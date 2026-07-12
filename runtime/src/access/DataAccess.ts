@@ -17,10 +17,10 @@ export class DataAccess {
         const dataType = reading.cluster === "temperatureMeasurement" ? "temperature" : "unknown";
 
         if (this.allowedTypes.has(dataType)) {
-            console.log(`\x1b[32m[DATA ACCESS] [AUTORISÉ] Donnée '${dataType}' autorisée pour le device ${reading.deviceId}.\x1b[0m`);
+            console.log(`\x1b[32m[DATA ACCESS] [ALLOW] Donnée '${dataType}' autorisée pour le device ${reading.deviceId}.\x1b[0m`);
             return true;
         } else {
-            console.log(`\x1b[31m[DATA ACCESS] [BLOQUÉ] Transmission REFUSÉE pour la donnée '${dataType}' du device ${reading.deviceId} (consentement utilisateur révoqué).\x1b[0m`);
+            console.log(`\x1b[31m[DATA ACCESS] [BLOCK] Transmission REFUSÉE pour la donnée '${dataType}' du device ${reading.deviceId} (consentement utilisateur révoqué).\x1b[0m`);
             return false;
         }
     }

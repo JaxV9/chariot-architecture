@@ -1,48 +1,48 @@
-# Gateway locale (Runtime environment) - CHARIOT
+# Local Gateway (Runtime Environment) - CHARIOT
 
-Ce package contient l'implémentation de la couche **Runtime** (Gateway locale) du projet CHARIOT.
+This package contains the implementation of the **Runtime** (Local Gateway) layer of the CHARIOT project.
 
-## Rôle et Pipeline Interne
+## Role and Internal Pipeline
 
-La gateway s'exécute localement et traite les données des capteurs de la smart home de bout en bout via le pipeline suivant :
+The gateway runs locally at the edge and processes smart home sensor data end-to-end through the following pipeline:
 
-1. **Embedded Broker** : Lance un broker MQTT embarqué (Aedes) sur le port `1883`.
-2. **Drivers (Matter)** : Se connecte au capteur de température virtuel Matter (démarré sur le port `5540`), s'abonne à ses valeurs brutes de température et les injecte dans le pipeline.
-3. **Protocoles Support** : Couche d'abstraction unifiant les événements de tous les drivers de protocoles.
-4. **Data Access** : Contrôle de conformité de consentement utilisateur (Data Act). Si l'utilisateur n'autorise pas un type de données, la transmission est immédiatement interrompue.
-5. **Devices Mapping** : Normalise la lecture brute en un format générique normalisé (Profile Property Identifier) de type `{ deviceId, type, unit, value, timestamp }`. Le mappage gère également la division par 100 de la valeur brute Matter (conformément aux spécifications du cluster de température Matter).
-6. **Data Encryption** : Chiffrement AES-256-GCM du profil virtuel. La clé de 32 octets est dérivée à l'aide de la méthode cryptographique native `crypto.scryptSync`.
-7. **Mqtt Publisher** : Publie le message chiffré sur le broker Aedes local, sur le topic `chariot/devices/{deviceId}`.
+1. **Embedded Broker**: Starts an embedded MQTT broker (Aedes) on local port `1883`.
+2. **Drivers (Matter)**: Connects to the virtual Matter temperature sensor (running on port `5540`), subscribes to its raw temperature measurements, and feeds them into the pipeline.
+3. **Protocol Support**: An abstraction layer unifying event reception from all protocol-specific drivers.
+4. **Data Access**: User consent compliance checker (Data Act). If the user does not authorize a specific data type, transmission is aborted immediately.
+5. **Devices Mapping**: Normalizes raw sensor readings into a standardized Virtual Profile format (**Profile Property Identifier**) resembling `{ deviceId, type, unit, value, timestamp }`. The mapping logic scales the raw Matter temperature value down by 100 (in compliance with Matter Temperature Measurement cluster specifications).
+6. **Data Encryption**: AES-256-GCM encryption of the virtual profile. The 32-byte key is derived using the native Node.js `crypto.scryptSync` cryptographic function.
+7. **Mqtt Publisher**: Publishes the encrypted payload to the local Aedes broker on the topic `chariot/devices/{deviceId}`.
 
-## Installation et Lancement
+## Installation and Execution
 
-### Étape 1 : Démarrer le capteur virtuel Matter
-Dans un terminal dédié à la racine du monorepo :
+### Step 1: Start the virtual Matter sensor
+In a dedicated terminal at the root of the monorepo:
 ```bash
 npm start -w devices
 ```
 
-### Étape 2 : Démarrer le Runtime (la Gateway)
-Dans un autre terminal à la racine du monorepo :
+### Step 2: Start the Runtime (Gateway)
+In another terminal at the root of the monorepo:
 ```bash
 npm run build -w runtime
 npm start -w runtime
 ```
 
-## Démo et Simulation de Consentement
+## Demo and Consent Simulation
 
-Pour faciliter la démonstration orale, le runtime intègre un simulateur dynamique de consentement utilisateur :
-1. **Pendant les 15 premières secondes** : Les données du capteur de température sont autorisées, normalisées, chiffrées, et publiées sur le broker MQTT.
-2. **Après 15 secondes** : Le système révoque dynamiquement l'autorisation de transmettre le type de donnée `temperature`.
-3. **Mises à jour suivantes** : Les données brutes reçues du driver Matter sont immédiatement bloquées par la couche `DataAccess`, montrant des logs d'interruption clairs en console.
+To facilitate oral demonstrations, the runtime includes a dynamic user-consent simulator:
+1. **For the first 15 seconds**: Temperature sensor data is authorized, mapped, encrypted, and published to the MQTT broker.
+2. **After 15 seconds**: The system dynamically revokes consent for the `temperature` data type.
+3. **Subsequent updates**: Raw readings received from the Matter driver are immediately blocked by the `DataAccess` layer, showing clear denial logs in the console.
 
-## Vérification et Écoute MQTT
+## MQTT Verification and Monitoring
 
-Vous pouvez vérifier le contenu publié sur le broker en utilisant un script d'écoute MQTT ou un client graphique comme MQTT X.
+You can verify the published data on the broker using an MQTT client (like MQTT X) or the built-in listening script.
 
-### Script de test rapide (`listen.js`)
-Un script d'écoute rapide est fourni à la racine de la gateway. Pour le lancer dans un troisième terminal :
+### Quick Listening Script (`listen.js`)
+A simple listening script is provided in the gateway package. To run it in a third terminal:
 ```bash
-node dist/listen.js
+node runtime/dist/listen.js
 ```
-Il affichera en temps réel les payloads chiffrés reçus et tentera de les déchiffrer avec la clé dérivée pour prouver la validité du chiffrement/déchiffrement de bout en bout.
+It will display the raw encrypted payloads received on the broker in real-time and decrypt them using the derived key to demonstrate the correctness of the end-to-end encryption.

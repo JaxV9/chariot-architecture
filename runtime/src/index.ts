@@ -59,13 +59,6 @@ async function main() {
     // 6. Démarrer les drivers de protocoles
     await protocolSupport.startAll();
 
-    // 7. [DEMO SIMULATION] Révoquer le consentement après 15 secondes pour montrer le blocage
-    console.log(`\x1b[35m[DEMO] Lancement du simulateur de consentement : le type 'temperature' sera révoqué dans 15 secondes.\x1b[0m`);
-    setTimeout(() => {
-        console.log(`\n\x1b[35;1m======================= SIMULATION DE DÉMO =====================\x1b[0m`);
-        dataAccess.revokeType("temperature");
-        console.log(`\x1b[35;1m================================================================\x1b[0m\n`);
-    }, 15000);
 
     // 8. Gestion propre de l'arrêt système
     const shutdown = async () => {

@@ -1,5 +1,40 @@
 import { ServerNode, Logger, LogLevel } from "@matter/main";
 import { TemperatureSensorDevice } from "@matter/main/devices";
+import os from "os";
+
+/**
+ * Configure the network interface for Matter to avoid tunnel interfaces.
+ */
+function setupMdnsInterface() {
+    const interfaces = os.networkInterfaces();
+    const candidates = ["en0", "wlan0", "eth0", "en1"];
+    let selected: string | undefined;
+
+    for (const name of candidates) {
+        if (interfaces[name] && interfaces[name].some((i: any) => !i.internal && (i.family === "IPv4" || (i.family as any) === 4))) {
+            selected = name;
+            break;
+        }
+    }
+
+    if (!selected) {
+        for (const name of Object.keys(interfaces)) {
+            if (name === "lo" || name === "lo0" || name.startsWith("utun") || name.startsWith("awdl")) {
+                continue;
+            }
+            if (interfaces[name]?.some((i: any) => !i.internal && (i.family === "IPv4" || (i.family as any) === 4))) {
+                selected = name;
+                break;
+            }
+        }
+    }
+
+    if (selected) {
+        console.log(`[NETWORK] Configuring Matter device to use network interface: ${selected}`);
+        process.env.MATTER_MDNS_NETWORKINTERFACE = selected;
+        process.env.PRIMARY_INTERFACE = selected;
+    }
+}
 
 /**
  * Main function to boot up the virtual Matter temperature sensor node.
@@ -7,6 +42,10 @@ import { TemperatureSensorDevice } from "@matter/main/devices";
 async function main() {
     // Configure log level to NOTICE to suppress verbose DEBUG/INFO logs
     Logger.defaultLogLevel = LogLevel.NOTICE;
+
+    // Detect and configure active interface
+    setupMdnsInterface();
+
 
     // 1. Initialize the Matter ServerNode
     const node = await ServerNode.create({

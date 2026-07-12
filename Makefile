@@ -1,4 +1,4 @@
-.PHONY: help install build build-devices build-runtime run-devices run-runtime demo clean
+.PHONY: help install build build-devices build-runtime run-devices run-runtime demo clean stop-demo
 
 # Default target: display help
 help:
@@ -30,9 +30,21 @@ run-runtime: build-runtime
 	npm run start -w runtime
 
 demo: build
-	osascript -e 'tell application "Terminal" to do script "cd $(CURDIR) && make run-devices"'
-	osascript -e 'tell application "Terminal" to do script "cd $(CURDIR) && sleep 3 && make run-runtime"'
-	osascript -e 'tell application "Terminal" to do script "cd $(CURDIR) && sleep 6 && node runtime/dist/listen.js"'
+	rm -rf ~/.matter
+	npx -y concurrently -n "Devices,Runtime,Listen" -c "green,blue,magenta" \
+		"make run-devices" \
+		"sleep 8 && make run-runtime" \
+		"sleep 12 && node runtime/dist/listen.js"
+
+stop-demo:
+	@echo "Arrêt des processus de démo Chariot..."
+	@pkill -f "run-devices" || true
+	@pkill -f "run-runtime" || true
+	@pkill -f "dist/index.js --device" || true
+	@pkill -f "dist/index.js --runtime" || true
+	@pkill -f "runtime/dist/listen.js" || true
+	@sleep 1
+
 
 clean:
 	rm -rf devices/dist runtime/dist communication/dist services/dist
