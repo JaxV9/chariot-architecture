@@ -17,20 +17,19 @@
  * Key: deviceId (as emitted by the driver, e.g., "chariot-temp-sensor").
  * Value: groupId (e.g., "living-room", "office").
  */
-export type DeviceGroupMap = Record<string, string>;
+export interface DeviceConfig {
+    homeId: string;
+    zoneId: string;
+}
+
+export type DeviceGroupMap = Record<string, DeviceConfig>;
 
 /**
  * Default static group configuration for the CHARIOT demo.
- *
- * - "chariot-temp-sensor"  → "living-room"  (real Matter device)
- * - "zigbee-temp-01"       → "living-room"  (mock Zigbee device, same group)
- * - "thread-temp-01"       → "office"       (mock Thread device, different group)
- *
- * Adjust these mappings and the K threshold (ANON_K_THRESHOLD env var) to
- * demonstrate both the "data withheld" and "data published" behaviours in demo.
+ * Maps each device ID to its respective home and zone identifiers.
  */
 export const DEFAULT_DEVICE_GROUPS: DeviceGroupMap = {
-    "chariot-temp-sensor": "living-room",
-    "zigbee-temp-01":      "living-room",
-    "thread-temp-01":      "office",
+    "chariot-temp-sensor": { homeId: "house-1", zoneId: "quartier-nord" },
+    "zigbee-temp-01":      { homeId: "house-1", zoneId: "quartier-nord" },
+    "thread-temp-01":      { homeId: "house-2", zoneId: "quartier-nord" },
 };

@@ -19,43 +19,57 @@ The gateway runs locally at the edge and processes smart home sensor data end-to
 
 ## Anonymisation Pipeline
 
-A three-step GDPR privacy pipeline (`src/anonymisation/`) is inserted between **Devices Mapping** and **Data Encryption**.
-When active, the output profile changes shape from a per-device `VirtualProfile` to an aggregated `GroupProfile`:
+A four-step GDPR privacy pipeline (`src/anonymisation/`) is inserted between **Devices Mapping** and **Data Encryption**.
+When active, the output profile changes shape from a per-device `VirtualProfile` to an aggregated zone-level profile:
 
 ```
 VirtualProfile  { deviceId, type, unit, value, timestamp }
       ↓  AnonymisationEngine
-GroupProfile    { groupId,  type, unit, value, deviceCount, timestamp }
+GroupProfile    { groupId, zoneId, type, unit, value, homeCount, deviceCount, timestamp }
 ```
 
-### Step 1 — Temporal Aggregation (per device)
+### Core Privacy Principle
 
-Instead of exposing a raw instantaneous reading, the engine maintains a **sliding window** of the last **N** values per device and exposes their arithmetic mean. This reduces temporal precision and smooths out short-lived spikes.
+**No data per room, nor per individual home, is ever exposed outside the local runtime (gateway).**
+The services tier and external smart city clients can only visualize aggregated data at the geographic zone/neighborhood level (`zoneId`), and only when a minimum number of distinct homes in that zone have active devices.
 
-- Window size controlled by `ANON_WINDOW_SIZE` (default `5`).
+---
+
+### Pipeline Steps (Executed Sequentially)
+
+#### Step 1 — Temporal Aggregation (per device)
+
+Instead of exposing raw instantaneous readings, the engine maintains a **sliding window** of the last **N** values per individual device and computes their arithmetic mean to smooth out spikes.
+
+- Window size is controlled by `ANON_WINDOW_SIZE` (default `5`).
 - Implemented as a pure function `temporalAggregate()` in `AnonymisationEngine.ts`.
 
-### Step 2 — K-Anonymity (per group)
+#### Step 2 — Intra-Home Aggregation (per home)
 
-Each device belongs to a **logical zone** (e.g., `"living-room"`, `"office"`). The engine maintains one aggregate per group and only publishes when at least **K** distinct devices in that group have reported a recent value.
+For each home (`homeId`), the engine aggregates the smoothed values of all active devices in that home (regardless of the room they are in) and computes their mean. 
 
-- If the group has fewer than K active devices → data is **withheld** and a `[K-ANONYMITY]` log is emitted.
-- When K is reached → the engine computes the **group mean** and marks it as publishable.
-- The published value cannot be traced back to a single device.
+- This produces a single consolidated value for the entire home.
+- **Critical Guarantee**: This home-level value is kept strictly internal and is never published or exposed outside the gateway.
+
+#### Step 3 — K-Anonymity (per zone)
+
+For each zone (`zoneId`), the engine collects the aggregated values of all active homes in that zone. The zone-level average is calculated and published **only if** at least **K** distinct homes in that zone have contributed a value.
+
+- If the number of active homes in the zone is less than K: the data is **withheld** (not published) and a `[K-ANONYMITY]` log is emitted.
+- If K is reached: the engine computes the average of the active homes' values.
 - Threshold controlled by `ANON_K_THRESHOLD` (default `2`).
 
-> **Demo tip**: with a single Matter device and K=2, you will see the "data withheld" log on every reading.  
-> Set `ANON_K_THRESHOLD=1` to observe the full publication path with one device.
+> **Demo tip**: With the default devices and K=2, if only the devices in `house-1` report, the zone data is withheld. Once the device in `house-2` reports, K=2 is met and the zone-level data is published.
 
-### Step 3 — Gaussian Perturbation
+#### Step 4 — Gaussian Perturbation
 
-A random noise sample drawn from **N(0, σ²)** is added to the group mean:
+To prevent reconstruction attacks on the zone aggregate, a random noise sample drawn from **N(0, σ²)** is added to the zone mean:
 
 ```
-final_value = group_mean + gaussian_noise(σ)
+final_value = zone_mean + gaussian_noise(σ)
 ```
 
-Noise is generated in pure TypeScript using the **Box-Muller transform** — no external library required.
+Noise is generated in pure TypeScript using the **Box-Muller transform**.
 
 - Std deviation controlled by `ANON_SIGMA` (default `0.1`).
 
@@ -65,24 +79,23 @@ Noise is generated in pure TypeScript using the **Box-Muller transform** — no 
 |---|---|---|
 | `ANONYMIZATION_ENABLED` | `true` | Set to `false` to disable the pipeline and publish raw VirtualProfiles |
 | `ANON_WINDOW_SIZE` | `5` | Temporal aggregation window size N (number of readings to average per device) |
-| `ANON_K_THRESHOLD` | `2` | Minimum number of active devices per group required to publish |
-| `ANON_SIGMA` | `0.1` | Standard deviation σ of the Gaussian noise added to the group aggregate |
+| `ANON_K_THRESHOLD` | `2` | Minimum number of active homes per zone required to publish |
+| `ANON_SIGMA` | `0.1` | Standard deviation σ of the Gaussian noise added to the zone aggregate |
 
-Example — run with K=1 to publish immediately with a single device:
+Example — run with K=1 to publish immediately with a single home:
 ```bash
 ANON_K_THRESHOLD=1 npm start -w runtime
 ```
 
-### Device Group Configuration
+### Device Configuration (Home & Zone Mapping)
 
-Group membership is defined statically in `src/anonymisation/DeviceGroupConfig.ts`.
-Add or change entries to assign devices to zones:
+Static mapping of devices to their respective home and zone is defined in `src/anonymisation/DeviceGroupConfig.ts`:
 
 ```ts
 export const DEFAULT_DEVICE_GROUPS: DeviceGroupMap = {
-    "chariot-temp-sensor": "living-room",  // real Matter device
-    "zigbee-temp-01":      "living-room",  // mock Zigbee device, same zone
-    "thread-temp-01":      "office",       // mock Thread device, different zone
+    "chariot-temp-sensor": { homeId: "house-1", zoneId: "quartier-nord" },
+    "zigbee-temp-01":      { homeId: "house-1", zoneId: "quartier-nord" },
+    "thread-temp-01":      { homeId: "house-2", zoneId: "quartier-nord" },
 };
 ```
 

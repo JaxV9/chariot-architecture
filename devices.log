@@ -1,0 +1,135 @@
+[NETWORK] Configuring Matter device to use network interface: en0
+[2m2026-07-12 15:17:08.029 WARN   [0;1;90mBasicInfor~ionServer [0;33mUsing development values for some BasicInformation attributes: [34mvendorId: [2;39m65521 [0;34mvendorName: [2;39mMatter.js Test Vendor [0;34mproductId: [2;39m32768 [0;34mproductName: [2;39mMatter.js Test Product [0;34mhardwareVersion: [2;39m0 [0;34msoftwareVersion: [2;39m0[0m
+[2m2026-07-12 15:17:08.065 NOTICE [0;1;90mNode                 [32mchariot-temp-sensor [0;32mgoing online[0m
+[2m2026-07-12 15:17:08.069 NOTICE [0;1;90mNode                 [32mchariot-temp-sensor [0;32mis online[0m
+[2m2026-07-12 15:17:08.074 NOTICE [0;1;90mCommissioning        [32mchariot-temp-sensor [0;32mis uncommissioned [34mpasscode: [2;39m20202021 [0;34mdiscriminator: [2;39m3840 [0;34mmanual pairing code: [2;39m34970112332
+  [0m▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
+  █⠀▄▄▄▄▄⠀██▀▄▀▄█⠀▄▄▄▄▄⠀█
+  █⠀█⠀⠀⠀█⠀█▄▀▄▀▄█⠀█⠀⠀⠀█⠀█
+  █⠀█▄▄▄█⠀██⠀▀▀▄█⠀█▄▄▄█⠀█
+  █▄▄▄▄▄▄▄█⠀█⠀▀▄█▄▄▄▄▄▄▄█
+  █▄⠀▄█▄⠀▄▄⠀▀⠀█⠀⠀▄▀██⠀█▀█
+  ██⠀█▀▀⠀▄▄█⠀█⠀▀▄▄██⠀▀█▀█
+  █▄▄████▄▄▄▀▄▀⠀▀██▄▄▀▄▀█
+  █⠀▄▄▄▄▄⠀█⠀⠀▄█▄█▄▄█▄⠀█⠀█
+  █⠀█⠀⠀⠀█⠀█▄▀▀█▄⠀▄▀▀▄⠀▀██
+  █⠀█▄▄▄█⠀█⠀⠀▀█▄█⠀▀█⠀⠀▀⠀█
+  █▄▄▄▄▄▄▄█▄█▄█▄██▄██▄█▄█
+  ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
+  QR code URL: https://project-chip.github.io/connectedhomeip/qrcode.html?data=MT:Y.K90AFN00KA0648G00
+  [0m
+Matter Virtual Temperature Sensor is now online and commissionable.
+[SIMULATOR] Updated Temperature: 20.07°C (Matter value: 2007)
+[2m2026-07-12 15:17:14.684 NOTICE [0;1;90mGeneralCom~erHandler [0;32mCommissioned [34mfabric: [2;39m1905fb46850bbb58 (#1) [0;34mnode: [2;39m0000000000000001[0m
+[2m2026-07-12 15:17:14.947 NOTICE [0;1;90mInteractionServer    [0;32mSubscribe successful » [35m@1:5a2291d68e243240•df4b⇵8e77 [32m2↔1 [34msub#: [2;39m34d7c3e0 [0;34mtiming: [2;39m1s - 1m 1s => 1m 1s [0;34msendInterval: [2;39m49.1s[0m
+[SIMULATOR] Updated Temperature: 20.11°C (Matter value: 2011)
+[SIMULATOR] Updated Temperature: 20.12°C (Matter value: 2012)
+[SIMULATOR] Updated Temperature: 19.89°C (Matter value: 1989)
+[SIMULATOR] Updated Temperature: 19.92°C (Matter value: 1992)
+[SIMULATOR] Updated Temperature: 19.77°C (Matter value: 1977)
+[SIMULATOR] Updated Temperature: 19.78°C (Matter value: 1978)
+[SIMULATOR] Updated Temperature: 19.83°C (Matter value: 1983)
+[SIMULATOR] Updated Temperature: 19.68°C (Matter value: 1968)
+[SIMULATOR] Updated Temperature: 19.93°C (Matter value: 1993)
+[SIMULATOR] Updated Temperature: 19.71°C (Matter value: 1971)
+[SIMULATOR] Updated Temperature: 19.56°C (Matter value: 1956)
+[SIMULATOR] Updated Temperature: 19.40°C (Matter value: 1940)
+[SIMULATOR] Updated Temperature: 19.34°C (Matter value: 1934)
+[SIMULATOR] Updated Temperature: 19.13°C (Matter value: 1913)
+[SIMULATOR] Updated Temperature: 19.26°C (Matter value: 1926)
+[SIMULATOR] Updated Temperature: 19.45°C (Matter value: 1945)
+[SIMULATOR] Updated Temperature: 19.66°C (Matter value: 1966)
+[SIMULATOR] Updated Temperature: 19.48°C (Matter value: 1948)
+[SIMULATOR] Updated Temperature: 19.44°C (Matter value: 1944)
+[SIMULATOR] Updated Temperature: 19.24°C (Matter value: 1924)
+[SIMULATOR] Updated Temperature: 19.20°C (Matter value: 1920)
+[SIMULATOR] Updated Temperature: 19.32°C (Matter value: 1932)
+[SIMULATOR] Updated Temperature: 19.51°C (Matter value: 1951)
+[SIMULATOR] Updated Temperature: 19.49°C (Matter value: 1949)
+[SIMULATOR] Updated Temperature: 19.54°C (Matter value: 1954)
+[SIMULATOR] Updated Temperature: 19.61°C (Matter value: 1961)
+[SIMULATOR] Updated Temperature: 19.45°C (Matter value: 1945)
+[SIMULATOR] Updated Temperature: 19.65°C (Matter value: 1965)
+[SIMULATOR] Updated Temperature: 19.49°C (Matter value: 1949)
+[SIMULATOR] Updated Temperature: 19.46°C (Matter value: 1946)
+[SIMULATOR] Updated Temperature: 19.65°C (Matter value: 1965)
+[SIMULATOR] Updated Temperature: 19.84°C (Matter value: 1984)
+[SIMULATOR] Updated Temperature: 19.79°C (Matter value: 1979)
+[SIMULATOR] Updated Temperature: 19.88°C (Matter value: 1988)
+[SIMULATOR] Updated Temperature: 19.97°C (Matter value: 1997)
+[SIMULATOR] Updated Temperature: 20.08°C (Matter value: 2008)
+[SIMULATOR] Updated Temperature: 19.84°C (Matter value: 1984)
+[SIMULATOR] Updated Temperature: 19.93°C (Matter value: 1993)
+[SIMULATOR] Updated Temperature: 19.87°C (Matter value: 1987)
+[SIMULATOR] Updated Temperature: 19.90°C (Matter value: 1990)
+[SIMULATOR] Updated Temperature: 20.01°C (Matter value: 2001)
+[SIMULATOR] Updated Temperature: 20.10°C (Matter value: 2010)
+[SIMULATOR] Updated Temperature: 20.34°C (Matter value: 2034)
+[SIMULATOR] Updated Temperature: 20.55°C (Matter value: 2055)
+[SIMULATOR] Updated Temperature: 20.33°C (Matter value: 2033)
+[SIMULATOR] Updated Temperature: 20.26°C (Matter value: 2026)
+[SIMULATOR] Updated Temperature: 20.50°C (Matter value: 2050)
+[SIMULATOR] Updated Temperature: 20.65°C (Matter value: 2065)
+[SIMULATOR] Updated Temperature: 20.46°C (Matter value: 2046)
+[SIMULATOR] Updated Temperature: 20.32°C (Matter value: 2032)
+[SIMULATOR] Updated Temperature: 20.40°C (Matter value: 2040)
+[SIMULATOR] Updated Temperature: 20.20°C (Matter value: 2020)
+[SIMULATOR] Updated Temperature: 20.11°C (Matter value: 2011)
+[SIMULATOR] Updated Temperature: 20.32°C (Matter value: 2032)
+[SIMULATOR] Updated Temperature: 20.23°C (Matter value: 2023)
+[SIMULATOR] Updated Temperature: 20.41°C (Matter value: 2041)
+[SIMULATOR] Updated Temperature: 20.26°C (Matter value: 2026)
+[SIMULATOR] Updated Temperature: 20.12°C (Matter value: 2012)
+[SIMULATOR] Updated Temperature: 19.92°C (Matter value: 1992)
+[SIMULATOR] Updated Temperature: 20.10°C (Matter value: 2010)
+[2m2026-07-12 15:24:48.006 NOTICE [0;1;90mRuntime              [0;32mShutting down[0m
+[2m2026-07-12 15:24:48.007 NOTICE [0;1;90mNode                 [32mchariot-temp-sensor [0;32mgoing offline[0m
+[2m2026-07-12 15:24:48.023 NOTICE [0;1;90mNode                 [32mchariot-temp-sensor [0;32mis offline[0m
+[SIMULATOR] Failed to update temperature: [destroyed-dependency] temp-sensor is closed
+      at Object.assertActive (file:///Users/jaxv9/Documents/chariot/node_modules/@matter/general/dist/esm/util/Lifecycle.js:35:15)
+      at Construction2.assert (file:///Users/jaxv9/Documents/chariot/node_modules/@matter/general/dist/esm/util/Construction.js:91:17)
+      at Endpoint.act (file:///Users/jaxv9/Documents/chariot/node_modules/@matter/node/dist/esm/endpoint/Endpoint.js:573:23)
+      at Endpoint.set (file:///Users/jaxv9/Documents/chariot/node_modules/@matter/node/dist/esm/endpoint/Endpoint.js:230:16)
+      at Timeout.updateInterval [as _onTimeout] (file:///Users/jaxv9/Documents/chariot/devices/dist/index.js:84:20)
+      at listOnTimeout (node:internal/timers:611:17)
+      at process.processTimers (node:internal/timers:546:7)
+[SIMULATOR] Failed to update temperature: [destroyed-dependency] temp-sensor is closed
+      at Object.assertActive (file:///Users/jaxv9/Documents/chariot/node_modules/@matter/general/dist/esm/util/Lifecycle.js:35:15)
+      at Construction2.assert (file:///Users/jaxv9/Documents/chariot/node_modules/@matter/general/dist/esm/util/Construction.js:91:17)
+      at Endpoint.act (file:///Users/jaxv9/Documents/chariot/node_modules/@matter/node/dist/esm/endpoint/Endpoint.js:573:23)
+      at Endpoint.set (file:///Users/jaxv9/Documents/chariot/node_modules/@matter/node/dist/esm/endpoint/Endpoint.js:230:16)
+      at Timeout.updateInterval [as _onTimeout] (file:///Users/jaxv9/Documents/chariot/devices/dist/index.js:84:20)
+      at listOnTimeout (node:internal/timers:611:17)
+      at process.processTimers (node:internal/timers:546:7)
+[SIMULATOR] Failed to update temperature: [destroyed-dependency] temp-sensor is closed
+      at Object.assertActive (file:///Users/jaxv9/Documents/chariot/node_modules/@matter/general/dist/esm/util/Lifecycle.js:35:15)
+      at Construction2.assert (file:///Users/jaxv9/Documents/chariot/node_modules/@matter/general/dist/esm/util/Construction.js:91:17)
+      at Endpoint.act (file:///Users/jaxv9/Documents/chariot/node_modules/@matter/node/dist/esm/endpoint/Endpoint.js:573:23)
+      at Endpoint.set (file:///Users/jaxv9/Documents/chariot/node_modules/@matter/node/dist/esm/endpoint/Endpoint.js:230:16)
+      at Timeout.updateInterval [as _onTimeout] (file:///Users/jaxv9/Documents/chariot/devices/dist/index.js:84:20)
+      at listOnTimeout (node:internal/timers:611:17)
+      at process.processTimers (node:internal/timers:546:7)
+[SIMULATOR] Failed to update temperature: [destroyed-dependency] temp-sensor is closed
+      at Object.assertActive (file:///Users/jaxv9/Documents/chariot/node_modules/@matter/general/dist/esm/util/Lifecycle.js:35:15)
+      at Construction2.assert (file:///Users/jaxv9/Documents/chariot/node_modules/@matter/general/dist/esm/util/Construction.js:91:17)
+      at Endpoint.act (file:///Users/jaxv9/Documents/chariot/node_modules/@matter/node/dist/esm/endpoint/Endpoint.js:573:23)
+      at Endpoint.set (file:///Users/jaxv9/Documents/chariot/node_modules/@matter/node/dist/esm/endpoint/Endpoint.js:230:16)
+      at Timeout.updateInterval [as _onTimeout] (file:///Users/jaxv9/Documents/chariot/devices/dist/index.js:84:20)
+      at listOnTimeout (node:internal/timers:611:17)
+      at process.processTimers (node:internal/timers:546:7)
+[SIMULATOR] Failed to update temperature: [destroyed-dependency] temp-sensor is closed
+      at Object.assertActive (file:///Users/jaxv9/Documents/chariot/node_modules/@matter/general/dist/esm/util/Lifecycle.js:35:15)
+      at Construction2.assert (file:///Users/jaxv9/Documents/chariot/node_modules/@matter/general/dist/esm/util/Construction.js:91:17)
+      at Endpoint.act (file:///Users/jaxv9/Documents/chariot/node_modules/@matter/node/dist/esm/endpoint/Endpoint.js:573:23)
+      at Endpoint.set (file:///Users/jaxv9/Documents/chariot/node_modules/@matter/node/dist/esm/endpoint/Endpoint.js:230:16)
+      at Timeout.updateInterval [as _onTimeout] (file:///Users/jaxv9/Documents/chariot/devices/dist/index.js:84:20)
+      at listOnTimeout (node:internal/timers:611:17)
+      at process.processTimers (node:internal/timers:546:7)
+[SIMULATOR] Failed to update temperature: [destroyed-dependency] temp-sensor is closed
+      at Object.assertActive (file:///Users/jaxv9/Documents/chariot/node_modules/@matter/general/dist/esm/util/Lifecycle.js:35:15)
+      at Construction2.assert (file:///Users/jaxv9/Documents/chariot/node_modules/@matter/general/dist/esm/util/Construction.js:91:17)
+      at Endpoint.act (file:///Users/jaxv9/Documents/chariot/node_modules/@matter/node/dist/esm/endpoint/Endpoint.js:573:23)
+      at Endpoint.set (file:///Users/jaxv9/Documents/chariot/node_modules/@matter/node/dist/esm/endpoint/Endpoint.js:230:16)
+      at Timeout.updateInterval [as _onTimeout] (file:///Users/jaxv9/Documents/chariot/devices/dist/index.js:84:20)
+      at listOnTimeout (node:internal/timers:611:17)
+      at process.processTimers (node:internal/timers:546:7)

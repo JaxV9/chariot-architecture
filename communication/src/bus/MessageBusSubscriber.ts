@@ -116,6 +116,14 @@ export class MessageBusSubscriber {
             }
 
             // Step 6: Store/register in the Directory Services
+            // Emit decryption telemetry (before/after payloads)
+            this.directoryService.emitTelemetry({
+                layer: "communication_decrypt",
+                encryptedPayload: encryptedPayload,
+                decryptedPayload: virtualProfile,
+                timestamp: new Date().toISOString()
+            });
+
             this.directoryService.saveProfile(virtualProfile);
             console.log(`\x1b[35m[MESSAGE BUS] [SUCCESS] Full processing pipeline completed.\x1b[0m`);
 

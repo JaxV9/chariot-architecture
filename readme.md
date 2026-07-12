@@ -175,3 +175,20 @@ curl -H "Authorization: Bearer chariot-test-token" http://localhost:3000/devices
   }
 ]
 ```
+
+---
+
+## ⚙️ Live Configuration Control
+
+The dashboard features a **Live Config** panel (top right) allowing you to adjust privacy parameters dynamically without restarting the edge gateway:
+- **K-Anonymity (K)**: Minimum active devices required in a zone before data is published.
+- **Gaussian Noise (σ)**: Standard deviation of Box-Muller perturbation added to group averages.
+- **Temporal Window Size (N)**: Sliding window size for initial device-level smoothing.
+
+### Technical Flow (Bi-Directional WebSocket Routing)
+
+1. **Dashboard UI**: The user adjusts values in the Live Config panel and clicks **Appliquer**.
+2. **Dashboard Server** (Port `4000`): The browser client sends an `update_config` message via the WebSocket (`browserWss`).
+3. **Telemetry Hub** (Port `4001`): The dashboard server intercepts the message and broadcasts it downstream to all telemetry emitters (e.g., the Runtime Gateway).
+4. **Runtime Gateway**: The `TelemetryClient` in the gateway receives the message and triggers the callback, updating the `AnonymisationEngine` configuration in-memory.
+5. **Config Broadcast**: The updated parameters are instantly re-broadcasted back to the dashboard to ensure all elements are synchronized.

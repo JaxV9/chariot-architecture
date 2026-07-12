@@ -97,140 +97,84 @@ test("large sigma produces larger spread (statistical sanity check)", () => {
 });
 
 // ---------------------------------------------------------------------------
-// 3. K-anonymity via AnonymisationEngine — dynamic effectiveK behaviour
-//
-// effectiveK(group) = min(ANON_K_THRESHOLD, maxDevicesEverSeenInGroup)
+// 3. K-anonymity via AnonymisationEngine — two-level aggregation
 // ---------------------------------------------------------------------------
 
 console.log("\n\x1b[1m[TEST] 3 — K-anonymity (AnonymisationEngine)\x1b[0m");
 
-// --- Single-device scenarios ------------------------------------------------
+// --- Single-home scenarios ------------------------------------------------
 
-test("1 device alone in its group publishes immediately (effectiveK = 1)", () => {
-    // Only device-A belongs to zone-1; maxSeen = 1 → effectiveK = min(2,1) = 1.
-    process.env.ANON_K_THRESHOLD = "2";
+test("1 device in a home and 1 home in zone with K=1 publishes immediately", () => {
+    process.env.ANON_K_THRESHOLD = "1";
     process.env.ANON_WINDOW_SIZE = "5";
     process.env.ANON_SIGMA       = "0";
 
-    const engine = new AnonymisationEngine({ "device-A": "zone-1" });
+    const engine = new AnonymisationEngine({
+        "device-A": { homeId: "house-1", zoneId: "zone-1" }
+    });
     const result = engine.process(makeProfile("device-A", 21.5));
 
-    assert.notEqual(result, null, "Solo device should publish immediately (effectiveK=1)");
+    assert.notEqual(result, null, "Should publish when K=1");
+    assert.equal(result!.zoneId, "zone-1");
     assert.equal(result!.groupId, "zone-1");
-    assert.equal(result!.deviceCount, 1);
+    assert.equal(result!.homeCount, 1);
     assert.equal(result!.value, 21.5);
 });
 
-test("unknown device falls back to 'default' group and publishes immediately", () => {
-    // Unknown device → group 'default'; maxSeen = 1 → effectiveK = min(2,1) = 1.
+test("K-anonymity: data is withheld when active homes in zone is less than K", () => {
     process.env.ANON_K_THRESHOLD = "2";
     process.env.ANON_SIGMA       = "0";
 
-    const engine = new AnonymisationEngine({}); // empty config → all go to 'default'
+    const engine = new AnonymisationEngine({
+        "dev-A1": { homeId: "house-1", zoneId: "zone-1" },
+        "dev-A2": { homeId: "house-1", zoneId: "zone-1" },
+        "dev-B1": { homeId: "house-2", zoneId: "zone-1" },
+    });
+
+    // 1st device of house-1 reports: house-1 has 1 active device. activeHomeCount in zone-1 is 1.
+    const r1 = engine.process(makeProfile("dev-A1", 20.0));
+    assert.equal(r1, null, "Should be withheld as only 1 home is active and K=2");
+
+    // 2nd device of house-1 reports: house-1 has 2 active devices. activeHomeCount in zone-1 is still 1.
+    const r2 = engine.process(makeProfile("dev-A2", 22.0));
+    assert.equal(r2, null, "Should still be withheld since it is still the same home (house-1)");
+
+    // 1st device of house-2 reports: house-2 becomes active. activeHomeCount in zone-1 is now 2.
+    const r3 = engine.process(makeProfile("dev-B1", 24.0));
+    assert.notEqual(r3, null, "Should publish because 2 distinct homes (house-1, house-2) are now active in the zone");
+    assert.equal(r3!.zoneId, "zone-1");
+    assert.equal(r3!.homeCount, 2);
+    // house-1 mean = (20 + 22) / 2 = 21
+    // house-2 mean = 24
+    // zone mean = (21 + 24) / 2 = 22.5
+    assert.equal(r3!.value, 22.5);
+});
+
+test("unknown device falls back to its own home and default-zone and publishes immediately with K=1", () => {
+    process.env.ANON_K_THRESHOLD = "1";
+    process.env.ANON_SIGMA       = "0";
+
+    const engine = new AnonymisationEngine({}); // empty config
     const result = engine.process(makeProfile("unknown-device", 19.0));
 
-    assert.notEqual(result, null, "Should publish to 'default' group immediately");
-    assert.equal(result!.groupId, "default");
+    assert.notEqual(result, null, "Should publish with K=1");
+    assert.equal(result!.zoneId, "default-zone");
 });
 
-// --- Multi-device scenarios -------------------------------------------------
-
-test("2-device group with K=2: first device withheld, second triggers publication", () => {
-    // maxSeen grows: 1 → effectiveK=1 (first), 2 → effectiveK=2 (second onward).
-    // After device-B arrives, effectiveK=2, and both are active → publish.
-    process.env.ANON_K_THRESHOLD = "2";
-    process.env.ANON_WINDOW_SIZE = "5";
-    process.env.ANON_SIGMA       = "0";
-
-    const engine = new AnonymisationEngine({
-        "device-A": "zone-1",
-        "device-B": "zone-1",
-    });
-
-    const r1 = engine.process(makeProfile("device-A", 20.0));
-    // After device-A: maxSeen=1 → effectiveK=1 → publishes.
-    assert.notEqual(r1, null, "1st device should publish (effectiveK=1 at this point)");
-
-    const r2 = engine.process(makeProfile("device-B", 22.0));
-    // After device-B: maxSeen=2 → effectiveK=2 → both active → publishes.
-    assert.notEqual(r2, null, "2nd device should also publish (both active, effectiveK=2)");
-    assert.equal(r2!.groupId, "zone-1");
-    assert.equal(r2!.deviceCount, 2);
-    assert.equal(r2!.value, 21.0, "mean of 20 and 22 = 21 (sigma=0)");
-});
-
-test("data withheld when active count drops below effectiveK after both devices seen", () => {
-    // Once both devices have been seen (maxSeen=2, effectiveK=2), if only one
-    // keeps emitting the other is considered inactive → withhold.
+test("homes in different zones are independent", () => {
     process.env.ANON_K_THRESHOLD = "2";
     process.env.ANON_SIGMA       = "0";
 
     const engine = new AnonymisationEngine({
-        "device-A": "zone-1",
-        "device-B": "zone-1",
+        "dev-A": { homeId: "house-A", zoneId: "zone-A" },
+        "dev-B": { homeId: "house-B", zoneId: "zone-B" },
     });
 
-    // Bring both devices into the group to set maxSeen=2.
-    engine.process(makeProfile("device-A", 20.0)); // effectiveK becomes 1 then publishes
-    engine.process(makeProfile("device-B", 22.0)); // maxSeen → 2, effectiveK → 2
+    const r1 = engine.process(makeProfile("dev-A", 20.0)); // zone-A: 1 home active -> withheld
+    const r2 = engine.process(makeProfile("dev-B", 22.0)); // zone-B: 1 home active -> withheld
 
-    // Create a NEW engine with same config but only device-A active from the start.
-    // This simulates device-B never showing up after a restart.
-    const engine2 = new AnonymisationEngine({
-        "device-A": "zone-2",
-        "device-B": "zone-2",
-    });
-    // Only device-A reports; maxSeen=1 → effectiveK=1 → should publish.
-    const r = engine2.process(makeProfile("device-A", 20.0));
-    assert.notEqual(r, null, "Only-seen device should still publish (effectiveK=1 before device-B is seen)");
-});
-
-test("devices in different groups are independent (1 device per group, both publish)", () => {
-    // Each group has 1 device → each group's effectiveK = 1 → both publish independently.
-    process.env.ANON_K_THRESHOLD = "2";
-    process.env.ANON_SIGMA       = "0";
-
-    const engine = new AnonymisationEngine({
-        "dev-A": "zone-A",
-        "dev-B": "zone-B",
-    });
-
-    const r1 = engine.process(makeProfile("dev-A", 20.0)); // zone-A: 1 device → publish
-    const r2 = engine.process(makeProfile("dev-B", 22.0)); // zone-B: 1 device → publish
-
-    assert.notEqual(r1, null, "zone-A (1 device) should publish immediately");
-    assert.notEqual(r2, null, "zone-B (1 device) should publish immediately");
-    assert.equal(r1!.groupId, "zone-A");
-    assert.equal(r2!.groupId, "zone-B");
-});
-
-test("2 devices per group, 2 groups, independent counts (first device withheld if other zone has 2)", () => {
-    // zone-A: 2 configured devices; zone-B: 2 configured devices.
-    // After device-A1 in zone-A reports: zone-A maxSeen=1 → effectiveK=1 → publishes.
-    // After device-B1 in zone-B reports: zone-B maxSeen=1 → effectiveK=1 → publishes.
-    // Both zones are counted independently.
-    process.env.ANON_K_THRESHOLD = "2";
-    process.env.ANON_SIGMA       = "0";
-
-    const engine = new AnonymisationEngine({
-        "dev-A1": "zone-A",
-        "dev-A2": "zone-A",
-        "dev-B1": "zone-B",
-        "dev-B2": "zone-B",
-    });
-
-    const r1 = engine.process(makeProfile("dev-A1", 20.0)); // zone-A: maxSeen=1 → effectiveK=1 → publish
-    const r2 = engine.process(makeProfile("dev-B1", 22.0)); // zone-B: maxSeen=1 → effectiveK=1 → publish
-    // Note: zone-B count does NOT affect zone-A threshold.
-
-    assert.notEqual(r1, null, "zone-A first device should publish (effectiveK=1)");
-    assert.notEqual(r2, null, "zone-B first device should publish (effectiveK=1)");
-
-    // Now bring in the second device of zone-A (maxSeen=2 → effectiveK=2 from now on).
-    const r3 = engine.process(makeProfile("dev-A2", 24.0)); // zone-A: 2/2 → publish
-    assert.notEqual(r3, null, "zone-A both active → should publish");
-    assert.equal(r3!.deviceCount, 2);
-    assert.equal(r3!.value, 22.0, "mean of 20 and 24 = 22");
+    assert.equal(r1, null, "zone-A should be withheld");
+    assert.equal(r2, null, "zone-B should be withheld");
 });
 
 // --- Shape test -------------------------------------------------------------
@@ -239,15 +183,19 @@ test("GroupProfile output has the correct shape", () => {
     process.env.ANON_K_THRESHOLD = "1";
     process.env.ANON_SIGMA       = "0";
 
-    const engine = new AnonymisationEngine({ "dev-X": "home" });
+    const engine = new AnonymisationEngine({
+        "dev-X": { homeId: "house-1", zoneId: "zone-1" }
+    });
     const result = engine.process(makeProfile("dev-X", 23.5));
 
     assert.ok(result !== null);
-    assert.ok(typeof result!.groupId    === "string");
+    assert.equal(result!.groupId, "zone-1");
+    assert.equal(result!.zoneId, "zone-1");
+    assert.equal(result!.homeCount, 1);
+    assert.equal(result!.deviceCount, 1);
     assert.ok(typeof result!.type       === "string");
     assert.ok(typeof result!.unit       === "string");
     assert.ok(typeof result!.value      === "number");
-    assert.ok(typeof result!.deviceCount === "number");
     assert.ok(typeof result!.timestamp  === "string");
 });
 

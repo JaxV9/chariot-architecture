@@ -21,9 +21,11 @@
  */
 export interface GroupProfile {
     groupId: string;
+    zoneId: string;
     type: string;
     unit: string;
     value: number;
+    homeCount: number;
     deviceCount: number;
     timestamp: string;
 }

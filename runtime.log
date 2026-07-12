@@ -1,0 +1,780 @@
+
+[35;1m===============================================================[0m
+[35;1m    STARTING CHARIOT GATEWAY (RUNTIME ENVIRONMENT)             [0m
+[35;1m===============================================================[0m
+
+[32m[DATA ENCRYPTION] AES-256 key successfully derived via scryptSync.[0m
+[35m[ANONYMISATION] Engine initialised — window=5, K=2, σ=0.1[0m
+[35m[GATEWAY] Anonymisation pipeline ENABLED (K=2, N=5, σ=0.1)[0m
+[32m[EMBEDDED BROKER] Aedes MQTT broker started successfully on port 1883.[0m
+[34m[MQTT PUBLISHER] Connecting to MQTT broker at mqtt://localhost:1883...[0m
+[TELEMETRY] Disconnected from telemetry server. Reconnecting in 1000ms...
+[34m[EMBEDDED BROKER] Client connected: chariot-gateway-publisher[0m
+[32m[MQTT PUBLISHER] Connected to local MQTT broker.[0m
+[32m[PROTOCOL SUPPORT] Driver registered for device chariot-temp-sensor (Protocol: MATTER)[0m
+[34m[PROTOCOL SUPPORT] Starting all protocol drivers...[0m
+[NETWORK] Configuring Matter controller to use network interface: en0
+[NETWORK] Detected active interface IP: 192.168.1.86
+[34m[DRIVER Matter] Starting Matter controller...[0m
+[2m2026-07-12 15:17:14.464 WARN   [0;1;90mBasicInfor~ionServer [0;33mUsing development values for some BasicInformation attributes: [34mvendorId: [2;39m65521 [0;34mvendorName: [2;39mMatter.js Test Vendor [0;34mproductId: [2;39m32768 [0;34mproductName: [2;39mMatter.js Test Product [0;34mhardwareVersion: [2;39m0 [0;34msoftwareVersion: [2;39m0[0m
+[32m[DRIVER Matter] Controller started successfully.[0m
+[34m[DRIVER Matter] Searching and pairing with Matter sensor (chariot-temp-sensor)...[0m
+[34m[DRIVER Matter] Parameters: Passcode: 20202021, Discriminator: 3840[0m
+[34m[DRIVER Matter] Direct connection to sensor at 192.168.1.86:5540 (ATTEMPT 1/5)...[0m
+[2m2026-07-12 15:17:14.635 WARN   [0;1;90mController~missioner [0;33mAttestation finding accepted for backward compatibility: DclServiceUnavailable DclCertificateService not available; skipping PAA trust store, chain, and revocation checks. Register DclCertificateService in the environment for full attestation.[0m
+[2m2026-07-12 15:17:14.635 WARN   [0;1;90mController~missioner [0;33mAttestation finding accepted for backward compatibility: CdSignerVerificationSkipped No DclCertificateService provided; skipping CD signature verification[0m
+[2m2026-07-12 15:17:14.635 WARN   [0;1;90mController~missioner [0;33mAttestation finding accepted for backward compatibility: CertificationTypeTest Certification Declaration has certification_type=0 (test)[0m
+[32m[DRIVER Matter] Pairing SUCCESSFUL with sensor (chariot-temp-sensor).[0m
+[32m[DRIVER Matter] Temperature cluster found on endpoint #1.[0m
+[36m[DRIVER Matter] Initial value read: 2007[0m
+
+[34m[PIPELINE] New raw reading received from chariot-temp-sensor [MATTER]: 2007[0m
+[32m[DEVICES MAPPING] Mapped data: { deviceId: "chariot-temp-sensor", type: "temperature", value: 20.07 celsius }[0m
+[32m[DATA ACCESS] [ALLOW] Data type 'temperature' allowed for device chariot-temp-sensor.[0m
+[36m[ANONYMISATION] [1/3 TEMPORAL] device='chariot-temp-sensor' raw=20.070 → smoothed=20.070 (window 1/5)[0m
+[32m[ANONYMISATION] [2/3 K-ANONYMITY] Group 'living-room': 1/1 active devices ✓ — group mean=20.070[0m
+[32m[ANONYMISATION] [3/3 GAUSSIAN] Group 'living-room': mean=20.070, noise=0.0886 → final=20.159 celsius[0m
+[32m[DATA ENCRYPTION] Virtual profile encrypted. IV: eeb14acb..., Tag: 19502552...[0m
+[35m[PIPELINE] [SUCCESS] Anonymised group profile published for group 'living-room' (1 device(s)).[0m
+[36m[EMBEDDED BROKER] Message published by chariot-gateway-publisher on topic 'chariot/devices/living-room'[0m
+[32m[MQTT PUBLISHER] Message published on 'chariot/devices/living-room' (size: 363 chars).[0m
+[TELEMETRY] Disconnected from telemetry server. Reconnecting in 2000ms...
+[TELEMETRY] Disconnected from telemetry server. Reconnecting in 4000ms...
+[36m[DRIVER Matter] Temperature change notification received: 2011[0m
+
+[34m[PIPELINE] New raw reading received from chariot-temp-sensor [MATTER]: 2011[0m
+[32m[DEVICES MAPPING] Mapped data: { deviceId: "chariot-temp-sensor", type: "temperature", value: 20.11 celsius }[0m
+[32m[DATA ACCESS] [ALLOW] Data type 'temperature' allowed for device chariot-temp-sensor.[0m
+[36m[ANONYMISATION] [1/3 TEMPORAL] device='chariot-temp-sensor' raw=20.110 → smoothed=20.090 (window 2/5)[0m
+[32m[ANONYMISATION] [2/3 K-ANONYMITY] Group 'living-room': 1/1 active devices ✓ — group mean=20.090[0m
+[32m[ANONYMISATION] [3/3 GAUSSIAN] Group 'living-room': mean=20.090, noise=-0.1980 → final=19.892 celsius[0m
+[32m[DATA ENCRYPTION] Virtual profile encrypted. IV: 8956ad44..., Tag: ae859c0c...[0m
+[35m[PIPELINE] [SUCCESS] Anonymised group profile published for group 'living-room' (1 device(s)).[0m
+[36m[EMBEDDED BROKER] Message published by chariot-gateway-publisher on topic 'chariot/devices/living-room'[0m
+[32m[MQTT PUBLISHER] Message published on 'chariot/devices/living-room' (size: 363 chars).[0m
+[TELEMETRY] Disconnected from telemetry server. Reconnecting in 8000ms...
+[34m[EMBEDDED BROKER] Client connected: chariot-communication-middleware-319d5e0a[0m
+[36m[DRIVER Matter] Temperature change notification received: 2012[0m
+
+[34m[PIPELINE] New raw reading received from chariot-temp-sensor [MATTER]: 2012[0m
+[32m[DEVICES MAPPING] Mapped data: { deviceId: "chariot-temp-sensor", type: "temperature", value: 20.12 celsius }[0m
+[32m[DATA ACCESS] [ALLOW] Data type 'temperature' allowed for device chariot-temp-sensor.[0m
+[36m[ANONYMISATION] [1/3 TEMPORAL] device='chariot-temp-sensor' raw=20.120 → smoothed=20.100 (window 3/5)[0m
+[32m[ANONYMISATION] [2/3 K-ANONYMITY] Group 'living-room': 1/1 active devices ✓ — group mean=20.100[0m
+[32m[ANONYMISATION] [3/3 GAUSSIAN] Group 'living-room': mean=20.100, noise=0.0925 → final=20.192 celsius[0m
+[32m[DATA ENCRYPTION] Virtual profile encrypted. IV: 163cd54e..., Tag: fca0105c...[0m
+[35m[PIPELINE] [SUCCESS] Anonymised group profile published for group 'living-room' (1 device(s)).[0m
+[32m[MQTT PUBLISHER] Message published on 'chariot/devices/living-room' (size: 363 chars).[0m
+[36m[EMBEDDED BROKER] Message published by chariot-gateway-publisher on topic 'chariot/devices/living-room'[0m
+[TELEMETRY] Connected to telemetry server at ws://localhost:4001
+[36m[DRIVER Matter] Temperature change notification received: 1989[0m
+
+[34m[PIPELINE] New raw reading received from chariot-temp-sensor [MATTER]: 1989[0m
+[32m[DEVICES MAPPING] Mapped data: { deviceId: "chariot-temp-sensor", type: "temperature", value: 19.89 celsius }[0m
+[32m[DATA ACCESS] [ALLOW] Data type 'temperature' allowed for device chariot-temp-sensor.[0m
+[36m[ANONYMISATION] [1/3 TEMPORAL] device='chariot-temp-sensor' raw=19.890 → smoothed=20.047 (window 4/5)[0m
+[32m[ANONYMISATION] [2/3 K-ANONYMITY] Group 'living-room': 1/1 active devices ✓ — group mean=20.047[0m
+[32m[ANONYMISATION] [3/3 GAUSSIAN] Group 'living-room': mean=20.047, noise=-0.1929 → final=19.855 celsius[0m
+[32m[DATA ENCRYPTION] Virtual profile encrypted. IV: 35ce56ce..., Tag: 51f45d8b...[0m
+[35m[PIPELINE] [SUCCESS] Anonymised group profile published for group 'living-room' (1 device(s)).[0m
+[32m[MQTT PUBLISHER] Message published on 'chariot/devices/living-room' (size: 363 chars).[0m
+[36m[EMBEDDED BROKER] Message published by chariot-gateway-publisher on topic 'chariot/devices/living-room'[0m
+[36m[DRIVER Matter] Temperature change notification received: 1992[0m
+
+[34m[PIPELINE] New raw reading received from chariot-temp-sensor [MATTER]: 1992[0m
+[32m[DEVICES MAPPING] Mapped data: { deviceId: "chariot-temp-sensor", type: "temperature", value: 19.92 celsius }[0m
+[32m[DATA ACCESS] [ALLOW] Data type 'temperature' allowed for device chariot-temp-sensor.[0m
+[36m[ANONYMISATION] [1/3 TEMPORAL] device='chariot-temp-sensor' raw=19.920 → smoothed=20.022 (window 5/5)[0m
+[32m[ANONYMISATION] [2/3 K-ANONYMITY] Group 'living-room': 1/1 active devices ✓ — group mean=20.022[0m
+[32m[ANONYMISATION] [3/3 GAUSSIAN] Group 'living-room': mean=20.022, noise=-0.0521 → final=19.97 celsius[0m
+[32m[DATA ENCRYPTION] Virtual profile encrypted. IV: 93571c7a..., Tag: 9eda4746...[0m
+[35m[PIPELINE] [SUCCESS] Anonymised group profile published for group 'living-room' (1 device(s)).[0m
+[32m[MQTT PUBLISHER] Message published on 'chariot/devices/living-room' (size: 361 chars).[0m
+[36m[EMBEDDED BROKER] Message published by chariot-gateway-publisher on topic 'chariot/devices/living-room'[0m
+[36m[DRIVER Matter] Temperature change notification received: 1977[0m
+
+[34m[PIPELINE] New raw reading received from chariot-temp-sensor [MATTER]: 1977[0m
+[32m[DEVICES MAPPING] Mapped data: { deviceId: "chariot-temp-sensor", type: "temperature", value: 19.77 celsius }[0m
+[32m[DATA ACCESS] [ALLOW] Data type 'temperature' allowed for device chariot-temp-sensor.[0m
+[36m[ANONYMISATION] [1/3 TEMPORAL] device='chariot-temp-sensor' raw=19.770 → smoothed=19.962 (window 5/5)[0m
+[32m[ANONYMISATION] [2/3 K-ANONYMITY] Group 'living-room': 1/1 active devices ✓ — group mean=19.962[0m
+[32m[ANONYMISATION] [3/3 GAUSSIAN] Group 'living-room': mean=19.962, noise=0.0862 → final=20.048 celsius[0m
+[32m[DATA ENCRYPTION] Virtual profile encrypted. IV: c6590317..., Tag: 59d77765...[0m
+[35m[PIPELINE] [SUCCESS] Anonymised group profile published for group 'living-room' (1 device(s)).[0m
+[32m[MQTT PUBLISHER] Message published on 'chariot/devices/living-room' (size: 363 chars).[0m
+[36m[EMBEDDED BROKER] Message published by chariot-gateway-publisher on topic 'chariot/devices/living-room'[0m
+[36m[DRIVER Matter] Temperature change notification received: 1978[0m
+
+[34m[PIPELINE] New raw reading received from chariot-temp-sensor [MATTER]: 1978[0m
+[32m[DEVICES MAPPING] Mapped data: { deviceId: "chariot-temp-sensor", type: "temperature", value: 19.78 celsius }[0m
+[32m[DATA ACCESS] [ALLOW] Data type 'temperature' allowed for device chariot-temp-sensor.[0m
+[36m[ANONYMISATION] [1/3 TEMPORAL] device='chariot-temp-sensor' raw=19.780 → smoothed=19.896 (window 5/5)[0m
+[32m[ANONYMISATION] [2/3 K-ANONYMITY] Group 'living-room': 1/1 active devices ✓ — group mean=19.896[0m
+[32m[ANONYMISATION] [3/3 GAUSSIAN] Group 'living-room': mean=19.896, noise=-0.0576 → final=19.838 celsius[0m
+[32m[DATA ENCRYPTION] Virtual profile encrypted. IV: 9bda70da..., Tag: f74a5deb...[0m
+[35m[PIPELINE] [SUCCESS] Anonymised group profile published for group 'living-room' (1 device(s)).[0m
+[32m[MQTT PUBLISHER] Message published on 'chariot/devices/living-room' (size: 363 chars).[0m
+[36m[EMBEDDED BROKER] Message published by chariot-gateway-publisher on topic 'chariot/devices/living-room'[0m
+[36m[DRIVER Matter] Temperature change notification received: 1983[0m
+
+[34m[PIPELINE] New raw reading received from chariot-temp-sensor [MATTER]: 1983[0m
+[32m[DEVICES MAPPING] Mapped data: { deviceId: "chariot-temp-sensor", type: "temperature", value: 19.83 celsius }[0m
+[32m[DATA ACCESS] [ALLOW] Data type 'temperature' allowed for device chariot-temp-sensor.[0m
+[36m[ANONYMISATION] [1/3 TEMPORAL] device='chariot-temp-sensor' raw=19.830 → smoothed=19.838 (window 5/5)[0m
+[32m[ANONYMISATION] [2/3 K-ANONYMITY] Group 'living-room': 1/1 active devices ✓ — group mean=19.838[0m
+[32m[ANONYMISATION] [3/3 GAUSSIAN] Group 'living-room': mean=19.838, noise=0.0775 → final=19.916 celsius[0m
+[32m[DATA ENCRYPTION] Virtual profile encrypted. IV: b215634f..., Tag: 656422a9...[0m
+[35m[PIPELINE] [SUCCESS] Anonymised group profile published for group 'living-room' (1 device(s)).[0m
+[32m[MQTT PUBLISHER] Message published on 'chariot/devices/living-room' (size: 363 chars).[0m
+[36m[EMBEDDED BROKER] Message published by chariot-gateway-publisher on topic 'chariot/devices/living-room'[0m
+[36m[DRIVER Matter] Temperature change notification received: 1968[0m
+
+[34m[PIPELINE] New raw reading received from chariot-temp-sensor [MATTER]: 1968[0m
+[32m[DEVICES MAPPING] Mapped data: { deviceId: "chariot-temp-sensor", type: "temperature", value: 19.68 celsius }[0m
+[32m[DATA ACCESS] [ALLOW] Data type 'temperature' allowed for device chariot-temp-sensor.[0m
+[36m[ANONYMISATION] [1/3 TEMPORAL] device='chariot-temp-sensor' raw=19.680 → smoothed=19.796 (window 5/5)[0m
+[32m[ANONYMISATION] [2/3 K-ANONYMITY] Group 'living-room': 1/1 active devices ✓ — group mean=19.796[0m
+[32m[ANONYMISATION] [3/3 GAUSSIAN] Group 'living-room': mean=19.796, noise=0.2010 → final=19.997 celsius[0m
+[32m[DATA ENCRYPTION] Virtual profile encrypted. IV: e67faedd..., Tag: dab07000...[0m
+[35m[PIPELINE] [SUCCESS] Anonymised group profile published for group 'living-room' (1 device(s)).[0m
+[32m[MQTT PUBLISHER] Message published on 'chariot/devices/living-room' (size: 363 chars).[0m
+[36m[EMBEDDED BROKER] Message published by chariot-gateway-publisher on topic 'chariot/devices/living-room'[0m
+[36m[DRIVER Matter] Temperature change notification received: 1993[0m
+
+[34m[PIPELINE] New raw reading received from chariot-temp-sensor [MATTER]: 1993[0m
+[32m[DEVICES MAPPING] Mapped data: { deviceId: "chariot-temp-sensor", type: "temperature", value: 19.93 celsius }[0m
+[32m[DATA ACCESS] [ALLOW] Data type 'temperature' allowed for device chariot-temp-sensor.[0m
+[36m[ANONYMISATION] [1/3 TEMPORAL] device='chariot-temp-sensor' raw=19.930 → smoothed=19.798 (window 5/5)[0m
+[32m[ANONYMISATION] [2/3 K-ANONYMITY] Group 'living-room': 1/1 active devices ✓ — group mean=19.798[0m
+[32m[ANONYMISATION] [3/3 GAUSSIAN] Group 'living-room': mean=19.798, noise=-0.1403 → final=19.658 celsius[0m
+[32m[DATA ENCRYPTION] Virtual profile encrypted. IV: 3f69052c..., Tag: 0d8c33ba...[0m
+[35m[PIPELINE] [SUCCESS] Anonymised group profile published for group 'living-room' (1 device(s)).[0m
+[32m[MQTT PUBLISHER] Message published on 'chariot/devices/living-room' (size: 363 chars).[0m
+[36m[EMBEDDED BROKER] Message published by chariot-gateway-publisher on topic 'chariot/devices/living-room'[0m
+[36m[DRIVER Matter] Temperature change notification received: 1971[0m
+
+[34m[PIPELINE] New raw reading received from chariot-temp-sensor [MATTER]: 1971[0m
+[32m[DEVICES MAPPING] Mapped data: { deviceId: "chariot-temp-sensor", type: "temperature", value: 19.71 celsius }[0m
+[32m[DATA ACCESS] [ALLOW] Data type 'temperature' allowed for device chariot-temp-sensor.[0m
+[36m[ANONYMISATION] [1/3 TEMPORAL] device='chariot-temp-sensor' raw=19.710 → smoothed=19.786 (window 5/5)[0m
+[32m[ANONYMISATION] [2/3 K-ANONYMITY] Group 'living-room': 1/1 active devices ✓ — group mean=19.786[0m
+[32m[ANONYMISATION] [3/3 GAUSSIAN] Group 'living-room': mean=19.786, noise=-0.0929 → final=19.693 celsius[0m
+[32m[DATA ENCRYPTION] Virtual profile encrypted. IV: d76d7bd2..., Tag: f02eeb10...[0m
+[35m[PIPELINE] [SUCCESS] Anonymised group profile published for group 'living-room' (1 device(s)).[0m
+[32m[MQTT PUBLISHER] Message published on 'chariot/devices/living-room' (size: 363 chars).[0m
+[36m[EMBEDDED BROKER] Message published by chariot-gateway-publisher on topic 'chariot/devices/living-room'[0m
+[36m[DRIVER Matter] Temperature change notification received: 1956[0m
+
+[34m[PIPELINE] New raw reading received from chariot-temp-sensor [MATTER]: 1956[0m
+[32m[DEVICES MAPPING] Mapped data: { deviceId: "chariot-temp-sensor", type: "temperature", value: 19.56 celsius }[0m
+[32m[DATA ACCESS] [ALLOW] Data type 'temperature' allowed for device chariot-temp-sensor.[0m
+[36m[ANONYMISATION] [1/3 TEMPORAL] device='chariot-temp-sensor' raw=19.560 → smoothed=19.742 (window 5/5)[0m
+[32m[ANONYMISATION] [2/3 K-ANONYMITY] Group 'living-room': 1/1 active devices ✓ — group mean=19.742[0m
+[32m[ANONYMISATION] [3/3 GAUSSIAN] Group 'living-room': mean=19.742, noise=0.0358 → final=19.778 celsius[0m
+[32m[DATA ENCRYPTION] Virtual profile encrypted. IV: 4d58c8c9..., Tag: c29a8ae0...[0m
+[35m[PIPELINE] [SUCCESS] Anonymised group profile published for group 'living-room' (1 device(s)).[0m
+[32m[MQTT PUBLISHER] Message published on 'chariot/devices/living-room' (size: 363 chars).[0m
+[36m[EMBEDDED BROKER] Message published by chariot-gateway-publisher on topic 'chariot/devices/living-room'[0m
+[36m[DRIVER Matter] Temperature change notification received: 1940[0m
+
+[34m[PIPELINE] New raw reading received from chariot-temp-sensor [MATTER]: 1940[0m
+[32m[DEVICES MAPPING] Mapped data: { deviceId: "chariot-temp-sensor", type: "temperature", value: 19.4 celsius }[0m
+[32m[DATA ACCESS] [ALLOW] Data type 'temperature' allowed for device chariot-temp-sensor.[0m
+[36m[ANONYMISATION] [1/3 TEMPORAL] device='chariot-temp-sensor' raw=19.400 → smoothed=19.656 (window 5/5)[0m
+[32m[ANONYMISATION] [2/3 K-ANONYMITY] Group 'living-room': 1/1 active devices ✓ — group mean=19.656[0m
+[32m[ANONYMISATION] [3/3 GAUSSIAN] Group 'living-room': mean=19.656, noise=0.0990 → final=19.755 celsius[0m
+[32m[DATA ENCRYPTION] Virtual profile encrypted. IV: ed7132c7..., Tag: d16f7055...[0m
+[35m[PIPELINE] [SUCCESS] Anonymised group profile published for group 'living-room' (1 device(s)).[0m
+[32m[MQTT PUBLISHER] Message published on 'chariot/devices/living-room' (size: 363 chars).[0m
+[36m[EMBEDDED BROKER] Message published by chariot-gateway-publisher on topic 'chariot/devices/living-room'[0m
+[36m[DRIVER Matter] Temperature change notification received: 1934[0m
+
+[34m[PIPELINE] New raw reading received from chariot-temp-sensor [MATTER]: 1934[0m
+[32m[DEVICES MAPPING] Mapped data: { deviceId: "chariot-temp-sensor", type: "temperature", value: 19.34 celsius }[0m
+[32m[DATA ACCESS] [ALLOW] Data type 'temperature' allowed for device chariot-temp-sensor.[0m
+[36m[ANONYMISATION] [1/3 TEMPORAL] device='chariot-temp-sensor' raw=19.340 → smoothed=19.588 (window 5/5)[0m
+[32m[ANONYMISATION] [2/3 K-ANONYMITY] Group 'living-room': 1/1 active devices ✓ — group mean=19.588[0m
+[32m[ANONYMISATION] [3/3 GAUSSIAN] Group 'living-room': mean=19.588, noise=-0.0172 → final=19.571 celsius[0m
+[32m[DATA ENCRYPTION] Virtual profile encrypted. IV: e1d6c398..., Tag: 821899a2...[0m
+[35m[PIPELINE] [SUCCESS] Anonymised group profile published for group 'living-room' (1 device(s)).[0m
+[32m[MQTT PUBLISHER] Message published on 'chariot/devices/living-room' (size: 363 chars).[0m
+[36m[EMBEDDED BROKER] Message published by chariot-gateway-publisher on topic 'chariot/devices/living-room'[0m
+[36m[DRIVER Matter] Temperature change notification received: 1913[0m
+
+[34m[PIPELINE] New raw reading received from chariot-temp-sensor [MATTER]: 1913[0m
+[32m[DEVICES MAPPING] Mapped data: { deviceId: "chariot-temp-sensor", type: "temperature", value: 19.13 celsius }[0m
+[32m[DATA ACCESS] [ALLOW] Data type 'temperature' allowed for device chariot-temp-sensor.[0m
+[36m[ANONYMISATION] [1/3 TEMPORAL] device='chariot-temp-sensor' raw=19.130 → smoothed=19.428 (window 5/5)[0m
+[32m[ANONYMISATION] [2/3 K-ANONYMITY] Group 'living-room': 1/1 active devices ✓ — group mean=19.428[0m
+[32m[ANONYMISATION] [3/3 GAUSSIAN] Group 'living-room': mean=19.428, noise=-0.0777 → final=19.35 celsius[0m
+[32m[DATA ENCRYPTION] Virtual profile encrypted. IV: 4df16670..., Tag: 42cf0677...[0m
+[35m[PIPELINE] [SUCCESS] Anonymised group profile published for group 'living-room' (1 device(s)).[0m
+[32m[MQTT PUBLISHER] Message published on 'chariot/devices/living-room' (size: 361 chars).[0m
+[36m[EMBEDDED BROKER] Message published by chariot-gateway-publisher on topic 'chariot/devices/living-room'[0m
+[36m[DRIVER Matter] Temperature change notification received: 1926[0m
+
+[34m[PIPELINE] New raw reading received from chariot-temp-sensor [MATTER]: 1926[0m
+[32m[DEVICES MAPPING] Mapped data: { deviceId: "chariot-temp-sensor", type: "temperature", value: 19.26 celsius }[0m
+[32m[DATA ACCESS] [ALLOW] Data type 'temperature' allowed for device chariot-temp-sensor.[0m
+[36m[ANONYMISATION] [1/3 TEMPORAL] device='chariot-temp-sensor' raw=19.260 → smoothed=19.338 (window 5/5)[0m
+[32m[ANONYMISATION] [2/3 K-ANONYMITY] Group 'living-room': 1/1 active devices ✓ — group mean=19.338[0m
+[32m[ANONYMISATION] [3/3 GAUSSIAN] Group 'living-room': mean=19.338, noise=0.0709 → final=19.409 celsius[0m
+[32m[DATA ENCRYPTION] Virtual profile encrypted. IV: 17f78b85..., Tag: a7f7bce6...[0m
+[35m[PIPELINE] [SUCCESS] Anonymised group profile published for group 'living-room' (1 device(s)).[0m
+[32m[MQTT PUBLISHER] Message published on 'chariot/devices/living-room' (size: 363 chars).[0m
+[36m[EMBEDDED BROKER] Message published by chariot-gateway-publisher on topic 'chariot/devices/living-room'[0m
+[36m[DRIVER Matter] Temperature change notification received: 1945[0m
+
+[34m[PIPELINE] New raw reading received from chariot-temp-sensor [MATTER]: 1945[0m
+[32m[DEVICES MAPPING] Mapped data: { deviceId: "chariot-temp-sensor", type: "temperature", value: 19.45 celsius }[0m
+[32m[DATA ACCESS] [ALLOW] Data type 'temperature' allowed for device chariot-temp-sensor.[0m
+[36m[ANONYMISATION] [1/3 TEMPORAL] device='chariot-temp-sensor' raw=19.450 → smoothed=19.316 (window 5/5)[0m
+[32m[ANONYMISATION] [2/3 K-ANONYMITY] Group 'living-room': 1/1 active devices ✓ — group mean=19.316[0m
+[32m[ANONYMISATION] [3/3 GAUSSIAN] Group 'living-room': mean=19.316, noise=-0.0095 → final=19.307 celsius[0m
+[32m[DATA ENCRYPTION] Virtual profile encrypted. IV: 3f203120..., Tag: c1aeec55...[0m
+[35m[PIPELINE] [SUCCESS] Anonymised group profile published for group 'living-room' (1 device(s)).[0m
+[32m[MQTT PUBLISHER] Message published on 'chariot/devices/living-room' (size: 363 chars).[0m
+[36m[EMBEDDED BROKER] Message published by chariot-gateway-publisher on topic 'chariot/devices/living-room'[0m
+[36m[DRIVER Matter] Temperature change notification received: 1966[0m
+
+[34m[PIPELINE] New raw reading received from chariot-temp-sensor [MATTER]: 1966[0m
+[32m[DEVICES MAPPING] Mapped data: { deviceId: "chariot-temp-sensor", type: "temperature", value: 19.66 celsius }[0m
+[32m[DATA ACCESS] [ALLOW] Data type 'temperature' allowed for device chariot-temp-sensor.[0m
+[36m[ANONYMISATION] [1/3 TEMPORAL] device='chariot-temp-sensor' raw=19.660 → smoothed=19.368 (window 5/5)[0m
+[32m[ANONYMISATION] [2/3 K-ANONYMITY] Group 'living-room': 1/1 active devices ✓ — group mean=19.368[0m
+[32m[ANONYMISATION] [3/3 GAUSSIAN] Group 'living-room': mean=19.368, noise=0.0789 → final=19.447 celsius[0m
+[32m[DATA ENCRYPTION] Virtual profile encrypted. IV: e986d248..., Tag: 46f18134...[0m
+[35m[PIPELINE] [SUCCESS] Anonymised group profile published for group 'living-room' (1 device(s)).[0m
+[32m[MQTT PUBLISHER] Message published on 'chariot/devices/living-room' (size: 363 chars).[0m
+[36m[EMBEDDED BROKER] Message published by chariot-gateway-publisher on topic 'chariot/devices/living-room'[0m
+[36m[DRIVER Matter] Temperature change notification received: 1948[0m
+
+[34m[PIPELINE] New raw reading received from chariot-temp-sensor [MATTER]: 1948[0m
+[32m[DEVICES MAPPING] Mapped data: { deviceId: "chariot-temp-sensor", type: "temperature", value: 19.48 celsius }[0m
+[32m[DATA ACCESS] [ALLOW] Data type 'temperature' allowed for device chariot-temp-sensor.[0m
+[36m[ANONYMISATION] [1/3 TEMPORAL] device='chariot-temp-sensor' raw=19.480 → smoothed=19.396 (window 5/5)[0m
+[32m[ANONYMISATION] [2/3 K-ANONYMITY] Group 'living-room': 1/1 active devices ✓ — group mean=19.396[0m
+[32m[ANONYMISATION] [3/3 GAUSSIAN] Group 'living-room': mean=19.396, noise=-0.0366 → final=19.359 celsius[0m
+[32m[DATA ENCRYPTION] Virtual profile encrypted. IV: 6e68ca2c..., Tag: 73918a57...[0m
+[35m[PIPELINE] [SUCCESS] Anonymised group profile published for group 'living-room' (1 device(s)).[0m
+[32m[MQTT PUBLISHER] Message published on 'chariot/devices/living-room' (size: 363 chars).[0m
+[36m[EMBEDDED BROKER] Message published by chariot-gateway-publisher on topic 'chariot/devices/living-room'[0m
+[36m[DRIVER Matter] Temperature change notification received: 1944[0m
+
+[34m[PIPELINE] New raw reading received from chariot-temp-sensor [MATTER]: 1944[0m
+[32m[DEVICES MAPPING] Mapped data: { deviceId: "chariot-temp-sensor", type: "temperature", value: 19.44 celsius }[0m
+[32m[DATA ACCESS] [ALLOW] Data type 'temperature' allowed for device chariot-temp-sensor.[0m
+[36m[ANONYMISATION] [1/3 TEMPORAL] device='chariot-temp-sensor' raw=19.440 → smoothed=19.458 (window 5/5)[0m
+[32m[ANONYMISATION] [2/3 K-ANONYMITY] Group 'living-room': 1/1 active devices ✓ — group mean=19.458[0m
+[32m[ANONYMISATION] [3/3 GAUSSIAN] Group 'living-room': mean=19.458, noise=-0.0503 → final=19.408 celsius[0m
+[32m[DATA ENCRYPTION] Virtual profile encrypted. IV: 4faba562..., Tag: c1e63b39...[0m
+[35m[PIPELINE] [SUCCESS] Anonymised group profile published for group 'living-room' (1 device(s)).[0m
+[32m[MQTT PUBLISHER] Message published on 'chariot/devices/living-room' (size: 363 chars).[0m
+[36m[EMBEDDED BROKER] Message published by chariot-gateway-publisher on topic 'chariot/devices/living-room'[0m
+[36m[DRIVER Matter] Temperature change notification received: 1924[0m
+
+[34m[PIPELINE] New raw reading received from chariot-temp-sensor [MATTER]: 1924[0m
+[32m[DEVICES MAPPING] Mapped data: { deviceId: "chariot-temp-sensor", type: "temperature", value: 19.24 celsius }[0m
+[32m[DATA ACCESS] [ALLOW] Data type 'temperature' allowed for device chariot-temp-sensor.[0m
+[36m[ANONYMISATION] [1/3 TEMPORAL] device='chariot-temp-sensor' raw=19.240 → smoothed=19.454 (window 5/5)[0m
+[32m[ANONYMISATION] [2/3 K-ANONYMITY] Group 'living-room': 1/1 active devices ✓ — group mean=19.454[0m
+[32m[ANONYMISATION] [3/3 GAUSSIAN] Group 'living-room': mean=19.454, noise=0.0576 → final=19.512 celsius[0m
+[32m[DATA ENCRYPTION] Virtual profile encrypted. IV: f22e8031..., Tag: 482ffcab...[0m
+[35m[PIPELINE] [SUCCESS] Anonymised group profile published for group 'living-room' (1 device(s)).[0m
+[32m[MQTT PUBLISHER] Message published on 'chariot/devices/living-room' (size: 363 chars).[0m
+[36m[EMBEDDED BROKER] Message published by chariot-gateway-publisher on topic 'chariot/devices/living-room'[0m
+[36m[DRIVER Matter] Temperature change notification received: 1920[0m
+
+[34m[PIPELINE] New raw reading received from chariot-temp-sensor [MATTER]: 1920[0m
+[32m[DEVICES MAPPING] Mapped data: { deviceId: "chariot-temp-sensor", type: "temperature", value: 19.2 celsius }[0m
+[32m[DATA ACCESS] [ALLOW] Data type 'temperature' allowed for device chariot-temp-sensor.[0m
+[36m[ANONYMISATION] [1/3 TEMPORAL] device='chariot-temp-sensor' raw=19.200 → smoothed=19.404 (window 5/5)[0m
+[32m[ANONYMISATION] [2/3 K-ANONYMITY] Group 'living-room': 1/1 active devices ✓ — group mean=19.404[0m
+[32m[ANONYMISATION] [3/3 GAUSSIAN] Group 'living-room': mean=19.404, noise=-0.0415 → final=19.362 celsius[0m
+[32m[DATA ENCRYPTION] Virtual profile encrypted. IV: 38c3961f..., Tag: 7928ed8b...[0m
+[35m[PIPELINE] [SUCCESS] Anonymised group profile published for group 'living-room' (1 device(s)).[0m
+[32m[MQTT PUBLISHER] Message published on 'chariot/devices/living-room' (size: 363 chars).[0m
+[36m[EMBEDDED BROKER] Message published by chariot-gateway-publisher on topic 'chariot/devices/living-room'[0m
+[36m[DRIVER Matter] Temperature change notification received: 1932[0m
+
+[34m[PIPELINE] New raw reading received from chariot-temp-sensor [MATTER]: 1932[0m
+[32m[DEVICES MAPPING] Mapped data: { deviceId: "chariot-temp-sensor", type: "temperature", value: 19.32 celsius }[0m
+[32m[DATA ACCESS] [ALLOW] Data type 'temperature' allowed for device chariot-temp-sensor.[0m
+[36m[ANONYMISATION] [1/3 TEMPORAL] device='chariot-temp-sensor' raw=19.320 → smoothed=19.336 (window 5/5)[0m
+[32m[ANONYMISATION] [2/3 K-ANONYMITY] Group 'living-room': 1/1 active devices ✓ — group mean=19.336[0m
+[32m[ANONYMISATION] [3/3 GAUSSIAN] Group 'living-room': mean=19.336, noise=-0.1750 → final=19.161 celsius[0m
+[32m[DATA ENCRYPTION] Virtual profile encrypted. IV: c0ded148..., Tag: c6c1ad94...[0m
+[35m[PIPELINE] [SUCCESS] Anonymised group profile published for group 'living-room' (1 device(s)).[0m
+[32m[MQTT PUBLISHER] Message published on 'chariot/devices/living-room' (size: 363 chars).[0m
+[36m[EMBEDDED BROKER] Message published by chariot-gateway-publisher on topic 'chariot/devices/living-room'[0m
+[36m[DRIVER Matter] Temperature change notification received: 1951[0m
+
+[34m[PIPELINE] New raw reading received from chariot-temp-sensor [MATTER]: 1951[0m
+[32m[DEVICES MAPPING] Mapped data: { deviceId: "chariot-temp-sensor", type: "temperature", value: 19.51 celsius }[0m
+[32m[DATA ACCESS] [ALLOW] Data type 'temperature' allowed for device chariot-temp-sensor.[0m
+[36m[ANONYMISATION] [1/3 TEMPORAL] device='chariot-temp-sensor' raw=19.510 → smoothed=19.342 (window 5/5)[0m
+[32m[ANONYMISATION] [2/3 K-ANONYMITY] Group 'living-room': 1/1 active devices ✓ — group mean=19.342[0m
+[32m[ANONYMISATION] [3/3 GAUSSIAN] Group 'living-room': mean=19.342, noise=0.0993 → final=19.441 celsius[0m
+[32m[DATA ENCRYPTION] Virtual profile encrypted. IV: 362cc749..., Tag: ce975880...[0m
+[35m[PIPELINE] [SUCCESS] Anonymised group profile published for group 'living-room' (1 device(s)).[0m
+[32m[MQTT PUBLISHER] Message published on 'chariot/devices/living-room' (size: 363 chars).[0m
+[36m[EMBEDDED BROKER] Message published by chariot-gateway-publisher on topic 'chariot/devices/living-room'[0m
+[36m[DRIVER Matter] Temperature change notification received: 1949[0m
+
+[34m[PIPELINE] New raw reading received from chariot-temp-sensor [MATTER]: 1949[0m
+[32m[DEVICES MAPPING] Mapped data: { deviceId: "chariot-temp-sensor", type: "temperature", value: 19.49 celsius }[0m
+[32m[DATA ACCESS] [ALLOW] Data type 'temperature' allowed for device chariot-temp-sensor.[0m
+[36m[ANONYMISATION] [1/3 TEMPORAL] device='chariot-temp-sensor' raw=19.490 → smoothed=19.352 (window 5/5)[0m
+[32m[ANONYMISATION] [2/3 K-ANONYMITY] Group 'living-room': 1/1 active devices ✓ — group mean=19.352[0m
+[32m[ANONYMISATION] [3/3 GAUSSIAN] Group 'living-room': mean=19.352, noise=0.0838 → final=19.436 celsius[0m
+[32m[DATA ENCRYPTION] Virtual profile encrypted. IV: b1b6bcdb..., Tag: 37416c2e...[0m
+[35m[PIPELINE] [SUCCESS] Anonymised group profile published for group 'living-room' (1 device(s)).[0m
+[32m[MQTT PUBLISHER] Message published on 'chariot/devices/living-room' (size: 363 chars).[0m
+[36m[EMBEDDED BROKER] Message published by chariot-gateway-publisher on topic 'chariot/devices/living-room'[0m
+[36m[DRIVER Matter] Temperature change notification received: 1954[0m
+
+[34m[PIPELINE] New raw reading received from chariot-temp-sensor [MATTER]: 1954[0m
+[32m[DEVICES MAPPING] Mapped data: { deviceId: "chariot-temp-sensor", type: "temperature", value: 19.54 celsius }[0m
+[32m[DATA ACCESS] [ALLOW] Data type 'temperature' allowed for device chariot-temp-sensor.[0m
+[36m[ANONYMISATION] [1/3 TEMPORAL] device='chariot-temp-sensor' raw=19.540 → smoothed=19.412 (window 5/5)[0m
+[32m[ANONYMISATION] [2/3 K-ANONYMITY] Group 'living-room': 1/1 active devices ✓ — group mean=19.412[0m
+[32m[ANONYMISATION] [3/3 GAUSSIAN] Group 'living-room': mean=19.412, noise=-0.0771 → final=19.335 celsius[0m
+[32m[DATA ENCRYPTION] Virtual profile encrypted. IV: c62b8092..., Tag: 11fa305f...[0m
+[35m[PIPELINE] [SUCCESS] Anonymised group profile published for group 'living-room' (1 device(s)).[0m
+[32m[MQTT PUBLISHER] Message published on 'chariot/devices/living-room' (size: 363 chars).[0m
+[36m[EMBEDDED BROKER] Message published by chariot-gateway-publisher on topic 'chariot/devices/living-room'[0m
+[36m[DRIVER Matter] Temperature change notification received: 1961[0m
+
+[34m[PIPELINE] New raw reading received from chariot-temp-sensor [MATTER]: 1961[0m
+[32m[DEVICES MAPPING] Mapped data: { deviceId: "chariot-temp-sensor", type: "temperature", value: 19.61 celsius }[0m
+[32m[DATA ACCESS] [ALLOW] Data type 'temperature' allowed for device chariot-temp-sensor.[0m
+[36m[ANONYMISATION] [1/3 TEMPORAL] device='chariot-temp-sensor' raw=19.610 → smoothed=19.494 (window 5/5)[0m
+[32m[ANONYMISATION] [2/3 K-ANONYMITY] Group 'living-room': 1/1 active devices ✓ — group mean=19.494[0m
+[32m[ANONYMISATION] [3/3 GAUSSIAN] Group 'living-room': mean=19.494, noise=-0.0474 → final=19.447 celsius[0m
+[32m[DATA ENCRYPTION] Virtual profile encrypted. IV: 782d86c9..., Tag: 0a547d30...[0m
+[35m[PIPELINE] [SUCCESS] Anonymised group profile published for group 'living-room' (1 device(s)).[0m
+[32m[MQTT PUBLISHER] Message published on 'chariot/devices/living-room' (size: 363 chars).[0m
+[36m[EMBEDDED BROKER] Message published by chariot-gateway-publisher on topic 'chariot/devices/living-room'[0m
+[35m[ANONYMISATION] Config updated dynamically — window=5, K=3, σ=0.5[0m
+[36m[DRIVER Matter] Temperature change notification received: 1945[0m
+
+[34m[PIPELINE] New raw reading received from chariot-temp-sensor [MATTER]: 1945[0m
+[32m[DEVICES MAPPING] Mapped data: { deviceId: "chariot-temp-sensor", type: "temperature", value: 19.45 celsius }[0m
+[32m[DATA ACCESS] [ALLOW] Data type 'temperature' allowed for device chariot-temp-sensor.[0m
+[36m[ANONYMISATION] [1/3 TEMPORAL] device='chariot-temp-sensor' raw=19.450 → smoothed=19.520 (window 5/5)[0m
+[32m[ANONYMISATION] [2/3 K-ANONYMITY] Group 'living-room': 1/1 active devices ✓ — group mean=19.520[0m
+[32m[ANONYMISATION] [3/3 GAUSSIAN] Group 'living-room': mean=19.520, noise=0.3968 → final=19.917 celsius[0m
+[32m[DATA ENCRYPTION] Virtual profile encrypted. IV: c1ff04fc..., Tag: e5b73e8d...[0m
+[35m[PIPELINE] [SUCCESS] Anonymised group profile published for group 'living-room' (1 device(s)).[0m
+[32m[MQTT PUBLISHER] Message published on 'chariot/devices/living-room' (size: 363 chars).[0m
+[36m[EMBEDDED BROKER] Message published by chariot-gateway-publisher on topic 'chariot/devices/living-room'[0m
+[36m[DRIVER Matter] Temperature change notification received: 1965[0m
+
+[34m[PIPELINE] New raw reading received from chariot-temp-sensor [MATTER]: 1965[0m
+[32m[DEVICES MAPPING] Mapped data: { deviceId: "chariot-temp-sensor", type: "temperature", value: 19.65 celsius }[0m
+[32m[DATA ACCESS] [ALLOW] Data type 'temperature' allowed for device chariot-temp-sensor.[0m
+[36m[ANONYMISATION] [1/3 TEMPORAL] device='chariot-temp-sensor' raw=19.650 → smoothed=19.548 (window 5/5)[0m
+[32m[ANONYMISATION] [2/3 K-ANONYMITY] Group 'living-room': 1/1 active devices ✓ — group mean=19.548[0m
+[32m[ANONYMISATION] [3/3 GAUSSIAN] Group 'living-room': mean=19.548, noise=-0.2635 → final=19.284 celsius[0m
+[32m[DATA ENCRYPTION] Virtual profile encrypted. IV: 582d52dc..., Tag: 0097e929...[0m
+[35m[PIPELINE] [SUCCESS] Anonymised group profile published for group 'living-room' (1 device(s)).[0m
+[32m[MQTT PUBLISHER] Message published on 'chariot/devices/living-room' (size: 363 chars).[0m
+[36m[EMBEDDED BROKER] Message published by chariot-gateway-publisher on topic 'chariot/devices/living-room'[0m
+[36m[DRIVER Matter] Temperature change notification received: 1949[0m
+
+[34m[PIPELINE] New raw reading received from chariot-temp-sensor [MATTER]: 1949[0m
+[32m[DEVICES MAPPING] Mapped data: { deviceId: "chariot-temp-sensor", type: "temperature", value: 19.49 celsius }[0m
+[32m[DATA ACCESS] [ALLOW] Data type 'temperature' allowed for device chariot-temp-sensor.[0m
+[36m[ANONYMISATION] [1/3 TEMPORAL] device='chariot-temp-sensor' raw=19.490 → smoothed=19.548 (window 5/5)[0m
+[32m[ANONYMISATION] [2/3 K-ANONYMITY] Group 'living-room': 1/1 active devices ✓ — group mean=19.548[0m
+[32m[ANONYMISATION] [3/3 GAUSSIAN] Group 'living-room': mean=19.548, noise=-0.3196 → final=19.228 celsius[0m
+[32m[DATA ENCRYPTION] Virtual profile encrypted. IV: 525e5080..., Tag: d61558f0...[0m
+[35m[PIPELINE] [SUCCESS] Anonymised group profile published for group 'living-room' (1 device(s)).[0m
+[32m[MQTT PUBLISHER] Message published on 'chariot/devices/living-room' (size: 363 chars).[0m
+[36m[EMBEDDED BROKER] Message published by chariot-gateway-publisher on topic 'chariot/devices/living-room'[0m
+[36m[DRIVER Matter] Temperature change notification received: 1946[0m
+
+[34m[PIPELINE] New raw reading received from chariot-temp-sensor [MATTER]: 1946[0m
+[32m[DEVICES MAPPING] Mapped data: { deviceId: "chariot-temp-sensor", type: "temperature", value: 19.46 celsius }[0m
+[32m[DATA ACCESS] [ALLOW] Data type 'temperature' allowed for device chariot-temp-sensor.[0m
+[36m[ANONYMISATION] [1/3 TEMPORAL] device='chariot-temp-sensor' raw=19.460 → smoothed=19.532 (window 5/5)[0m
+[32m[ANONYMISATION] [2/3 K-ANONYMITY] Group 'living-room': 1/1 active devices ✓ — group mean=19.532[0m
+[32m[ANONYMISATION] [3/3 GAUSSIAN] Group 'living-room': mean=19.532, noise=-0.1995 → final=19.333 celsius[0m
+[32m[DATA ENCRYPTION] Virtual profile encrypted. IV: f6890b42..., Tag: 6d53ea67...[0m
+[35m[PIPELINE] [SUCCESS] Anonymised group profile published for group 'living-room' (1 device(s)).[0m
+[32m[MQTT PUBLISHER] Message published on 'chariot/devices/living-room' (size: 363 chars).[0m
+[36m[EMBEDDED BROKER] Message published by chariot-gateway-publisher on topic 'chariot/devices/living-room'[0m
+[36m[DRIVER Matter] Temperature change notification received: 1965[0m
+
+[34m[PIPELINE] New raw reading received from chariot-temp-sensor [MATTER]: 1965[0m
+[32m[DEVICES MAPPING] Mapped data: { deviceId: "chariot-temp-sensor", type: "temperature", value: 19.65 celsius }[0m
+[32m[DATA ACCESS] [ALLOW] Data type 'temperature' allowed for device chariot-temp-sensor.[0m
+[36m[ANONYMISATION] [1/3 TEMPORAL] device='chariot-temp-sensor' raw=19.650 → smoothed=19.540 (window 5/5)[0m
+[32m[ANONYMISATION] [2/3 K-ANONYMITY] Group 'living-room': 1/1 active devices ✓ — group mean=19.540[0m
+[32m[ANONYMISATION] [3/3 GAUSSIAN] Group 'living-room': mean=19.540, noise=-0.9810 → final=18.559 celsius[0m
+[32m[DATA ENCRYPTION] Virtual profile encrypted. IV: 14d63aa1..., Tag: 8a8160f8...[0m
+[35m[PIPELINE] [SUCCESS] Anonymised group profile published for group 'living-room' (1 device(s)).[0m
+[32m[MQTT PUBLISHER] Message published on 'chariot/devices/living-room' (size: 363 chars).[0m
+[36m[EMBEDDED BROKER] Message published by chariot-gateway-publisher on topic 'chariot/devices/living-room'[0m
+[36m[DRIVER Matter] Temperature change notification received: 1984[0m
+
+[34m[PIPELINE] New raw reading received from chariot-temp-sensor [MATTER]: 1984[0m
+[32m[DEVICES MAPPING] Mapped data: { deviceId: "chariot-temp-sensor", type: "temperature", value: 19.84 celsius }[0m
+[32m[DATA ACCESS] [ALLOW] Data type 'temperature' allowed for device chariot-temp-sensor.[0m
+[36m[ANONYMISATION] [1/3 TEMPORAL] device='chariot-temp-sensor' raw=19.840 → smoothed=19.618 (window 5/5)[0m
+[32m[ANONYMISATION] [2/3 K-ANONYMITY] Group 'living-room': 1/1 active devices ✓ — group mean=19.618[0m
+[32m[ANONYMISATION] [3/3 GAUSSIAN] Group 'living-room': mean=19.618, noise=-0.1765 → final=19.441 celsius[0m
+[32m[DATA ENCRYPTION] Virtual profile encrypted. IV: d104f3d1..., Tag: 6a410c72...[0m
+[35m[PIPELINE] [SUCCESS] Anonymised group profile published for group 'living-room' (1 device(s)).[0m
+[32m[MQTT PUBLISHER] Message published on 'chariot/devices/living-room' (size: 363 chars).[0m
+[36m[EMBEDDED BROKER] Message published by chariot-gateway-publisher on topic 'chariot/devices/living-room'[0m
+[36m[DRIVER Matter] Temperature change notification received: 1979[0m
+
+[34m[PIPELINE] New raw reading received from chariot-temp-sensor [MATTER]: 1979[0m
+[32m[DEVICES MAPPING] Mapped data: { deviceId: "chariot-temp-sensor", type: "temperature", value: 19.79 celsius }[0m
+[32m[DATA ACCESS] [ALLOW] Data type 'temperature' allowed for device chariot-temp-sensor.[0m
+[36m[ANONYMISATION] [1/3 TEMPORAL] device='chariot-temp-sensor' raw=19.790 → smoothed=19.646 (window 5/5)[0m
+[32m[ANONYMISATION] [2/3 K-ANONYMITY] Group 'living-room': 1/1 active devices ✓ — group mean=19.646[0m
+[32m[ANONYMISATION] [3/3 GAUSSIAN] Group 'living-room': mean=19.646, noise=-0.1215 → final=19.524 celsius[0m
+[32m[DATA ENCRYPTION] Virtual profile encrypted. IV: 4644ea3e..., Tag: c8d5ac9b...[0m
+[35m[PIPELINE] [SUCCESS] Anonymised group profile published for group 'living-room' (1 device(s)).[0m
+[32m[MQTT PUBLISHER] Message published on 'chariot/devices/living-room' (size: 363 chars).[0m
+[36m[EMBEDDED BROKER] Message published by chariot-gateway-publisher on topic 'chariot/devices/living-room'[0m
+[36m[DRIVER Matter] Temperature change notification received: 1988[0m
+
+[34m[PIPELINE] New raw reading received from chariot-temp-sensor [MATTER]: 1988[0m
+[32m[DEVICES MAPPING] Mapped data: { deviceId: "chariot-temp-sensor", type: "temperature", value: 19.88 celsius }[0m
+[32m[DATA ACCESS] [ALLOW] Data type 'temperature' allowed for device chariot-temp-sensor.[0m
+[36m[ANONYMISATION] [1/3 TEMPORAL] device='chariot-temp-sensor' raw=19.880 → smoothed=19.724 (window 5/5)[0m
+[32m[ANONYMISATION] [2/3 K-ANONYMITY] Group 'living-room': 1/1 active devices ✓ — group mean=19.724[0m
+[32m[ANONYMISATION] [3/3 GAUSSIAN] Group 'living-room': mean=19.724, noise=-0.4510 → final=19.273 celsius[0m
+[32m[DATA ENCRYPTION] Virtual profile encrypted. IV: 8d037ded..., Tag: 96091720...[0m
+[35m[PIPELINE] [SUCCESS] Anonymised group profile published for group 'living-room' (1 device(s)).[0m
+[32m[MQTT PUBLISHER] Message published on 'chariot/devices/living-room' (size: 363 chars).[0m
+[36m[EMBEDDED BROKER] Message published by chariot-gateway-publisher on topic 'chariot/devices/living-room'[0m
+[36m[DRIVER Matter] Temperature change notification received: 1997[0m
+
+[34m[PIPELINE] New raw reading received from chariot-temp-sensor [MATTER]: 1997[0m
+[32m[DEVICES MAPPING] Mapped data: { deviceId: "chariot-temp-sensor", type: "temperature", value: 19.97 celsius }[0m
+[32m[DATA ACCESS] [ALLOW] Data type 'temperature' allowed for device chariot-temp-sensor.[0m
+[36m[ANONYMISATION] [1/3 TEMPORAL] device='chariot-temp-sensor' raw=19.970 → smoothed=19.826 (window 5/5)[0m
+[32m[ANONYMISATION] [2/3 K-ANONYMITY] Group 'living-room': 1/1 active devices ✓ — group mean=19.826[0m
+[32m[ANONYMISATION] [3/3 GAUSSIAN] Group 'living-room': mean=19.826, noise=0.1498 → final=19.976 celsius[0m
+[32m[DATA ENCRYPTION] Virtual profile encrypted. IV: ec50f67c..., Tag: 38a4e37c...[0m
+[35m[PIPELINE] [SUCCESS] Anonymised group profile published for group 'living-room' (1 device(s)).[0m
+[32m[MQTT PUBLISHER] Message published on 'chariot/devices/living-room' (size: 363 chars).[0m
+[36m[EMBEDDED BROKER] Message published by chariot-gateway-publisher on topic 'chariot/devices/living-room'[0m
+[36m[DRIVER Matter] Temperature change notification received: 2008[0m
+
+[34m[PIPELINE] New raw reading received from chariot-temp-sensor [MATTER]: 2008[0m
+[32m[DEVICES MAPPING] Mapped data: { deviceId: "chariot-temp-sensor", type: "temperature", value: 20.08 celsius }[0m
+[32m[DATA ACCESS] [ALLOW] Data type 'temperature' allowed for device chariot-temp-sensor.[0m
+[36m[ANONYMISATION] [1/3 TEMPORAL] device='chariot-temp-sensor' raw=20.080 → smoothed=19.912 (window 5/5)[0m
+[32m[ANONYMISATION] [2/3 K-ANONYMITY] Group 'living-room': 1/1 active devices ✓ — group mean=19.912[0m
+[32m[ANONYMISATION] [3/3 GAUSSIAN] Group 'living-room': mean=19.912, noise=-0.2944 → final=19.618 celsius[0m
+[32m[DATA ENCRYPTION] Virtual profile encrypted. IV: 3e784615..., Tag: b6a6cd26...[0m
+[35m[PIPELINE] [SUCCESS] Anonymised group profile published for group 'living-room' (1 device(s)).[0m
+[32m[MQTT PUBLISHER] Message published on 'chariot/devices/living-room' (size: 363 chars).[0m
+[36m[EMBEDDED BROKER] Message published by chariot-gateway-publisher on topic 'chariot/devices/living-room'[0m
+[36m[DRIVER Matter] Temperature change notification received: 1984[0m
+
+[34m[PIPELINE] New raw reading received from chariot-temp-sensor [MATTER]: 1984[0m
+[32m[DEVICES MAPPING] Mapped data: { deviceId: "chariot-temp-sensor", type: "temperature", value: 19.84 celsius }[0m
+[32m[DATA ACCESS] [ALLOW] Data type 'temperature' allowed for device chariot-temp-sensor.[0m
+[36m[ANONYMISATION] [1/3 TEMPORAL] device='chariot-temp-sensor' raw=19.840 → smoothed=19.912 (window 5/5)[0m
+[32m[ANONYMISATION] [2/3 K-ANONYMITY] Group 'living-room': 1/1 active devices ✓ — group mean=19.912[0m
+[32m[ANONYMISATION] [3/3 GAUSSIAN] Group 'living-room': mean=19.912, noise=-0.4658 → final=19.446 celsius[0m
+[32m[DATA ENCRYPTION] Virtual profile encrypted. IV: 94f8e231..., Tag: c0c99c1d...[0m
+[35m[PIPELINE] [SUCCESS] Anonymised group profile published for group 'living-room' (1 device(s)).[0m
+[32m[MQTT PUBLISHER] Message published on 'chariot/devices/living-room' (size: 363 chars).[0m
+[36m[EMBEDDED BROKER] Message published by chariot-gateway-publisher on topic 'chariot/devices/living-room'[0m
+[36m[DRIVER Matter] Temperature change notification received: 1993[0m
+
+[34m[PIPELINE] New raw reading received from chariot-temp-sensor [MATTER]: 1993[0m
+[32m[DEVICES MAPPING] Mapped data: { deviceId: "chariot-temp-sensor", type: "temperature", value: 19.93 celsius }[0m
+[32m[DATA ACCESS] [ALLOW] Data type 'temperature' allowed for device chariot-temp-sensor.[0m
+[36m[ANONYMISATION] [1/3 TEMPORAL] device='chariot-temp-sensor' raw=19.930 → smoothed=19.940 (window 5/5)[0m
+[32m[ANONYMISATION] [2/3 K-ANONYMITY] Group 'living-room': 1/1 active devices ✓ — group mean=19.940[0m
+[32m[ANONYMISATION] [3/3 GAUSSIAN] Group 'living-room': mean=19.940, noise=0.3549 → final=20.295 celsius[0m
+[32m[DATA ENCRYPTION] Virtual profile encrypted. IV: 4ce6092e..., Tag: 5c130674...[0m
+[35m[PIPELINE] [SUCCESS] Anonymised group profile published for group 'living-room' (1 device(s)).[0m
+[32m[MQTT PUBLISHER] Message published on 'chariot/devices/living-room' (size: 363 chars).[0m
+[36m[EMBEDDED BROKER] Message published by chariot-gateway-publisher on topic 'chariot/devices/living-room'[0m
+[36m[DRIVER Matter] Temperature change notification received: 1987[0m
+
+[34m[PIPELINE] New raw reading received from chariot-temp-sensor [MATTER]: 1987[0m
+[32m[DEVICES MAPPING] Mapped data: { deviceId: "chariot-temp-sensor", type: "temperature", value: 19.87 celsius }[0m
+[32m[DATA ACCESS] [ALLOW] Data type 'temperature' allowed for device chariot-temp-sensor.[0m
+[36m[ANONYMISATION] [1/3 TEMPORAL] device='chariot-temp-sensor' raw=19.870 → smoothed=19.938 (window 5/5)[0m
+[32m[ANONYMISATION] [2/3 K-ANONYMITY] Group 'living-room': 1/1 active devices ✓ — group mean=19.938[0m
+[32m[ANONYMISATION] [3/3 GAUSSIAN] Group 'living-room': mean=19.938, noise=-0.2366 → final=19.701 celsius[0m
+[32m[DATA ENCRYPTION] Virtual profile encrypted. IV: e82d6082..., Tag: 684a4676...[0m
+[35m[PIPELINE] [SUCCESS] Anonymised group profile published for group 'living-room' (1 device(s)).[0m
+[32m[MQTT PUBLISHER] Message published on 'chariot/devices/living-room' (size: 363 chars).[0m
+[36m[EMBEDDED BROKER] Message published by chariot-gateway-publisher on topic 'chariot/devices/living-room'[0m
+[36m[DRIVER Matter] Temperature change notification received: 1990[0m
+
+[34m[PIPELINE] New raw reading received from chariot-temp-sensor [MATTER]: 1990[0m
+[32m[DEVICES MAPPING] Mapped data: { deviceId: "chariot-temp-sensor", type: "temperature", value: 19.9 celsius }[0m
+[32m[DATA ACCESS] [ALLOW] Data type 'temperature' allowed for device chariot-temp-sensor.[0m
+[36m[ANONYMISATION] [1/3 TEMPORAL] device='chariot-temp-sensor' raw=19.900 → smoothed=19.924 (window 5/5)[0m
+[32m[ANONYMISATION] [2/3 K-ANONYMITY] Group 'living-room': 1/1 active devices ✓ — group mean=19.924[0m
+[32m[ANONYMISATION] [3/3 GAUSSIAN] Group 'living-room': mean=19.924, noise=-0.4247 → final=19.499 celsius[0m
+[32m[DATA ENCRYPTION] Virtual profile encrypted. IV: b02ccfd8..., Tag: 8747ac5c...[0m
+[35m[PIPELINE] [SUCCESS] Anonymised group profile published for group 'living-room' (1 device(s)).[0m
+[32m[MQTT PUBLISHER] Message published on 'chariot/devices/living-room' (size: 363 chars).[0m
+[36m[EMBEDDED BROKER] Message published by chariot-gateway-publisher on topic 'chariot/devices/living-room'[0m
+[36m[DRIVER Matter] Temperature change notification received: 2001[0m
+
+[34m[PIPELINE] New raw reading received from chariot-temp-sensor [MATTER]: 2001[0m
+[32m[DEVICES MAPPING] Mapped data: { deviceId: "chariot-temp-sensor", type: "temperature", value: 20.01 celsius }[0m
+[32m[DATA ACCESS] [ALLOW] Data type 'temperature' allowed for device chariot-temp-sensor.[0m
+[36m[ANONYMISATION] [1/3 TEMPORAL] device='chariot-temp-sensor' raw=20.010 → smoothed=19.910 (window 5/5)[0m
+[32m[ANONYMISATION] [2/3 K-ANONYMITY] Group 'living-room': 1/1 active devices ✓ — group mean=19.910[0m
+[32m[ANONYMISATION] [3/3 GAUSSIAN] Group 'living-room': mean=19.910, noise=0.2912 → final=20.201 celsius[0m
+[32m[DATA ENCRYPTION] Virtual profile encrypted. IV: b8b7fbaf..., Tag: 6dd93412...[0m
+[35m[PIPELINE] [SUCCESS] Anonymised group profile published for group 'living-room' (1 device(s)).[0m
+[32m[MQTT PUBLISHER] Message published on 'chariot/devices/living-room' (size: 363 chars).[0m
+[36m[EMBEDDED BROKER] Message published by chariot-gateway-publisher on topic 'chariot/devices/living-room'[0m
+[35m[ANONYMISATION] Config updated dynamically — window=5, K=3, σ=0.5[0m
+[36m[DRIVER Matter] Temperature change notification received: 2010[0m
+
+[34m[PIPELINE] New raw reading received from chariot-temp-sensor [MATTER]: 2010[0m
+[32m[DEVICES MAPPING] Mapped data: { deviceId: "chariot-temp-sensor", type: "temperature", value: 20.1 celsius }[0m
+[32m[DATA ACCESS] [ALLOW] Data type 'temperature' allowed for device chariot-temp-sensor.[0m
+[36m[ANONYMISATION] [1/3 TEMPORAL] device='chariot-temp-sensor' raw=20.100 → smoothed=19.962 (window 5/5)[0m
+[32m[ANONYMISATION] [2/3 K-ANONYMITY] Group 'living-room': 1/1 active devices ✓ — group mean=19.962[0m
+[32m[ANONYMISATION] [3/3 GAUSSIAN] Group 'living-room': mean=19.962, noise=-0.2087 → final=19.753 celsius[0m
+[32m[DATA ENCRYPTION] Virtual profile encrypted. IV: 70a7f269..., Tag: 54e0363c...[0m
+[35m[PIPELINE] [SUCCESS] Anonymised group profile published for group 'living-room' (1 device(s)).[0m
+[32m[MQTT PUBLISHER] Message published on 'chariot/devices/living-room' (size: 363 chars).[0m
+[36m[EMBEDDED BROKER] Message published by chariot-gateway-publisher on topic 'chariot/devices/living-room'[0m
+[36m[DRIVER Matter] Temperature change notification received: 2034[0m
+
+[34m[PIPELINE] New raw reading received from chariot-temp-sensor [MATTER]: 2034[0m
+[32m[DEVICES MAPPING] Mapped data: { deviceId: "chariot-temp-sensor", type: "temperature", value: 20.34 celsius }[0m
+[32m[DATA ACCESS] [ALLOW] Data type 'temperature' allowed for device chariot-temp-sensor.[0m
+[36m[ANONYMISATION] [1/3 TEMPORAL] device='chariot-temp-sensor' raw=20.340 → smoothed=20.044 (window 5/5)[0m
+[32m[ANONYMISATION] [2/3 K-ANONYMITY] Group 'living-room': 1/1 active devices ✓ — group mean=20.044[0m
+[32m[ANONYMISATION] [3/3 GAUSSIAN] Group 'living-room': mean=20.044, noise=-0.1797 → final=19.864 celsius[0m
+[32m[DATA ENCRYPTION] Virtual profile encrypted. IV: 3e916934..., Tag: 76d8e7f1...[0m
+[35m[PIPELINE] [SUCCESS] Anonymised group profile published for group 'living-room' (1 device(s)).[0m
+[32m[MQTT PUBLISHER] Message published on 'chariot/devices/living-room' (size: 363 chars).[0m
+[36m[EMBEDDED BROKER] Message published by chariot-gateway-publisher on topic 'chariot/devices/living-room'[0m
+[36m[DRIVER Matter] Temperature change notification received: 2055[0m
+
+[34m[PIPELINE] New raw reading received from chariot-temp-sensor [MATTER]: 2055[0m
+[32m[DEVICES MAPPING] Mapped data: { deviceId: "chariot-temp-sensor", type: "temperature", value: 20.55 celsius }[0m
+[32m[DATA ACCESS] [ALLOW] Data type 'temperature' allowed for device chariot-temp-sensor.[0m
+[36m[ANONYMISATION] [1/3 TEMPORAL] device='chariot-temp-sensor' raw=20.550 → smoothed=20.180 (window 5/5)[0m
+[32m[ANONYMISATION] [2/3 K-ANONYMITY] Group 'living-room': 1/1 active devices ✓ — group mean=20.180[0m
+[32m[ANONYMISATION] [3/3 GAUSSIAN] Group 'living-room': mean=20.180, noise=0.0754 → final=20.255 celsius[0m
+[32m[DATA ENCRYPTION] Virtual profile encrypted. IV: 2e20d6d9..., Tag: feeb6896...[0m
+[35m[PIPELINE] [SUCCESS] Anonymised group profile published for group 'living-room' (1 device(s)).[0m
+[32m[MQTT PUBLISHER] Message published on 'chariot/devices/living-room' (size: 363 chars).[0m
+[36m[EMBEDDED BROKER] Message published by chariot-gateway-publisher on topic 'chariot/devices/living-room'[0m
+[36m[DRIVER Matter] Temperature change notification received: 2033[0m
+
+[34m[PIPELINE] New raw reading received from chariot-temp-sensor [MATTER]: 2033[0m
+[32m[DEVICES MAPPING] Mapped data: { deviceId: "chariot-temp-sensor", type: "temperature", value: 20.33 celsius }[0m
+[32m[DATA ACCESS] [ALLOW] Data type 'temperature' allowed for device chariot-temp-sensor.[0m
+[36m[ANONYMISATION] [1/3 TEMPORAL] device='chariot-temp-sensor' raw=20.330 → smoothed=20.266 (window 5/5)[0m
+[32m[ANONYMISATION] [2/3 K-ANONYMITY] Group 'living-room': 1/1 active devices ✓ — group mean=20.266[0m
+[32m[ANONYMISATION] [3/3 GAUSSIAN] Group 'living-room': mean=20.266, noise=-0.3031 → final=19.963 celsius[0m
+[32m[DATA ENCRYPTION] Virtual profile encrypted. IV: f60f485e..., Tag: 90db5188...[0m
+[35m[PIPELINE] [SUCCESS] Anonymised group profile published for group 'living-room' (1 device(s)).[0m
+[32m[MQTT PUBLISHER] Message published on 'chariot/devices/living-room' (size: 363 chars).[0m
+[36m[EMBEDDED BROKER] Message published by chariot-gateway-publisher on topic 'chariot/devices/living-room'[0m
+[36m[DRIVER Matter] Temperature change notification received: 2026[0m
+
+[34m[PIPELINE] New raw reading received from chariot-temp-sensor [MATTER]: 2026[0m
+[32m[DEVICES MAPPING] Mapped data: { deviceId: "chariot-temp-sensor", type: "temperature", value: 20.26 celsius }[0m
+[32m[DATA ACCESS] [ALLOW] Data type 'temperature' allowed for device chariot-temp-sensor.[0m
+[36m[ANONYMISATION] [1/3 TEMPORAL] device='chariot-temp-sensor' raw=20.260 → smoothed=20.316 (window 5/5)[0m
+[32m[ANONYMISATION] [2/3 K-ANONYMITY] Group 'living-room': 1/1 active devices ✓ — group mean=20.316[0m
+[32m[ANONYMISATION] [3/3 GAUSSIAN] Group 'living-room': mean=20.316, noise=0.1038 → final=20.42 celsius[0m
+[32m[DATA ENCRYPTION] Virtual profile encrypted. IV: 2fcc9755..., Tag: 602f9282...[0m
+[35m[PIPELINE] [SUCCESS] Anonymised group profile published for group 'living-room' (1 device(s)).[0m
+[32m[MQTT PUBLISHER] Message published on 'chariot/devices/living-room' (size: 361 chars).[0m
+[36m[EMBEDDED BROKER] Message published by chariot-gateway-publisher on topic 'chariot/devices/living-room'[0m
+[36m[DRIVER Matter] Temperature change notification received: 2050[0m
+
+[34m[PIPELINE] New raw reading received from chariot-temp-sensor [MATTER]: 2050[0m
+[32m[DEVICES MAPPING] Mapped data: { deviceId: "chariot-temp-sensor", type: "temperature", value: 20.5 celsius }[0m
+[32m[DATA ACCESS] [ALLOW] Data type 'temperature' allowed for device chariot-temp-sensor.[0m
+[36m[ANONYMISATION] [1/3 TEMPORAL] device='chariot-temp-sensor' raw=20.500 → smoothed=20.396 (window 5/5)[0m
+[32m[ANONYMISATION] [2/3 K-ANONYMITY] Group 'living-room': 1/1 active devices ✓ — group mean=20.396[0m
+[32m[ANONYMISATION] [3/3 GAUSSIAN] Group 'living-room': mean=20.396, noise=0.4456 → final=20.842 celsius[0m
+[32m[DATA ENCRYPTION] Virtual profile encrypted. IV: 695acffc..., Tag: 9d7585df...[0m
+[35m[PIPELINE] [SUCCESS] Anonymised group profile published for group 'living-room' (1 device(s)).[0m
+[32m[MQTT PUBLISHER] Message published on 'chariot/devices/living-room' (size: 363 chars).[0m
+[36m[EMBEDDED BROKER] Message published by chariot-gateway-publisher on topic 'chariot/devices/living-room'[0m
+[36m[DRIVER Matter] Temperature change notification received: 2065[0m
+
+[34m[PIPELINE] New raw reading received from chariot-temp-sensor [MATTER]: 2065[0m
+[32m[DEVICES MAPPING] Mapped data: { deviceId: "chariot-temp-sensor", type: "temperature", value: 20.65 celsius }[0m
+[32m[DATA ACCESS] [ALLOW] Data type 'temperature' allowed for device chariot-temp-sensor.[0m
+[36m[ANONYMISATION] [1/3 TEMPORAL] device='chariot-temp-sensor' raw=20.650 → smoothed=20.458 (window 5/5)[0m
+[32m[ANONYMISATION] [2/3 K-ANONYMITY] Group 'living-room': 1/1 active devices ✓ — group mean=20.458[0m
+[32m[ANONYMISATION] [3/3 GAUSSIAN] Group 'living-room': mean=20.458, noise=-0.0699 → final=20.388 celsius[0m
+[32m[DATA ENCRYPTION] Virtual profile encrypted. IV: e38668bf..., Tag: 7f077261...[0m
+[35m[PIPELINE] [SUCCESS] Anonymised group profile published for group 'living-room' (1 device(s)).[0m
+[32m[MQTT PUBLISHER] Message published on 'chariot/devices/living-room' (size: 363 chars).[0m
+[36m[EMBEDDED BROKER] Message published by chariot-gateway-publisher on topic 'chariot/devices/living-room'[0m
+[36m[DRIVER Matter] Temperature change notification received: 2046[0m
+
+[34m[PIPELINE] New raw reading received from chariot-temp-sensor [MATTER]: 2046[0m
+[32m[DEVICES MAPPING] Mapped data: { deviceId: "chariot-temp-sensor", type: "temperature", value: 20.46 celsius }[0m
+[32m[DATA ACCESS] [ALLOW] Data type 'temperature' allowed for device chariot-temp-sensor.[0m
+[36m[ANONYMISATION] [1/3 TEMPORAL] device='chariot-temp-sensor' raw=20.460 → smoothed=20.440 (window 5/5)[0m
+[32m[ANONYMISATION] [2/3 K-ANONYMITY] Group 'living-room': 1/1 active devices ✓ — group mean=20.440[0m
+[32m[ANONYMISATION] [3/3 GAUSSIAN] Group 'living-room': mean=20.440, noise=1.0000 → final=21.44 celsius[0m
+[32m[DATA ENCRYPTION] Virtual profile encrypted. IV: cbd47159..., Tag: 0f0834fb...[0m
+[35m[PIPELINE] [SUCCESS] Anonymised group profile published for group 'living-room' (1 device(s)).[0m
+[32m[MQTT PUBLISHER] Message published on 'chariot/devices/living-room' (size: 361 chars).[0m
+[36m[EMBEDDED BROKER] Message published by chariot-gateway-publisher on topic 'chariot/devices/living-room'[0m
+[36m[DRIVER Matter] Temperature change notification received: 2032[0m
+
+[34m[PIPELINE] New raw reading received from chariot-temp-sensor [MATTER]: 2032[0m
+[32m[DEVICES MAPPING] Mapped data: { deviceId: "chariot-temp-sensor", type: "temperature", value: 20.32 celsius }[0m
+[32m[DATA ACCESS] [ALLOW] Data type 'temperature' allowed for device chariot-temp-sensor.[0m
+[36m[ANONYMISATION] [1/3 TEMPORAL] device='chariot-temp-sensor' raw=20.320 → smoothed=20.438 (window 5/5)[0m
+[32m[ANONYMISATION] [2/3 K-ANONYMITY] Group 'living-room': 1/1 active devices ✓ — group mean=20.438[0m
+[32m[ANONYMISATION] [3/3 GAUSSIAN] Group 'living-room': mean=20.438, noise=0.7867 → final=21.225 celsius[0m
+[32m[DATA ENCRYPTION] Virtual profile encrypted. IV: 95836c00..., Tag: 92873717...[0m
+[35m[PIPELINE] [SUCCESS] Anonymised group profile published for group 'living-room' (1 device(s)).[0m
+[32m[MQTT PUBLISHER] Message published on 'chariot/devices/living-room' (size: 363 chars).[0m
+[36m[EMBEDDED BROKER] Message published by chariot-gateway-publisher on topic 'chariot/devices/living-room'[0m
+[36m[DRIVER Matter] Temperature change notification received: 2040[0m
+
+[34m[PIPELINE] New raw reading received from chariot-temp-sensor [MATTER]: 2040[0m
+[32m[DEVICES MAPPING] Mapped data: { deviceId: "chariot-temp-sensor", type: "temperature", value: 20.4 celsius }[0m
+[32m[DATA ACCESS] [ALLOW] Data type 'temperature' allowed for device chariot-temp-sensor.[0m
+[36m[ANONYMISATION] [1/3 TEMPORAL] device='chariot-temp-sensor' raw=20.400 → smoothed=20.466 (window 5/5)[0m
+[32m[ANONYMISATION] [2/3 K-ANONYMITY] Group 'living-room': 1/1 active devices ✓ — group mean=20.466[0m
+[32m[ANONYMISATION] [3/3 GAUSSIAN] Group 'living-room': mean=20.466, noise=0.4487 → final=20.915 celsius[0m
+[32m[DATA ENCRYPTION] Virtual profile encrypted. IV: d6151c72..., Tag: 3ac76114...[0m
+[35m[PIPELINE] [SUCCESS] Anonymised group profile published for group 'living-room' (1 device(s)).[0m
+[32m[MQTT PUBLISHER] Message published on 'chariot/devices/living-room' (size: 363 chars).[0m
+[36m[EMBEDDED BROKER] Message published by chariot-gateway-publisher on topic 'chariot/devices/living-room'[0m
+[36m[DRIVER Matter] Temperature change notification received: 2020[0m
+
+[34m[PIPELINE] New raw reading received from chariot-temp-sensor [MATTER]: 2020[0m
+[32m[DEVICES MAPPING] Mapped data: { deviceId: "chariot-temp-sensor", type: "temperature", value: 20.2 celsius }[0m
+[32m[DATA ACCESS] [ALLOW] Data type 'temperature' allowed for device chariot-temp-sensor.[0m
+[36m[ANONYMISATION] [1/3 TEMPORAL] device='chariot-temp-sensor' raw=20.200 → smoothed=20.406 (window 5/5)[0m
+[32m[ANONYMISATION] [2/3 K-ANONYMITY] Group 'living-room': 1/1 active devices ✓ — group mean=20.406[0m
+[32m[ANONYMISATION] [3/3 GAUSSIAN] Group 'living-room': mean=20.406, noise=-0.0916 → final=20.314 celsius[0m
+[32m[DATA ENCRYPTION] Virtual profile encrypted. IV: 7c13335c..., Tag: 670903b0...[0m
+[35m[PIPELINE] [SUCCESS] Anonymised group profile published for group 'living-room' (1 device(s)).[0m
+[32m[MQTT PUBLISHER] Message published on 'chariot/devices/living-room' (size: 363 chars).[0m
+[36m[EMBEDDED BROKER] Message published by chariot-gateway-publisher on topic 'chariot/devices/living-room'[0m
+[36m[DRIVER Matter] Temperature change notification received: 2011[0m
+
+[34m[PIPELINE] New raw reading received from chariot-temp-sensor [MATTER]: 2011[0m
+[32m[DEVICES MAPPING] Mapped data: { deviceId: "chariot-temp-sensor", type: "temperature", value: 20.11 celsius }[0m
+[32m[DATA ACCESS] [ALLOW] Data type 'temperature' allowed for device chariot-temp-sensor.[0m
+[36m[ANONYMISATION] [1/3 TEMPORAL] device='chariot-temp-sensor' raw=20.110 → smoothed=20.298 (window 5/5)[0m
+[32m[ANONYMISATION] [2/3 K-ANONYMITY] Group 'living-room': 1/1 active devices ✓ — group mean=20.298[0m
+[32m[ANONYMISATION] [3/3 GAUSSIAN] Group 'living-room': mean=20.298, noise=0.0851 → final=20.383 celsius[0m
+[32m[DATA ENCRYPTION] Virtual profile encrypted. IV: e4baf352..., Tag: 866a398d...[0m
+[35m[PIPELINE] [SUCCESS] Anonymised group profile published for group 'living-room' (1 device(s)).[0m
+[32m[MQTT PUBLISHER] Message published on 'chariot/devices/living-room' (size: 363 chars).[0m
+[36m[EMBEDDED BROKER] Message published by chariot-gateway-publisher on topic 'chariot/devices/living-room'[0m
+[36m[DRIVER Matter] Temperature change notification received: 2032[0m
+
+[34m[PIPELINE] New raw reading received from chariot-temp-sensor [MATTER]: 2032[0m
+[32m[DEVICES MAPPING] Mapped data: { deviceId: "chariot-temp-sensor", type: "temperature", value: 20.32 celsius }[0m
+[32m[DATA ACCESS] [ALLOW] Data type 'temperature' allowed for device chariot-temp-sensor.[0m
+[36m[ANONYMISATION] [1/3 TEMPORAL] device='chariot-temp-sensor' raw=20.320 → smoothed=20.270 (window 5/5)[0m
+[32m[ANONYMISATION] [2/3 K-ANONYMITY] Group 'living-room': 1/1 active devices ✓ — group mean=20.270[0m
+[32m[ANONYMISATION] [3/3 GAUSSIAN] Group 'living-room': mean=20.270, noise=0.5071 → final=20.777 celsius[0m
+[32m[DATA ENCRYPTION] Virtual profile encrypted. IV: e007f428..., Tag: b7f9eda9...[0m
+[35m[PIPELINE] [SUCCESS] Anonymised group profile published for group 'living-room' (1 device(s)).[0m
+[32m[MQTT PUBLISHER] Message published on 'chariot/devices/living-room' (size: 363 chars).[0m
+[36m[EMBEDDED BROKER] Message published by chariot-gateway-publisher on topic 'chariot/devices/living-room'[0m
+[36m[DRIVER Matter] Temperature change notification received: 2023[0m
+
+[34m[PIPELINE] New raw reading received from chariot-temp-sensor [MATTER]: 2023[0m
+[32m[DEVICES MAPPING] Mapped data: { deviceId: "chariot-temp-sensor", type: "temperature", value: 20.23 celsius }[0m
+[32m[DATA ACCESS] [ALLOW] Data type 'temperature' allowed for device chariot-temp-sensor.[0m
+[36m[ANONYMISATION] [1/3 TEMPORAL] device='chariot-temp-sensor' raw=20.230 → smoothed=20.252 (window 5/5)[0m
+[32m[ANONYMISATION] [2/3 K-ANONYMITY] Group 'living-room': 1/1 active devices ✓ — group mean=20.252[0m
+[32m[ANONYMISATION] [3/3 GAUSSIAN] Group 'living-room': mean=20.252, noise=-0.1636 → final=20.088 celsius[0m
+[32m[DATA ENCRYPTION] Virtual profile encrypted. IV: 4c741984..., Tag: c4fdc500...[0m
+[35m[PIPELINE] [SUCCESS] Anonymised group profile published for group 'living-room' (1 device(s)).[0m
+[32m[MQTT PUBLISHER] Message published on 'chariot/devices/living-room' (size: 363 chars).[0m
+[36m[EMBEDDED BROKER] Message published by chariot-gateway-publisher on topic 'chariot/devices/living-room'[0m
+[36m[DRIVER Matter] Temperature change notification received: 2041[0m
+
+[34m[PIPELINE] New raw reading received from chariot-temp-sensor [MATTER]: 2041[0m
+[32m[DEVICES MAPPING] Mapped data: { deviceId: "chariot-temp-sensor", type: "temperature", value: 20.41 celsius }[0m
+[32m[DATA ACCESS] [ALLOW] Data type 'temperature' allowed for device chariot-temp-sensor.[0m
+[36m[ANONYMISATION] [1/3 TEMPORAL] device='chariot-temp-sensor' raw=20.410 → smoothed=20.254 (window 5/5)[0m
+[32m[ANONYMISATION] [2/3 K-ANONYMITY] Group 'living-room': 1/1 active devices ✓ — group mean=20.254[0m
+[32m[ANONYMISATION] [3/3 GAUSSIAN] Group 'living-room': mean=20.254, noise=0.3014 → final=20.555 celsius[0m
+[32m[DATA ENCRYPTION] Virtual profile encrypted. IV: f9501f01..., Tag: 5d36f6d9...[0m
+[35m[PIPELINE] [SUCCESS] Anonymised group profile published for group 'living-room' (1 device(s)).[0m
+[32m[MQTT PUBLISHER] Message published on 'chariot/devices/living-room' (size: 363 chars).[0m
+[36m[EMBEDDED BROKER] Message published by chariot-gateway-publisher on topic 'chariot/devices/living-room'[0m
+[36m[DRIVER Matter] Temperature change notification received: 2026[0m
+
+[34m[PIPELINE] New raw reading received from chariot-temp-sensor [MATTER]: 2026[0m
+[32m[DEVICES MAPPING] Mapped data: { deviceId: "chariot-temp-sensor", type: "temperature", value: 20.26 celsius }[0m
+[32m[DATA ACCESS] [ALLOW] Data type 'temperature' allowed for device chariot-temp-sensor.[0m
+[36m[ANONYMISATION] [1/3 TEMPORAL] device='chariot-temp-sensor' raw=20.260 → smoothed=20.266 (window 5/5)[0m
+[32m[ANONYMISATION] [2/3 K-ANONYMITY] Group 'living-room': 1/1 active devices ✓ — group mean=20.266[0m
+[32m[ANONYMISATION] [3/3 GAUSSIAN] Group 'living-room': mean=20.266, noise=-0.8230 → final=19.443 celsius[0m
+[32m[DATA ENCRYPTION] Virtual profile encrypted. IV: e91b033f..., Tag: 55eedfd0...[0m
+[35m[PIPELINE] [SUCCESS] Anonymised group profile published for group 'living-room' (1 device(s)).[0m
+[32m[MQTT PUBLISHER] Message published on 'chariot/devices/living-room' (size: 363 chars).[0m
+[36m[EMBEDDED BROKER] Message published by chariot-gateway-publisher on topic 'chariot/devices/living-room'[0m
+[36m[DRIVER Matter] Temperature change notification received: 2012[0m
+
+[34m[PIPELINE] New raw reading received from chariot-temp-sensor [MATTER]: 2012[0m
+[32m[DEVICES MAPPING] Mapped data: { deviceId: "chariot-temp-sensor", type: "temperature", value: 20.12 celsius }[0m
+[32m[DATA ACCESS] [ALLOW] Data type 'temperature' allowed for device chariot-temp-sensor.[0m
+[36m[ANONYMISATION] [1/3 TEMPORAL] device='chariot-temp-sensor' raw=20.120 → smoothed=20.268 (window 5/5)[0m
+[32m[ANONYMISATION] [2/3 K-ANONYMITY] Group 'living-room': 1/1 active devices ✓ — group mean=20.268[0m
+[32m[ANONYMISATION] [3/3 GAUSSIAN] Group 'living-room': mean=20.268, noise=0.2466 → final=20.515 celsius[0m
+[32m[DATA ENCRYPTION] Virtual profile encrypted. IV: 5315f019..., Tag: e6d702d2...[0m
+[35m[PIPELINE] [SUCCESS] Anonymised group profile published for group 'living-room' (1 device(s)).[0m
+[32m[MQTT PUBLISHER] Message published on 'chariot/devices/living-room' (size: 363 chars).[0m
+[36m[EMBEDDED BROKER] Message published by chariot-gateway-publisher on topic 'chariot/devices/living-room'[0m
+[36m[DRIVER Matter] Temperature change notification received: 1992[0m
+
+[34m[PIPELINE] New raw reading received from chariot-temp-sensor [MATTER]: 1992[0m
+[32m[DEVICES MAPPING] Mapped data: { deviceId: "chariot-temp-sensor", type: "temperature", value: 19.92 celsius }[0m
+[32m[DATA ACCESS] [ALLOW] Data type 'temperature' allowed for device chariot-temp-sensor.[0m
+[36m[ANONYMISATION] [1/3 TEMPORAL] device='chariot-temp-sensor' raw=19.920 → smoothed=20.188 (window 5/5)[0m
+[32m[ANONYMISATION] [2/3 K-ANONYMITY] Group 'living-room': 1/1 active devices ✓ — group mean=20.188[0m
+[32m[ANONYMISATION] [3/3 GAUSSIAN] Group 'living-room': mean=20.188, noise=-0.0761 → final=20.112 celsius[0m
+[32m[DATA ENCRYPTION] Virtual profile encrypted. IV: 74084924..., Tag: ade33714...[0m
+[35m[PIPELINE] [SUCCESS] Anonymised group profile published for group 'living-room' (1 device(s)).[0m
+[32m[MQTT PUBLISHER] Message published on 'chariot/devices/living-room' (size: 363 chars).[0m
+[36m[EMBEDDED BROKER] Message published by chariot-gateway-publisher on topic 'chariot/devices/living-room'[0m
+[36m[DRIVER Matter] Temperature change notification received: 2010[0m
+
+[34m[PIPELINE] New raw reading received from chariot-temp-sensor [MATTER]: 2010[0m
+[32m[DEVICES MAPPING] Mapped data: { deviceId: "chariot-temp-sensor", type: "temperature", value: 20.1 celsius }[0m
+[32m[DATA ACCESS] [ALLOW] Data type 'temperature' allowed for device chariot-temp-sensor.[0m
+[36m[ANONYMISATION] [1/3 TEMPORAL] device='chariot-temp-sensor' raw=20.100 → smoothed=20.162 (window 5/5)[0m
+[32m[ANONYMISATION] [2/3 K-ANONYMITY] Group 'living-room': 1/1 active devices ✓ — group mean=20.162[0m
+[32m[ANONYMISATION] [3/3 GAUSSIAN] Group 'living-room': mean=20.162, noise=-0.0578 → final=20.104 celsius[0m
+[32m[DATA ENCRYPTION] Virtual profile encrypted. IV: 185891d4..., Tag: c949e456...[0m
+[35m[PIPELINE] [SUCCESS] Anonymised group profile published for group 'living-room' (1 device(s)).[0m
+[32m[MQTT PUBLISHER] Message published on 'chariot/devices/living-room' (size: 363 chars).[0m
+[36m[EMBEDDED BROKER] Message published by chariot-gateway-publisher on topic 'chariot/devices/living-room'[0m
+[2m2026-07-12 15:24:48.024 WARN   [0;1;90mExchangeManager      [0;35m@1:?•d5b7 [33mIgnoring message for unknown session[0m
+
+[31;1m[GATEWAY] Shutdown signal received. Closing gracefully...[0m
+[34m[PROTOCOL SUPPORT] Stopping all protocol drivers...[0m
+[34m[DRIVER Matter] Stopping Matter driver...[0m
+[33m[EMBEDDED BROKER] Client disconnected: chariot-communication-middleware-319d5e0a[0m
+[32m[DRIVER Matter] Matter controller stopped.[0m
+[34m[MQTT PUBLISHER] Disconnecting MQTT client...[0m
+[33m[EMBEDDED BROKER] Client disconnected: chariot-gateway-publisher[0m
+[32m[MQTT PUBLISHER] MQTT client disconnected.[0m
+[34m[EMBEDDED BROKER] Stopping MQTT broker...[0m
+[32m[EMBEDDED BROKER] MQTT broker stopped.[0m
+[32m[GATEWAY] Shutdown completed successfully.[0m

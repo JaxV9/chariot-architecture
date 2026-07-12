@@ -6,11 +6,13 @@
 import { fileURLToPath } from "node:url";
 import { DirectoryService, VirtualProfile } from "./directory/DirectoryService.js";
 import { MessageBusSubscriber } from "./bus/MessageBusSubscriber.js";
+import { TelemetryClient } from "./telemetry/TelemetryClient.js";
 
-export { DirectoryService, VirtualProfile, MessageBusSubscriber };
+export { DirectoryService, VirtualProfile, MessageBusSubscriber, TelemetryClient };
 
 // Create singleton instances for direct imports (singleton pattern for shared state within the same process)
-const directoryServiceInstance = new DirectoryService();
+const telemetryInstance = new TelemetryClient();
+const directoryServiceInstance = new DirectoryService(telemetryInstance);
 const subscriberInstance = new MessageBusSubscriber(directoryServiceInstance);
 
 export const getDirectoryService = () => directoryServiceInstance;
@@ -39,6 +41,7 @@ if (isMain) {
         console.log(`\n\x1b[31;1m[COMMUNICATION] Shutdown signal received. Closing...\x1b[0m`);
         try {
             await subscriberInstance.disconnect();
+            telemetryInstance.close();
             console.log(`\x1b[32m[COMMUNICATION] Middleware stopped cleanly.\x1b[0m`);
             process.exit(0);
         } catch (error) {

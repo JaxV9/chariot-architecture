@@ -3,6 +3,8 @@
  * @description Directory Services storage layer for virtual device profiles, backed by an in-memory Map.
  */
 
+import { TelemetryClient } from "../telemetry/TelemetryClient.js";
+
 export interface VirtualProfile {
     deviceId: string;
     type: string;
@@ -15,6 +17,16 @@ export interface VirtualProfile {
 export class DirectoryService {
     // Map storing the profile history per deviceId (maximum 10 entries)
     private store: Map<string, VirtualProfile[]> = new Map();
+
+    /**
+     * Optional telemetry client for dashboard observation.
+     * Provided via constructor; if absent, no telemetry is emitted.
+     */
+    private readonly telemetry?: TelemetryClient;
+
+    constructor(telemetry?: TelemetryClient) {
+        this.telemetry = telemetry;
+    }
 
     /**
      * Saves a new virtual profile for a device.
@@ -37,6 +49,24 @@ export class DirectoryService {
         }
 
         console.log(`\x1b[32m[DIRECTORY SERVICES] Profile saved for ${deviceId}. Value: ${profile.value} ${profile.unit}. History: ${history.length}/10\x1b[0m`);
+
+        // Emit communication-layer telemetry event (fire-and-forget)
+        this.telemetry?.emit({
+            layer: "communication",
+            groupId: deviceId,
+            type: profile.type,
+            value: profile.value,
+            unit: profile.unit,
+            timestamp: profile.timestamp,
+            directoryStoreStructure: history,
+        });
+    }
+
+    /**
+     * Emits a telemetry event via the Directory Services telemetry client.
+     */
+    emitTelemetry(event: any): void {
+        this.telemetry?.emit(event);
     }
 
     /**

@@ -11,6 +11,7 @@ import { DataAccess } from "./access/DataAccess.js";
 import { DevicesMapper } from "./mapping/DevicesMapper.js";
 import { Encryption } from "./security/Encryption.js";
 import { AnonymisationEngine } from "./anonymisation/AnonymisationEngine.js";
+import { TelemetryClient } from "./telemetry/TelemetryClient.js";
 
 async function main() {
     console.log(`\n\x1b[35;1m===============================================================\x1b[0m`);
@@ -21,6 +22,9 @@ async function main() {
     const broker = new EmbeddedBroker();
     const publisher = new MqttPublisher();
 
+    // Initialize optional telemetry client (no-op if TELEMETRY_ENABLED !== "true")
+    const telemetry = new TelemetryClient();
+
     // 2. Initialize the pipeline processing modules
     const protocolSupport = new ProtocolSupport();
     const dataAccess = new DataAccess();
@@ -29,10 +33,40 @@ async function main() {
 
     // Anonymisation is enabled by default; set ANONYMIZATION_ENABLED=false to bypass
     const anonymisationEnabled = (process.env.ANONYMIZATION_ENABLED ?? "true") !== "false";
-    const anonymisationEngine = new AnonymisationEngine();
+    const anonymisationEngine = new AnonymisationEngine(
+        undefined,
+        // Pass telemetry callback only when both pipelines are active
+        (event) => telemetry.emit({ layer: "runtime", ...event })
+    );
 
     if (anonymisationEnabled) {
         console.log(`\x1b[35m[GATEWAY] Anonymisation pipeline ENABLED (K=${process.env.ANON_K_THRESHOLD ?? 2}, N=${process.env.ANON_WINDOW_SIZE ?? 5}, σ=${process.env.ANON_SIGMA ?? 0.1})\x1b[0m`);
+
+        // Register config update receiver
+        telemetry.onConfigUpdate((config) => {
+            anonymisationEngine.updateConfig(config);
+            // Broadcast the new config back as runtime telemetry
+            telemetry.emit({
+                layer: "runtime",
+                step: "config",
+                kThreshold: anonymisationEngine.getKThreshold(),
+                sigma: anonymisationEngine.getSigma(),
+                windowSize: anonymisationEngine.getWindowSize(),
+                timestamp: new Date().toISOString()
+            } as any);
+        });
+
+        // Register connect/reconnect callback to push current config
+        telemetry.onConnect(() => {
+            telemetry.emit({
+                layer: "runtime",
+                step: "config",
+                kThreshold: anonymisationEngine.getKThreshold(),
+                sigma: anonymisationEngine.getSigma(),
+                windowSize: anonymisationEngine.getWindowSize(),
+                timestamp: new Date().toISOString()
+            } as any);
+        });
     } else {
         console.log(`\x1b[33m[GATEWAY] Anonymisation pipeline DISABLED — raw virtual profiles will be published.\x1b[0m`);
     }
@@ -45,14 +79,41 @@ async function main() {
     protocolSupport.onData((reading) => {
         console.log(`\n\x1b[34m[PIPELINE] New raw reading received from ${reading.deviceId} [${reading.protocol.toUpperCase()}]: ${reading.value}\x1b[0m`);
 
+        // Step B: Devices Mapping (Normalization → VirtualProfile)
+        const virtualProfile = mapper.mapToVirtualProfile(reading);
+
+        // Emit device-level telemetry event (fire-and-forget, no impact if dashboard is down)
+        let telemetryRawValue = reading.value;
+        if (reading.protocol === "matter") {
+            if (reading.cluster === "temperatureMeasurement" && reading.attribute === "measuredValue") {
+                telemetryRawValue = reading.value / 100;
+            }
+        }
+
+        telemetry.emit({
+            layer: "devices",
+            deviceId: reading.deviceId,
+            protocol: reading.protocol,
+            rawValue: telemetryRawValue,
+            timestamp: new Date().toISOString(),
+            rawReading: {
+                deviceId: reading.deviceId,
+                protocol: reading.protocol,
+                cluster: reading.cluster,
+                attribute: reading.attribute,
+                value: reading.value,
+                timestamp: new Date().toISOString()
+            },
+            virtualProfile: virtualProfile
+        });
+
         // Step A: User consent check (DataAccess)
         if (!dataAccess.isTransmissionAllowed(reading)) {
             console.log(`\x1b[33m[PIPELINE] [STOP] Data blocked by Data Access. Processing halted.\x1b[0m`);
             return;
         }
 
-        // Step B: Devices Mapping (Normalization → VirtualProfile)
-        const virtualProfile = mapper.mapToVirtualProfile(reading);
+        // Step B: Devices Mapping (Normalization → VirtualProfile) - already mapped above
 
         // Step C: Anonymisation pipeline (temporal aggregation → k-anonymity → Gaussian noise)
         if (anonymisationEnabled) {
@@ -100,6 +161,7 @@ async function main() {
             await protocolSupport.stopAll();
             await publisher.disconnect();
             await broker.stop();
+            telemetry.close();
             console.log(`\x1b[32m[GATEWAY] Shutdown completed successfully.\x1b[0m`);
             process.exit(0);
         } catch (error) {

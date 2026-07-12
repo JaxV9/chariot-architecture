@@ -6,7 +6,9 @@
     "devices",
     "runtime",
     "communication",
-    "services"
+    "services",
+    "dashboard",
+    "dashboard-client"
   ],
   "engines": {
     "node": ">=18.0.0"

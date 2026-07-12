@@ -1,0 +1,1019 @@
+[32m[DECRYPTION MODULE] AES-256 key successfully derived via scryptSync.[0m
+
+[32;1m===============================================================[0m
+[32;1m         CHARIOT SERVICES LAYER RUNNING ON PORT 3000          [0m
+[32;1m===============================================================[0m
+
+[34m[MESSAGE BUS] Connecting to MQTT broker at mqtt://localhost:1883...[0m
+[TELEMETRY] Disconnected from telemetry server. Reconnecting in 1000ms...
+[32m[MESSAGE BUS] Connected to MQTT broker.[0m
+[32m[MESSAGE BUS] Successfully subscribed to topic 'chariot/devices/+'.[0m
+[36m[SERVICES] Internal communication subscriber successfully connected to MQTT broker.[0m
+[TELEMETRY] Disconnected from telemetry server. Reconnecting in 2000ms...
+[TELEMETRY] Disconnected from telemetry server. Reconnecting in 4000ms...
+
+[34m[MESSAGE BUS] Message received on topic: chariot/devices/living-room[0m
+[32m[MESSAGE BUS] Decryption successful with AES-256 key.[0m
+[32m[MESSAGE BUS] Structure validation successful for virtual profile.[0m
+[32m[DIRECTORY SERVICES] Profile saved for living-room. Value: 20.192 celsius. History: 1/10[0m
+[35m[MESSAGE BUS] [SUCCESS] Full processing pipeline completed.[0m
+[TELEMETRY] Connected to telemetry server at ws://localhost:4001
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (2ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (1ms)
+
+[34m[MESSAGE BUS] Message received on topic: chariot/devices/living-room[0m
+[32m[MESSAGE BUS] Decryption successful with AES-256 key.[0m
+[32m[MESSAGE BUS] Structure validation successful for virtual profile.[0m
+[32m[DIRECTORY SERVICES] Profile saved for living-room. Value: 19.855 celsius. History: 2/10[0m
+[35m[MESSAGE BUS] [SUCCESS] Full processing pipeline completed.[0m
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+
+[34m[MESSAGE BUS] Message received on topic: chariot/devices/living-room[0m
+[32m[MESSAGE BUS] Decryption successful with AES-256 key.[0m
+[32m[MESSAGE BUS] Structure validation successful for virtual profile.[0m
+[32m[DIRECTORY SERVICES] Profile saved for living-room. Value: 19.97 celsius. History: 3/10[0m
+[35m[MESSAGE BUS] [SUCCESS] Full processing pipeline completed.[0m
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+
+[34m[MESSAGE BUS] Message received on topic: chariot/devices/living-room[0m
+[32m[MESSAGE BUS] Decryption successful with AES-256 key.[0m
+[32m[MESSAGE BUS] Structure validation successful for virtual profile.[0m
+[32m[DIRECTORY SERVICES] Profile saved for living-room. Value: 20.048 celsius. History: 4/10[0m
+[35m[MESSAGE BUS] [SUCCESS] Full processing pipeline completed.[0m
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (4ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+
+[34m[MESSAGE BUS] Message received on topic: chariot/devices/living-room[0m
+[32m[MESSAGE BUS] Decryption successful with AES-256 key.[0m
+[32m[MESSAGE BUS] Structure validation successful for virtual profile.[0m
+[32m[DIRECTORY SERVICES] Profile saved for living-room. Value: 19.838 celsius. History: 5/10[0m
+[35m[MESSAGE BUS] [SUCCESS] Full processing pipeline completed.[0m
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+
+[34m[MESSAGE BUS] Message received on topic: chariot/devices/living-room[0m
+[32m[MESSAGE BUS] Decryption successful with AES-256 key.[0m
+[32m[MESSAGE BUS] Structure validation successful for virtual profile.[0m
+[32m[DIRECTORY SERVICES] Profile saved for living-room. Value: 19.916 celsius. History: 6/10[0m
+[35m[MESSAGE BUS] [SUCCESS] Full processing pipeline completed.[0m
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+
+[34m[MESSAGE BUS] Message received on topic: chariot/devices/living-room[0m
+[32m[MESSAGE BUS] Decryption successful with AES-256 key.[0m
+[32m[MESSAGE BUS] Structure validation successful for virtual profile.[0m
+[32m[DIRECTORY SERVICES] Profile saved for living-room. Value: 19.997 celsius. History: 7/10[0m
+[35m[MESSAGE BUS] [SUCCESS] Full processing pipeline completed.[0m
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+
+[34m[MESSAGE BUS] Message received on topic: chariot/devices/living-room[0m
+[32m[MESSAGE BUS] Decryption successful with AES-256 key.[0m
+[32m[MESSAGE BUS] Structure validation successful for virtual profile.[0m
+[32m[DIRECTORY SERVICES] Profile saved for living-room. Value: 19.658 celsius. History: 8/10[0m
+[35m[MESSAGE BUS] [SUCCESS] Full processing pipeline completed.[0m
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (1ms)
+
+[34m[MESSAGE BUS] Message received on topic: chariot/devices/living-room[0m
+[32m[MESSAGE BUS] Decryption successful with AES-256 key.[0m
+[32m[MESSAGE BUS] Structure validation successful for virtual profile.[0m
+[32m[DIRECTORY SERVICES] Profile saved for living-room. Value: 19.693 celsius. History: 9/10[0m
+[35m[MESSAGE BUS] [SUCCESS] Full processing pipeline completed.[0m
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+
+[34m[MESSAGE BUS] Message received on topic: chariot/devices/living-room[0m
+[32m[MESSAGE BUS] Decryption successful with AES-256 key.[0m
+[32m[MESSAGE BUS] Structure validation successful for virtual profile.[0m
+[32m[DIRECTORY SERVICES] Profile saved for living-room. Value: 19.778 celsius. History: 10/10[0m
+[35m[MESSAGE BUS] [SUCCESS] Full processing pipeline completed.[0m
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (1ms)
+
+[34m[MESSAGE BUS] Message received on topic: chariot/devices/living-room[0m
+[32m[MESSAGE BUS] Decryption successful with AES-256 key.[0m
+[32m[MESSAGE BUS] Structure validation successful for virtual profile.[0m
+[32m[DIRECTORY SERVICES] Profile saved for living-room. Value: 19.755 celsius. History: 10/10[0m
+[35m[MESSAGE BUS] [SUCCESS] Full processing pipeline completed.[0m
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+
+[34m[MESSAGE BUS] Message received on topic: chariot/devices/living-room[0m
+[32m[MESSAGE BUS] Decryption successful with AES-256 key.[0m
+[32m[MESSAGE BUS] Structure validation successful for virtual profile.[0m
+[32m[DIRECTORY SERVICES] Profile saved for living-room. Value: 19.571 celsius. History: 10/10[0m
+[35m[MESSAGE BUS] [SUCCESS] Full processing pipeline completed.[0m
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+
+[34m[MESSAGE BUS] Message received on topic: chariot/devices/living-room[0m
+[32m[MESSAGE BUS] Decryption successful with AES-256 key.[0m
+[32m[MESSAGE BUS] Structure validation successful for virtual profile.[0m
+[32m[DIRECTORY SERVICES] Profile saved for living-room. Value: 19.35 celsius. History: 10/10[0m
+[35m[MESSAGE BUS] [SUCCESS] Full processing pipeline completed.[0m
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+
+[34m[MESSAGE BUS] Message received on topic: chariot/devices/living-room[0m
+[32m[MESSAGE BUS] Decryption successful with AES-256 key.[0m
+[32m[MESSAGE BUS] Structure validation successful for virtual profile.[0m
+[32m[DIRECTORY SERVICES] Profile saved for living-room. Value: 19.409 celsius. History: 10/10[0m
+[35m[MESSAGE BUS] [SUCCESS] Full processing pipeline completed.[0m
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (1ms)
+
+[34m[MESSAGE BUS] Message received on topic: chariot/devices/living-room[0m
+[32m[MESSAGE BUS] Decryption successful with AES-256 key.[0m
+[32m[MESSAGE BUS] Structure validation successful for virtual profile.[0m
+[32m[DIRECTORY SERVICES] Profile saved for living-room. Value: 19.307 celsius. History: 10/10[0m
+[35m[MESSAGE BUS] [SUCCESS] Full processing pipeline completed.[0m
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (1ms)
+
+[34m[MESSAGE BUS] Message received on topic: chariot/devices/living-room[0m
+[32m[MESSAGE BUS] Decryption successful with AES-256 key.[0m
+[32m[MESSAGE BUS] Structure validation successful for virtual profile.[0m
+[32m[DIRECTORY SERVICES] Profile saved for living-room. Value: 19.447 celsius. History: 10/10[0m
+[35m[MESSAGE BUS] [SUCCESS] Full processing pipeline completed.[0m
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (1ms)
+
+[34m[MESSAGE BUS] Message received on topic: chariot/devices/living-room[0m
+[32m[MESSAGE BUS] Decryption successful with AES-256 key.[0m
+[32m[MESSAGE BUS] Structure validation successful for virtual profile.[0m
+[32m[DIRECTORY SERVICES] Profile saved for living-room. Value: 19.359 celsius. History: 10/10[0m
+[35m[MESSAGE BUS] [SUCCESS] Full processing pipeline completed.[0m
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+
+[34m[MESSAGE BUS] Message received on topic: chariot/devices/living-room[0m
+[32m[MESSAGE BUS] Decryption successful with AES-256 key.[0m
+[32m[MESSAGE BUS] Structure validation successful for virtual profile.[0m
+[32m[DIRECTORY SERVICES] Profile saved for living-room. Value: 19.408 celsius. History: 10/10[0m
+[35m[MESSAGE BUS] [SUCCESS] Full processing pipeline completed.[0m
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (1ms)
+
+[34m[MESSAGE BUS] Message received on topic: chariot/devices/living-room[0m
+[32m[MESSAGE BUS] Decryption successful with AES-256 key.[0m
+[32m[MESSAGE BUS] Structure validation successful for virtual profile.[0m
+[32m[DIRECTORY SERVICES] Profile saved for living-room. Value: 19.512 celsius. History: 10/10[0m
+[35m[MESSAGE BUS] [SUCCESS] Full processing pipeline completed.[0m
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (1ms)
+
+[34m[MESSAGE BUS] Message received on topic: chariot/devices/living-room[0m
+[32m[MESSAGE BUS] Decryption successful with AES-256 key.[0m
+[32m[MESSAGE BUS] Structure validation successful for virtual profile.[0m
+[32m[DIRECTORY SERVICES] Profile saved for living-room. Value: 19.362 celsius. History: 10/10[0m
+[35m[MESSAGE BUS] [SUCCESS] Full processing pipeline completed.[0m
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+
+[34m[MESSAGE BUS] Message received on topic: chariot/devices/living-room[0m
+[32m[MESSAGE BUS] Decryption successful with AES-256 key.[0m
+[32m[MESSAGE BUS] Structure validation successful for virtual profile.[0m
+[32m[DIRECTORY SERVICES] Profile saved for living-room. Value: 19.161 celsius. History: 10/10[0m
+[35m[MESSAGE BUS] [SUCCESS] Full processing pipeline completed.[0m
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+
+[34m[MESSAGE BUS] Message received on topic: chariot/devices/living-room[0m
+[32m[MESSAGE BUS] Decryption successful with AES-256 key.[0m
+[32m[MESSAGE BUS] Structure validation successful for virtual profile.[0m
+[32m[DIRECTORY SERVICES] Profile saved for living-room. Value: 19.441 celsius. History: 10/10[0m
+[35m[MESSAGE BUS] [SUCCESS] Full processing pipeline completed.[0m
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+
+[34m[MESSAGE BUS] Message received on topic: chariot/devices/living-room[0m
+[32m[MESSAGE BUS] Decryption successful with AES-256 key.[0m
+[32m[MESSAGE BUS] Structure validation successful for virtual profile.[0m
+[32m[DIRECTORY SERVICES] Profile saved for living-room. Value: 19.436 celsius. History: 10/10[0m
+[35m[MESSAGE BUS] [SUCCESS] Full processing pipeline completed.[0m
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+
+[34m[MESSAGE BUS] Message received on topic: chariot/devices/living-room[0m
+[32m[MESSAGE BUS] Decryption successful with AES-256 key.[0m
+[32m[MESSAGE BUS] Structure validation successful for virtual profile.[0m
+[32m[DIRECTORY SERVICES] Profile saved for living-room. Value: 19.335 celsius. History: 10/10[0m
+[35m[MESSAGE BUS] [SUCCESS] Full processing pipeline completed.[0m
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+
+[34m[MESSAGE BUS] Message received on topic: chariot/devices/living-room[0m
+[32m[MESSAGE BUS] Decryption successful with AES-256 key.[0m
+[32m[MESSAGE BUS] Structure validation successful for virtual profile.[0m
+[32m[DIRECTORY SERVICES] Profile saved for living-room. Value: 19.447 celsius. History: 10/10[0m
+[35m[MESSAGE BUS] [SUCCESS] Full processing pipeline completed.[0m
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+
+[34m[MESSAGE BUS] Message received on topic: chariot/devices/living-room[0m
+[32m[MESSAGE BUS] Decryption successful with AES-256 key.[0m
+[32m[MESSAGE BUS] Structure validation successful for virtual profile.[0m
+[32m[DIRECTORY SERVICES] Profile saved for living-room. Value: 19.917 celsius. History: 10/10[0m
+[35m[MESSAGE BUS] [SUCCESS] Full processing pipeline completed.[0m
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+
+[34m[MESSAGE BUS] Message received on topic: chariot/devices/living-room[0m
+[32m[MESSAGE BUS] Decryption successful with AES-256 key.[0m
+[32m[MESSAGE BUS] Structure validation successful for virtual profile.[0m
+[32m[DIRECTORY SERVICES] Profile saved for living-room. Value: 19.284 celsius. History: 10/10[0m
+[35m[MESSAGE BUS] [SUCCESS] Full processing pipeline completed.[0m
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+
+[34m[MESSAGE BUS] Message received on topic: chariot/devices/living-room[0m
+[32m[MESSAGE BUS] Decryption successful with AES-256 key.[0m
+[32m[MESSAGE BUS] Structure validation successful for virtual profile.[0m
+[32m[DIRECTORY SERVICES] Profile saved for living-room. Value: 19.228 celsius. History: 10/10[0m
+[35m[MESSAGE BUS] [SUCCESS] Full processing pipeline completed.[0m
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (1ms)
+
+[34m[MESSAGE BUS] Message received on topic: chariot/devices/living-room[0m
+[32m[MESSAGE BUS] Decryption successful with AES-256 key.[0m
+[32m[MESSAGE BUS] Structure validation successful for virtual profile.[0m
+[32m[DIRECTORY SERVICES] Profile saved for living-room. Value: 19.333 celsius. History: 10/10[0m
+[35m[MESSAGE BUS] [SUCCESS] Full processing pipeline completed.[0m
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+
+[34m[MESSAGE BUS] Message received on topic: chariot/devices/living-room[0m
+[32m[MESSAGE BUS] Decryption successful with AES-256 key.[0m
+[32m[MESSAGE BUS] Structure validation successful for virtual profile.[0m
+[32m[DIRECTORY SERVICES] Profile saved for living-room. Value: 18.559 celsius. History: 10/10[0m
+[35m[MESSAGE BUS] [SUCCESS] Full processing pipeline completed.[0m
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+
+[34m[MESSAGE BUS] Message received on topic: chariot/devices/living-room[0m
+[32m[MESSAGE BUS] Decryption successful with AES-256 key.[0m
+[32m[MESSAGE BUS] Structure validation successful for virtual profile.[0m
+[32m[DIRECTORY SERVICES] Profile saved for living-room. Value: 19.441 celsius. History: 10/10[0m
+[35m[MESSAGE BUS] [SUCCESS] Full processing pipeline completed.[0m
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (1ms)
+
+[34m[MESSAGE BUS] Message received on topic: chariot/devices/living-room[0m
+[32m[MESSAGE BUS] Decryption successful with AES-256 key.[0m
+[32m[MESSAGE BUS] Structure validation successful for virtual profile.[0m
+[32m[DIRECTORY SERVICES] Profile saved for living-room. Value: 19.524 celsius. History: 10/10[0m
+[35m[MESSAGE BUS] [SUCCESS] Full processing pipeline completed.[0m
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (1ms)
+
+[34m[MESSAGE BUS] Message received on topic: chariot/devices/living-room[0m
+[32m[MESSAGE BUS] Decryption successful with AES-256 key.[0m
+[32m[MESSAGE BUS] Structure validation successful for virtual profile.[0m
+[32m[DIRECTORY SERVICES] Profile saved for living-room. Value: 19.273 celsius. History: 10/10[0m
+[35m[MESSAGE BUS] [SUCCESS] Full processing pipeline completed.[0m
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+
+[34m[MESSAGE BUS] Message received on topic: chariot/devices/living-room[0m
+[32m[MESSAGE BUS] Decryption successful with AES-256 key.[0m
+[32m[MESSAGE BUS] Structure validation successful for virtual profile.[0m
+[32m[DIRECTORY SERVICES] Profile saved for living-room. Value: 19.976 celsius. History: 10/10[0m
+[35m[MESSAGE BUS] [SUCCESS] Full processing pipeline completed.[0m
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+
+[34m[MESSAGE BUS] Message received on topic: chariot/devices/living-room[0m
+[32m[MESSAGE BUS] Decryption successful with AES-256 key.[0m
+[32m[MESSAGE BUS] Structure validation successful for virtual profile.[0m
+[32m[DIRECTORY SERVICES] Profile saved for living-room. Value: 19.618 celsius. History: 10/10[0m
+[35m[MESSAGE BUS] [SUCCESS] Full processing pipeline completed.[0m
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+
+[34m[MESSAGE BUS] Message received on topic: chariot/devices/living-room[0m
+[32m[MESSAGE BUS] Decryption successful with AES-256 key.[0m
+[32m[MESSAGE BUS] Structure validation successful for virtual profile.[0m
+[32m[DIRECTORY SERVICES] Profile saved for living-room. Value: 19.446 celsius. History: 10/10[0m
+[35m[MESSAGE BUS] [SUCCESS] Full processing pipeline completed.[0m
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+
+[34m[MESSAGE BUS] Message received on topic: chariot/devices/living-room[0m
+[32m[MESSAGE BUS] Decryption successful with AES-256 key.[0m
+[32m[MESSAGE BUS] Structure validation successful for virtual profile.[0m
+[32m[DIRECTORY SERVICES] Profile saved for living-room. Value: 20.295 celsius. History: 10/10[0m
+[35m[MESSAGE BUS] [SUCCESS] Full processing pipeline completed.[0m
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (1ms)
+
+[34m[MESSAGE BUS] Message received on topic: chariot/devices/living-room[0m
+[32m[MESSAGE BUS] Decryption successful with AES-256 key.[0m
+[32m[MESSAGE BUS] Structure validation successful for virtual profile.[0m
+[32m[DIRECTORY SERVICES] Profile saved for living-room. Value: 19.701 celsius. History: 10/10[0m
+[35m[MESSAGE BUS] [SUCCESS] Full processing pipeline completed.[0m
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+
+[34m[MESSAGE BUS] Message received on topic: chariot/devices/living-room[0m
+[32m[MESSAGE BUS] Decryption successful with AES-256 key.[0m
+[32m[MESSAGE BUS] Structure validation successful for virtual profile.[0m
+[32m[DIRECTORY SERVICES] Profile saved for living-room. Value: 19.499 celsius. History: 10/10[0m
+[35m[MESSAGE BUS] [SUCCESS] Full processing pipeline completed.[0m
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (1ms)
+
+[34m[MESSAGE BUS] Message received on topic: chariot/devices/living-room[0m
+[32m[MESSAGE BUS] Decryption successful with AES-256 key.[0m
+[32m[MESSAGE BUS] Structure validation successful for virtual profile.[0m
+[32m[DIRECTORY SERVICES] Profile saved for living-room. Value: 20.201 celsius. History: 10/10[0m
+[35m[MESSAGE BUS] [SUCCESS] Full processing pipeline completed.[0m
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (1ms)
+
+[34m[MESSAGE BUS] Message received on topic: chariot/devices/living-room[0m
+[32m[MESSAGE BUS] Decryption successful with AES-256 key.[0m
+[32m[MESSAGE BUS] Structure validation successful for virtual profile.[0m
+[32m[DIRECTORY SERVICES] Profile saved for living-room. Value: 19.753 celsius. History: 10/10[0m
+[35m[MESSAGE BUS] [SUCCESS] Full processing pipeline completed.[0m
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+
+[34m[MESSAGE BUS] Message received on topic: chariot/devices/living-room[0m
+[32m[MESSAGE BUS] Decryption successful with AES-256 key.[0m
+[32m[MESSAGE BUS] Structure validation successful for virtual profile.[0m
+[32m[DIRECTORY SERVICES] Profile saved for living-room. Value: 19.864 celsius. History: 10/10[0m
+[35m[MESSAGE BUS] [SUCCESS] Full processing pipeline completed.[0m
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (1ms)
+
+[34m[MESSAGE BUS] Message received on topic: chariot/devices/living-room[0m
+[32m[MESSAGE BUS] Decryption successful with AES-256 key.[0m
+[32m[MESSAGE BUS] Structure validation successful for virtual profile.[0m
+[32m[DIRECTORY SERVICES] Profile saved for living-room. Value: 20.255 celsius. History: 10/10[0m
+[35m[MESSAGE BUS] [SUCCESS] Full processing pipeline completed.[0m
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (1ms)
+
+[34m[MESSAGE BUS] Message received on topic: chariot/devices/living-room[0m
+[32m[MESSAGE BUS] Decryption successful with AES-256 key.[0m
+[32m[MESSAGE BUS] Structure validation successful for virtual profile.[0m
+[32m[DIRECTORY SERVICES] Profile saved for living-room. Value: 19.963 celsius. History: 10/10[0m
+[35m[MESSAGE BUS] [SUCCESS] Full processing pipeline completed.[0m
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+
+[34m[MESSAGE BUS] Message received on topic: chariot/devices/living-room[0m
+[32m[MESSAGE BUS] Decryption successful with AES-256 key.[0m
+[32m[MESSAGE BUS] Structure validation successful for virtual profile.[0m
+[32m[DIRECTORY SERVICES] Profile saved for living-room. Value: 20.42 celsius. History: 10/10[0m
+[35m[MESSAGE BUS] [SUCCESS] Full processing pipeline completed.[0m
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+
+[34m[MESSAGE BUS] Message received on topic: chariot/devices/living-room[0m
+[32m[MESSAGE BUS] Decryption successful with AES-256 key.[0m
+[32m[MESSAGE BUS] Structure validation successful for virtual profile.[0m
+[32m[DIRECTORY SERVICES] Profile saved for living-room. Value: 20.842 celsius. History: 10/10[0m
+[35m[MESSAGE BUS] [SUCCESS] Full processing pipeline completed.[0m
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+
+[34m[MESSAGE BUS] Message received on topic: chariot/devices/living-room[0m
+[32m[MESSAGE BUS] Decryption successful with AES-256 key.[0m
+[32m[MESSAGE BUS] Structure validation successful for virtual profile.[0m
+[32m[DIRECTORY SERVICES] Profile saved for living-room. Value: 20.388 celsius. History: 10/10[0m
+[35m[MESSAGE BUS] [SUCCESS] Full processing pipeline completed.[0m
+
+[34m[MESSAGE BUS] Message received on topic: chariot/devices/living-room[0m
+[32m[MESSAGE BUS] Decryption successful with AES-256 key.[0m
+[32m[MESSAGE BUS] Structure validation successful for virtual profile.[0m
+[32m[DIRECTORY SERVICES] Profile saved for living-room. Value: 21.44 celsius. History: 10/10[0m
+[35m[MESSAGE BUS] [SUCCESS] Full processing pipeline completed.[0m
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (1ms)
+
+[34m[MESSAGE BUS] Message received on topic: chariot/devices/living-room[0m
+[32m[MESSAGE BUS] Decryption successful with AES-256 key.[0m
+[32m[MESSAGE BUS] Structure validation successful for virtual profile.[0m
+[32m[DIRECTORY SERVICES] Profile saved for living-room. Value: 21.225 celsius. History: 10/10[0m
+[35m[MESSAGE BUS] [SUCCESS] Full processing pipeline completed.[0m
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (1ms)
+
+[34m[MESSAGE BUS] Message received on topic: chariot/devices/living-room[0m
+[32m[MESSAGE BUS] Decryption successful with AES-256 key.[0m
+[32m[MESSAGE BUS] Structure validation successful for virtual profile.[0m
+[32m[DIRECTORY SERVICES] Profile saved for living-room. Value: 20.915 celsius. History: 10/10[0m
+[35m[MESSAGE BUS] [SUCCESS] Full processing pipeline completed.[0m
+
+[34m[MESSAGE BUS] Message received on topic: chariot/devices/living-room[0m
+[32m[MESSAGE BUS] Decryption successful with AES-256 key.[0m
+[32m[MESSAGE BUS] Structure validation successful for virtual profile.[0m
+[32m[DIRECTORY SERVICES] Profile saved for living-room. Value: 20.314 celsius. History: 10/10[0m
+[35m[MESSAGE BUS] [SUCCESS] Full processing pipeline completed.[0m
+
+[34m[MESSAGE BUS] Message received on topic: chariot/devices/living-room[0m
+[32m[MESSAGE BUS] Decryption successful with AES-256 key.[0m
+[32m[MESSAGE BUS] Structure validation successful for virtual profile.[0m
+[32m[DIRECTORY SERVICES] Profile saved for living-room. Value: 20.383 celsius. History: 10/10[0m
+[35m[MESSAGE BUS] [SUCCESS] Full processing pipeline completed.[0m
+
+[34m[MESSAGE BUS] Message received on topic: chariot/devices/living-room[0m
+[32m[MESSAGE BUS] Decryption successful with AES-256 key.[0m
+[32m[MESSAGE BUS] Structure validation successful for virtual profile.[0m
+[32m[DIRECTORY SERVICES] Profile saved for living-room. Value: 20.777 celsius. History: 10/10[0m
+[35m[MESSAGE BUS] [SUCCESS] Full processing pipeline completed.[0m
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+
+[34m[MESSAGE BUS] Message received on topic: chariot/devices/living-room[0m
+[32m[MESSAGE BUS] Decryption successful with AES-256 key.[0m
+[32m[MESSAGE BUS] Structure validation successful for virtual profile.[0m
+[32m[DIRECTORY SERVICES] Profile saved for living-room. Value: 20.088 celsius. History: 10/10[0m
+[35m[MESSAGE BUS] [SUCCESS] Full processing pipeline completed.[0m
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+
+[34m[MESSAGE BUS] Message received on topic: chariot/devices/living-room[0m
+[32m[MESSAGE BUS] Decryption successful with AES-256 key.[0m
+[32m[MESSAGE BUS] Structure validation successful for virtual profile.[0m
+[32m[DIRECTORY SERVICES] Profile saved for living-room. Value: 20.555 celsius. History: 10/10[0m
+[35m[MESSAGE BUS] [SUCCESS] Full processing pipeline completed.[0m
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (1ms)
+
+[34m[MESSAGE BUS] Message received on topic: chariot/devices/living-room[0m
+[32m[MESSAGE BUS] Decryption successful with AES-256 key.[0m
+[32m[MESSAGE BUS] Structure validation successful for virtual profile.[0m
+[32m[DIRECTORY SERVICES] Profile saved for living-room. Value: 19.443 celsius. History: 10/10[0m
+[35m[MESSAGE BUS] [SUCCESS] Full processing pipeline completed.[0m
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+
+[34m[MESSAGE BUS] Message received on topic: chariot/devices/living-room[0m
+[32m[MESSAGE BUS] Decryption successful with AES-256 key.[0m
+[32m[MESSAGE BUS] Structure validation successful for virtual profile.[0m
+[32m[DIRECTORY SERVICES] Profile saved for living-room. Value: 20.515 celsius. History: 10/10[0m
+[35m[MESSAGE BUS] [SUCCESS] Full processing pipeline completed.[0m
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (1ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+
+[34m[MESSAGE BUS] Message received on topic: chariot/devices/living-room[0m
+[32m[MESSAGE BUS] Decryption successful with AES-256 key.[0m
+[32m[MESSAGE BUS] Structure validation successful for virtual profile.[0m
+[32m[DIRECTORY SERVICES] Profile saved for living-room. Value: 20.112 celsius. History: 10/10[0m
+[35m[MESSAGE BUS] [SUCCESS] Full processing pipeline completed.[0m
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room - Status: [32m200[0m (0ms)
+[36m[SERVICES API][0m GET /devices/living-room/history - Status: [32m200[0m (0ms)
+
+[34m[MESSAGE BUS] Message received on topic: chariot/devices/living-room[0m
+[32m[MESSAGE BUS] Decryption successful with AES-256 key.[0m
+[32m[MESSAGE BUS] Structure validation successful for virtual profile.[0m
+[32m[DIRECTORY SERVICES] Profile saved for living-room. Value: 20.104 celsius. History: 10/10[0m
+[35m[MESSAGE BUS] [SUCCESS] Full processing pipeline completed.[0m
