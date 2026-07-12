@@ -1,6 +1,6 @@
 /**
  * @file ProtocolSupport.ts
- * @description Couche "Protocoles support" assurant la gestion et l'unification des différents drivers de protocole.
+ * @description Protocol support layer: manages and unifies all registered protocol drivers.
  */
 
 import { DeviceDriver, RawReading } from "../driver/DeviceDriver.js";
@@ -10,43 +10,43 @@ export class ProtocolSupport {
     private onDataCallback?: (reading: RawReading) => void;
 
     /**
-     * Enregistre un driver dans le gestionnaire.
+     * Registers a driver with the protocol manager.
      */
     registerDriver(driver: DeviceDriver): void {
         this.drivers.set(driver.id, driver);
         
-        // Rediriger les données brutes vers le callback unifié
+        // Redirect raw data from this driver to the unified callback
         driver.onRawData((reading) => {
             if (this.onDataCallback) {
                 this.onDataCallback(reading);
             }
         });
         
-        console.log(`\x1b[32m[PROTOCOL SUPPORT] Driver enregistré pour le device ${driver.id} (Protocole: ${driver.protocol.toUpperCase()})\x1b[0m`);
+        console.log(`\x1b[32m[PROTOCOL SUPPORT] Driver registered for device ${driver.id} (Protocol: ${driver.protocol.toUpperCase()})\x1b[0m`);
     }
 
     /**
-     * Démarre tous les drivers enregistrés.
+     * Starts all registered drivers.
      */
     async startAll(): Promise<void> {
-        console.log(`\x1b[34m[PROTOCOL SUPPORT] Démarrage de tous les drivers de protocoles...\x1b[0m`);
+        console.log(`\x1b[34m[PROTOCOL SUPPORT] Starting all protocol drivers...\x1b[0m`);
         for (const driver of this.drivers.values()) {
             await driver.start();
         }
     }
 
     /**
-     * Arrête tous les drivers enregistrés.
+     * Stops all registered drivers.
      */
     async stopAll(): Promise<void> {
-        console.log(`\x1b[34m[PROTOCOL SUPPORT] Arrêt de tous les drivers de protocoles...\x1b[0m`);
+        console.log(`\x1b[34m[PROTOCOL SUPPORT] Stopping all protocol drivers...\x1b[0m`);
         for (const driver of this.drivers.values()) {
             await driver.stop();
         }
     }
 
     /**
-     * Enregistre un callback unifié pour traiter les lectures brutes entrantes.
+     * Registers a unified callback to handle incoming raw readings from any driver.
      */
     onData(callback: (reading: RawReading) => void): void {
         this.onDataCallback = callback;

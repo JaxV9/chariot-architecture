@@ -1,6 +1,6 @@
 /**
  * @file MatterDriver.ts
- * @description Driver Matter client pour se connecter au capteur de température virtuel de CHARIOT.
+ * @description Matter client driver for connecting to the CHARIOT virtual temperature sensor.
  */
 
 import { ServerNode, Seconds, Logger, LogLevel } from "@matter/main";
@@ -59,36 +59,36 @@ export class MatterDriver implements DeviceDriver {
     private onRawDataCallback?: (reading: RawReading) => void;
 
     /**
-     * Démarre le contrôleur Matter et procède au commissioning du capteur virtuel.
+     * Starts the Matter controller and commissions the virtual sensor.
      */
     async start(): Promise<void> {
-        // Supprime les logs internes multicast/réseau très verbeux de matter.js
+        // Suppress verbose internal multicast/network logs from matter.js
         Logger.defaultLogLevel = LogLevel.WARN;
 
         // Detect and configure active interface
         setupMdnsInterface();
 
-        console.log(`\x1b[34m[DRIVER Matter] Démarrage du contrôleur Matter...\x1b[0m`);
+        console.log(`\x1b[34m[DRIVER Matter] Starting Matter controller...\x1b[0m`);
 
         
         try {
-            // 1. Initialiser le nœud serveur (Gateway / Contrôleur) avec le support du rôle de contrôleur
+            // 1. Initialize the server node (Gateway / Controller) with controller role support
             const ControllerRootEndpoint = ServerNode.RootEndpoint.with(ControllerBehavior);
 
             this.controllerNode = await ServerNode.create(ControllerRootEndpoint, {
                 id: "chariot-gateway-controller",
                 network: {
-                    port: 0, // Utilise un port libre aléatoire pour éviter le conflit avec le capteur (port 5540)
+                    port: 0, // Use a random free port to avoid conflict with the sensor (port 5540)
                 }
             });
 
-            // 2. Lancer le nœud
+            // 2. Start the node
             await this.controllerNode.start();
-            console.log(`\x1b[32m[DRIVER Matter] Contrôleur démarré avec succès.\x1b[0m`);
+            console.log(`\x1b[32m[DRIVER Matter] Controller started successfully.\x1b[0m`);
 
-            // 3. Lancer le commissioning avec mécanisme de réessai robuste
-            console.log(`\x1b[34m[DRIVER Matter] Recherche et appairage avec le capteur Matter (${this.id})...\x1b[0m`);
-            console.log(`\x1b[34m[DRIVER Matter] Paramètres: Passcode: 20202021, Discriminator: 3840\x1b[0m`);
+            // 3. Commission the sensor with a robust retry mechanism
+            console.log(`\x1b[34m[DRIVER Matter] Searching and pairing with Matter sensor (${this.id})...\x1b[0m`);
+            console.log(`\x1b[34m[DRIVER Matter] Parameters: Passcode: 20202021, Discriminator: 3840\x1b[0m`);
             
             let clientNode;
             const maxRetries = 5;
@@ -96,7 +96,7 @@ export class MatterDriver implements DeviceDriver {
             
             for (let attempt = 1; attempt <= maxRetries; attempt++) {
                 try {
-                    console.log(`\x1b[34m[DRIVER Matter] Connexion directe au capteur via ${targetIp}:5540 (ATTEMPT ${attempt}/${maxRetries})...\x1b[0m`);
+                    console.log(`\x1b[34m[DRIVER Matter] Direct connection to sensor at ${targetIp}:5540 (ATTEMPT ${attempt}/${maxRetries})...\x1b[0m`);
                     const descriptor = {
                         D: 3840,
                         CM: 1,
@@ -108,7 +108,7 @@ export class MatterDriver implements DeviceDriver {
                     };
                     const peerNode = await this.controllerNode.peers.forDescriptor(descriptor);
                     
-                    // Associer le nœud client au contrôleur avant l'appairage
+                    // Associate the peer node with the controller before commissioning
                     this.controllerNode.peers.add(peerNode);
 
                     await peerNode.commission({
@@ -117,37 +117,37 @@ export class MatterDriver implements DeviceDriver {
                     clientNode = peerNode;
                     break;
                 } catch (err: any) {
-                    console.warn(`\x1b[33m[DRIVER Matter] [ATTEMPT ${attempt}/${maxRetries}] Échec temporaire d'appairage direct : ${err.message || err}\x1b[0m`);
+                    console.warn(`\x1b[33m[DRIVER Matter] [ATTEMPT ${attempt}/${maxRetries}] Temporary direct pairing failure: ${err.message || err}\x1b[0m`);
                     if (attempt === maxRetries) {
                         throw err;
                     }
-                    console.log(`\x1b[34m[DRIVER Matter] Attente de ${retryDelayMs / 1000}s avant la prochaine tentative...\x1b[0m`);
+                    console.log(`\x1b[34m[DRIVER Matter] Waiting ${retryDelayMs / 1000}s before next attempt...\x1b[0m`);
                     await new Promise(resolve => setTimeout(resolve, retryDelayMs));
                 }
             }
 
             if (!clientNode) {
-                throw new Error("Impossible d'appairer le capteur Matter : clientNode non défini.");
+                throw new Error("Unable to pair with the Matter sensor: clientNode is undefined.");
             }
 
-            console.log(`\x1b[32m[DRIVER Matter] Appairage RÉUSSI avec le capteur (${this.id}).\x1b[0m`);
+            console.log(`\x1b[32m[DRIVER Matter] Pairing SUCCESSFUL with sensor (${this.id}).\x1b[0m`);
 
-            // 4. Analyser les endpoints pour trouver le cluster TemperatureMeasurement
+            // 4. Scan endpoints to locate the TemperatureMeasurement cluster
             for (const endpoint of clientNode.endpoints) {
                 if (endpoint.behaviors.has(TemperatureMeasurementBehavior)) {
-                    console.log(`\x1b[32m[DRIVER Matter] Cluster de température trouvé sur l'endpoint #${endpoint.number}.\x1b[0m`);
+                    console.log(`\x1b[32m[DRIVER Matter] Temperature cluster found on endpoint #${endpoint.number}.\x1b[0m`);
 
-                    // Lecture de la valeur initiale
+                    // Read the initial value
                     const initialValue = endpoint.stateOf(TemperatureMeasurementBehavior).measuredValue;
                     if (initialValue !== undefined && initialValue !== null) {
-                        console.log(`\x1b[36m[DRIVER Matter] Valeur initiale lue : ${initialValue}\x1b[0m`);
+                        console.log(`\x1b[36m[DRIVER Matter] Initial value read: ${initialValue}\x1b[0m`);
                         this.emitReading(initialValue);
                     }
 
-                    // S'abonner aux futures mises à jour
+                    // Subscribe to future attribute updates
                     endpoint.eventsOf(TemperatureMeasurementBehavior).measuredValue$Changed.on((newValue) => {
                         if (newValue !== undefined && newValue !== null) {
-                            console.log(`\x1b[36m[DRIVER Matter] Notification de changement de température reçue : ${newValue}\x1b[0m`);
+                            console.log(`\x1b[36m[DRIVER Matter] Temperature change notification received: ${newValue}\x1b[0m`);
                             this.emitReading(newValue);
                         }
                     });
@@ -155,30 +155,30 @@ export class MatterDriver implements DeviceDriver {
             }
 
         } catch (error) {
-            console.error(`\x1b[31m[DRIVER Matter] Échec du driver Matter :\x1b[0m`, error);
+            console.error(`\x1b[31m[DRIVER Matter] Matter driver failed:\x1b[0m`, error);
         }
     }
 
     /**
-     * Arrête proprement le contrôleur Matter.
+     * Gracefully stops the Matter controller.
      */
     async stop(): Promise<void> {
-        console.log(`\x1b[34m[DRIVER Matter] Arrêt du driver Matter...\x1b[0m`);
+        console.log(`\x1b[34m[DRIVER Matter] Stopping Matter driver...\x1b[0m`);
         if (this.controllerNode) {
             await this.controllerNode.close();
-            console.log(`\x1b[32m[DRIVER Matter] Contrôleur Matter arrêté.\x1b[0m`);
+            console.log(`\x1b[32m[DRIVER Matter] Matter controller stopped.\x1b[0m`);
         }
     }
 
     /**
-     * Enregistre le callback pour la transmission des données brutes.
+     * Registers the callback for raw data transmission to the pipeline.
      */
     onRawData(callback: (reading: RawReading) => void): void {
         this.onRawDataCallback = callback;
     }
 
     /**
-     * Émet une lecture brute formatée vers le pipeline supérieur.
+     * Emits a formatted raw reading to the upstream pipeline.
      */
     private emitReading(value: number): void {
         if (this.onRawDataCallback) {

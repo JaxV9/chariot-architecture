@@ -1,6 +1,6 @@
 /**
  * @file DeviceDriver.ts
- * @description Interface commune pour tous les drivers de protocole de communication de CHARIOT.
+ * @description Common interface for all CHARIOT protocol drivers.
  */
 
 export interface RawReading {

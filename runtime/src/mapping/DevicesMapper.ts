@@ -1,6 +1,6 @@
 /**
  * @file DevicesMapper.ts
- * @description Mappe les lectures de données brutes des drivers en profils virtuels normalisés (Profile Property Identifier).
+ * @description Maps raw driver readings to normalized virtual profiles (Profile Property Identifier).
  */
 
 import { RawReading } from "../driver/DeviceDriver.js";
@@ -15,23 +15,23 @@ export interface VirtualProfile {
 
 export class DevicesMapper {
     /**
-     * Mappe une donnée brute de capteur en profil virtuel standardisé indépendant du protocole.
+     * Maps a raw sensor reading to a protocol-independent, standardized virtual profile.
      */
     mapToVirtualProfile(reading: RawReading): VirtualProfile {
         let mappedValue = reading.value;
         let unit = "unknown";
         let type = "unknown";
 
-        // Traitement spécifique selon le protocole et la donnée brute
+        // Protocol-specific processing of the raw value
         if (reading.protocol === "matter") {
             if (reading.cluster === "temperatureMeasurement" && reading.attribute === "measuredValue") {
-                // Les valeurs Matter de température sont à l'échelle 100x (ex: 2000 = 20.00°C)
+                // Matter temperature values are scaled by 100 (e.g., 2000 = 20.00°C)
                 mappedValue = reading.value / 100;
                 unit = "celsius";
                 type = "temperature";
             }
         } else {
-            // Autres protocoles (Zigbee/Thread mockés)
+            // Other protocols (mocked Zigbee/Thread)
             if (reading.cluster === "temperature") {
                 mappedValue = reading.value;
                 unit = "celsius";
@@ -47,7 +47,7 @@ export class DevicesMapper {
             timestamp: new Date().toISOString(),
         };
 
-        console.log(`\x1b[32m[DEVICES MAPPING] Donnée mappée : { deviceId: "${profile.deviceId}", type: "${profile.type}", value: ${profile.value} ${profile.unit} }\x1b[0m`);
+        console.log(`\x1b[32m[DEVICES MAPPING] Mapped data: { deviceId: "${profile.deviceId}", type: "${profile.type}", value: ${profile.value} ${profile.unit} }\x1b[0m`);
         return profile;
     }
 }

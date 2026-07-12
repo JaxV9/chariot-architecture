@@ -1,6 +1,6 @@
 /**
  * @file Encryption.ts
- * @description Services de chiffrement AES-256-GCM avec dérivation de clé via scryptSync.
+ * @description AES-256-GCM encryption/decryption service with key derivation via scryptSync.
  */
 
 import * as crypto from "crypto";
@@ -16,18 +16,18 @@ export class Encryption {
     private key: Buffer;
 
     constructor(passphrase = "chariot-super-secret-passphrase", salt = "chariot-cryptographic-salt") {
-        // Dérive une clé cryptographique valide de 32 octets (256 bits) à partir de la phrase de passe
+        // Derive a valid 32-byte (256-bit) cryptographic key from the passphrase
         this.key = crypto.scryptSync(passphrase, salt, 32);
-        console.log(`\x1b[32m[DATA ENCRYPTION] Clé AES-256 dérivée avec succès via scryptSync.\x1b[0m`);
+        console.log(`\x1b[32m[DATA ENCRYPTION] AES-256 key successfully derived via scryptSync.\x1b[0m`);
     }
 
     /**
-     * Chiffre le profil virtuel en AES-256-GCM.
+     * Encrypts a virtual profile using AES-256-GCM.
      */
     encrypt(profile: VirtualProfile): EncryptedPayload {
         const jsonString = JSON.stringify(profile);
         
-        // Générer un IV aléatoire de 12 octets (taille recommandée pour GCM)
+        // Generate a random 12-byte IV (recommended size for GCM mode)
         const iv = crypto.randomBytes(12);
         
         const cipher = crypto.createCipheriv("aes-256-gcm", this.key, iv);
@@ -43,12 +43,12 @@ export class Encryption {
             authTag: authTag,
         };
 
-        console.log(`\x1b[32m[DATA ENCRYPTION] Profil virtuel chiffré. IV: ${result.iv.slice(0, 8)}..., Tag: ${result.authTag.slice(0, 8)}...\x1b[0m`);
+        console.log(`\x1b[32m[DATA ENCRYPTION] Virtual profile encrypted. IV: ${result.iv.slice(0, 8)}..., Tag: ${result.authTag.slice(0, 8)}...\x1b[0m`);
         return result;
     }
 
     /**
-     * Déchiffre un payload chiffré (utilisé pour la vérification).
+     * Decrypts an encrypted payload (used for verification).
      */
     decrypt(payload: EncryptedPayload): VirtualProfile {
         const ivBuffer = Buffer.from(payload.iv, "hex");

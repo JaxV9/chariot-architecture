@@ -1,43 +1,43 @@
 /**
  * @file DataAccess.ts
- * @description Contrôle d'accès aux données utilisateur (conformité Data Act et gestion dynamique du consentement).
+ * @description User data access control layer (Data Act compliance and dynamic consent management).
  */
 
 import { RawReading } from "../driver/DeviceDriver.js";
 
 export class DataAccess {
-    // Par défaut, nous autorisons certains types de données
+    // By default, certain data types are allowed for transmission
     private allowedTypes: Set<string> = new Set(["temperature"]);
 
     /**
-     * Vérifie si la transmission de cette lecture brute est autorisée par l'utilisateur.
+     * Checks whether the transmission of a given raw reading is permitted by the user.
      */
     isTransmissionAllowed(reading: RawReading): boolean {
-        // Dans notre cas d'usage, le type est déduit de la classe/attribut (ex: temperature)
+        // Derive the data type from the cluster/attribute (e.g., temperature)
         const dataType = reading.cluster === "temperatureMeasurement" ? "temperature" : "unknown";
 
         if (this.allowedTypes.has(dataType)) {
-            console.log(`\x1b[32m[DATA ACCESS] [ALLOW] Donnée '${dataType}' autorisée pour le device ${reading.deviceId}.\x1b[0m`);
+            console.log(`\x1b[32m[DATA ACCESS] [ALLOW] Data type '${dataType}' allowed for device ${reading.deviceId}.\x1b[0m`);
             return true;
         } else {
-            console.log(`\x1b[31m[DATA ACCESS] [BLOCK] Transmission REFUSÉE pour la donnée '${dataType}' du device ${reading.deviceId} (consentement utilisateur révoqué).\x1b[0m`);
+            console.log(`\x1b[31m[DATA ACCESS] [BLOCK] Transmission DENIED for data type '${dataType}' from device ${reading.deviceId} (user consent revoked).\x1b[0m`);
             return false;
         }
     }
 
     /**
-     * Permet d'ajouter dynamiquement l'autorisation pour un type de donnée.
+     * Dynamically grants transmission permission for a given data type.
      */
     allowType(dataType: string): void {
         this.allowedTypes.add(dataType);
-        console.log(`\x1b[34m[DATA ACCESS] Consentement ACCORDÉ pour le type : ${dataType}\x1b[0m`);
+        console.log(`\x1b[34m[DATA ACCESS] Consent GRANTED for type: ${dataType}\x1b[0m`);
     }
 
     /**
-     * Permet de révoquer dynamiquement l'autorisation pour un type de donnée (simulation pour la démo).
+     * Dynamically revokes transmission permission for a given data type (demo simulation).
      */
     revokeType(dataType: string): void {
         this.allowedTypes.delete(dataType);
-        console.log(`\x1b[35m[DATA ACCESS] [ACTION DEMO] Consentement RÉVOQUÉ pour le type : ${dataType}\x1b[0m`);
+        console.log(`\x1b[35m[DATA ACCESS] [DEMO ACTION] Consent REVOKED for type: ${dataType}\x1b[0m`);
     }
 }

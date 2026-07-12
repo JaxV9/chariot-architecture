@@ -1,6 +1,6 @@
 /**
  * @file listen.ts
- * @description Script d'écoute MQTT simple pour vérifier la publication et tester le déchiffrement.
+ * @description Simple MQTT listener script to verify message publication and test decryption.
  */
 
 import * as mqtt from "mqtt";
@@ -8,56 +8,56 @@ import { Encryption, EncryptedPayload } from "./security/Encryption.js";
 
 async function main() {
     console.log(`\n\x1b[35;1m===============================================================\x1b[0m`);
-    console.log(`\x1b[35;1m       SCRIPT DE TEST D'ÉCOUTE ET DÉCHIFFREMENT MQTT           \x1b[0m`);
+    console.log(`\x1b[35;1m       MQTT LISTEN & DECRYPT TEST SCRIPT                       \x1b[0m`);
     console.log(`\x1b[35;1m===============================================================\x1b[0m\n`);
 
     const brokerUrl = "mqtt://localhost:1883";
     const topic = "chariot/devices/#";
     
-    // Initialiser le module de déchiffrement avec la même clé scryptSync par défaut
+    // Initialize the decryption module using the same default scryptSync key
     const encryption = new Encryption();
 
-    console.log(`\x1b[34m[LISTEN] Connexion au broker MQTT à l'adresse ${brokerUrl}...\x1b[0m`);
+    console.log(`\x1b[34m[LISTEN] Connecting to MQTT broker at ${brokerUrl}...\x1b[0m`);
     const client = mqtt.connect(brokerUrl, {
         clientId: "chariot-test-listener",
     });
 
     client.on("connect", () => {
-        console.log(`\x1b[32m[LISTEN] Connecté avec succès. Abonnement au topic '${topic}'...\x1b[0m`);
+        console.log(`\x1b[32m[LISTEN] Connected successfully. Subscribing to topic '${topic}'...\x1b[0m`);
         client.subscribe(topic, (err) => {
             if (err) {
-                console.error(`\x1b[31m[LISTEN] Échec de l'abonnement :\x1b[0m`, err);
+                console.error(`\x1b[31m[LISTEN] Subscription failed:\x1b[0m`, err);
             } else {
-                console.log(`\x1b[32m[LISTEN] Abonné avec succès. En attente de messages chiffrés...\x1b[0m`);
+                console.log(`\x1b[32m[LISTEN] Subscribed successfully. Waiting for encrypted messages...\x1b[0m`);
             }
         });
     });
 
     client.on("message", (msgTopic, messageBuffer) => {
         const rawMessage = messageBuffer.toString("utf8");
-        console.log(`\n\x1b[34m[LISTEN] [Nouveau message sur topic : ${msgTopic}]\x1b[0m`);
-        console.log(`\x1b[36m[LISTEN] Payload brut chiffré reçu :\x1b[0m`);
+        console.log(`\n\x1b[34m[LISTEN] [New message on topic: ${msgTopic}]\x1b[0m`);
+        console.log(`\x1b[36m[LISTEN] Raw encrypted payload received:\x1b[0m`);
         console.log(rawMessage);
 
         try {
             const payload: EncryptedPayload = JSON.parse(rawMessage);
             
-            // Tenter de déchiffrer
+            // Attempt to decrypt the payload
             const decryptedProfile = encryption.decrypt(payload);
             
-            console.log(`\x1b[32m[LISTEN] [DÉCHIFFREMENT RÉUSSI] Profil virtuel décodé :\x1b[0m`);
+            console.log(`\x1b[32m[LISTEN] [DECRYPTION SUCCESS] Decoded virtual profile:\x1b[0m`);
             console.log(JSON.stringify(decryptedProfile, null, 2));
         } catch (error: any) {
-            console.error(`\x1b[31m[LISTEN] [ERREUR DÉCHIFFREMENT] Impossible de décoder ou déchiffrer le payload :\x1b[0m`, error.message);
+            console.error(`\x1b[31m[LISTEN] [DECRYPTION ERROR] Unable to parse or decrypt payload:\x1b[0m`, error.message);
         }
     });
 
     client.on("error", (err) => {
-        console.error(`\x1b[31m[LISTEN] Erreur MQTT :\x1b[0m`, err);
+        console.error(`\x1b[31m[LISTEN] MQTT error:\x1b[0m`, err);
     });
 
     const shutdown = () => {
-        console.log(`\n\x1b[33m[LISTEN] Déconnexion et arrêt...\x1b[0m`);
+        console.log(`\n\x1b[33m[LISTEN] Disconnecting and shutting down...\x1b[0m`);
         client.end(false, {}, () => {
             process.exit(0);
         });
@@ -68,5 +68,5 @@ async function main() {
 }
 
 main().catch((err) => {
-    console.error("Erreur critique dans le script d'écoute :", err);
+    console.error("Critical error in the listen script:", err);
 });
