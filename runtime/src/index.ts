@@ -10,6 +10,7 @@ import { MatterDriver } from "./driver/MatterDriver.js";
 import { DataAccess } from "./access/DataAccess.js";
 import { DevicesMapper } from "./mapping/DevicesMapper.js";
 import { Encryption } from "./security/Encryption.js";
+import { AnonymisationEngine } from "./anonymisation/AnonymisationEngine.js";
 
 async function main() {
     console.log(`\n\x1b[35;1m===============================================================\x1b[0m`);
@@ -19,12 +20,22 @@ async function main() {
     // 1. Initialize the system support layers
     const broker = new EmbeddedBroker();
     const publisher = new MqttPublisher();
-    
+
     // 2. Initialize the pipeline processing modules
     const protocolSupport = new ProtocolSupport();
     const dataAccess = new DataAccess();
     const mapper = new DevicesMapper();
     const encryption = new Encryption(); // Key derived via scryptSync
+
+    // Anonymisation is enabled by default; set ANONYMIZATION_ENABLED=false to bypass
+    const anonymisationEnabled = (process.env.ANONYMIZATION_ENABLED ?? "true") !== "false";
+    const anonymisationEngine = new AnonymisationEngine();
+
+    if (anonymisationEnabled) {
+        console.log(`\x1b[35m[GATEWAY] Anonymisation pipeline ENABLED (K=${process.env.ANON_K_THRESHOLD ?? 2}, N=${process.env.ANON_WINDOW_SIZE ?? 5}, σ=${process.env.ANON_SIGMA ?? 0.1})\x1b[0m`);
+    } else {
+        console.log(`\x1b[33m[GATEWAY] Anonymisation pipeline DISABLED — raw virtual profiles will be published.\x1b[0m`);
+    }
 
     // 3. Start the MQTT broker and connect the publisher
     await broker.start();
@@ -40,16 +51,38 @@ async function main() {
             return;
         }
 
-        // Step B: Devices Mapping (Normalization)
+        // Step B: Devices Mapping (Normalization → VirtualProfile)
         const virtualProfile = mapper.mapToVirtualProfile(reading);
 
-        // Step C: AES-256-GCM Encryption
-        const encryptedPayload = encryption.encrypt(virtualProfile);
+        // Step C: Anonymisation pipeline (temporal aggregation → k-anonymity → Gaussian noise)
+        if (anonymisationEnabled) {
+            const groupProfile = anonymisationEngine.process(virtualProfile);
 
-        // Step D: Publish to the MQTT Message Bus
-        publisher.publish(reading.deviceId, encryptedPayload);
-        
-        console.log(`\x1b[35m[PIPELINE] [SUCCESS] Pipeline completed for temperature data.\x1b[0m`);
+            if (groupProfile === null) {
+                // K threshold not reached — data withheld, pipeline stops here
+                console.log(`\x1b[33m[PIPELINE] [STOP] Anonymisation withheld data (K threshold not reached). No MQTT publish.\x1b[0m`);
+                return;
+            }
+
+            // Step D: AES-256-GCM Encryption (on GroupProfile)
+            const encryptedPayload = encryption.encrypt(groupProfile);
+
+            // Step E: Publish to MQTT Message Bus (topic keyed by groupId)
+            publisher.publish(groupProfile.groupId, encryptedPayload);
+
+            console.log(`\x1b[35m[PIPELINE] [SUCCESS] Anonymised group profile published for group '${groupProfile.groupId}' (${groupProfile.deviceCount} device(s)).\x1b[0m`);
+
+        } else {
+            // Anonymisation disabled — pass VirtualProfile directly
+
+            // Step D: AES-256-GCM Encryption (on VirtualProfile)
+            const encryptedPayload = encryption.encrypt(virtualProfile);
+
+            // Step E: Publish to MQTT Message Bus (topic keyed by deviceId)
+            publisher.publish(reading.deviceId, encryptedPayload);
+
+            console.log(`\x1b[35m[PIPELINE] [SUCCESS] Pipeline completed for device '${reading.deviceId}'.\x1b[0m`);
+        }
     });
 
     // 5. Register the active protocol drivers

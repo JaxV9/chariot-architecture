@@ -5,6 +5,10 @@
 
 import * as crypto from "crypto";
 import { VirtualProfile } from "../mapping/DevicesMapper.js";
+import { GroupProfile } from "../anonymisation/GroupProfile.js";
+
+/** Union of the two possible profile shapes that can flow into encryption. */
+export type EncryptableProfile = VirtualProfile | GroupProfile;
 
 export interface EncryptedPayload {
     iv: string;
@@ -24,7 +28,7 @@ export class Encryption {
     /**
      * Encrypts a virtual profile using AES-256-GCM.
      */
-    encrypt(profile: VirtualProfile): EncryptedPayload {
+    encrypt(profile: EncryptableProfile): EncryptedPayload {
         const jsonString = JSON.stringify(profile);
         
         // Generate a random 12-byte IV (recommended size for GCM mode)
@@ -50,7 +54,7 @@ export class Encryption {
     /**
      * Decrypts an encrypted payload (used for verification).
      */
-    decrypt(payload: EncryptedPayload): VirtualProfile {
+    decrypt(payload: EncryptedPayload): EncryptableProfile {
         const ivBuffer = Buffer.from(payload.iv, "hex");
         const authTagBuffer = Buffer.from(payload.authTag, "hex");
         

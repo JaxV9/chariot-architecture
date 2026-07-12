@@ -34,7 +34,7 @@ export class MessageBusSubscriber {
             console.log(`\x1b[34m[MESSAGE BUS] Connecting to MQTT broker at ${this.brokerUrl}...\x1b[0m`);
             
             this.client = mqtt.connect(this.brokerUrl, {
-                clientId: "chariot-communication-middleware",
+                clientId: `chariot-communication-middleware-${Math.random().toString(16).substring(2, 10)}`,
             });
 
             this.client.on("connect", () => {

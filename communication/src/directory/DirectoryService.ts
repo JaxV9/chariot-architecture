@@ -9,6 +9,7 @@ export interface VirtualProfile {
     unit: string;
     value: number;
     timestamp: string;
+    deviceCount?: number;
 }
 
 export class DirectoryService {

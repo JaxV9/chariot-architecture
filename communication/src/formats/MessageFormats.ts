@@ -15,10 +15,11 @@ export class MessageFormats {
             throw new Error("Message is not a valid JSON object");
         }
 
-        const { deviceId, type, unit, value, timestamp } = data;
+        const { deviceId, groupId, type, unit, value, timestamp } = data;
+        const id = deviceId || groupId;
 
-        if (typeof deviceId !== "string" || deviceId.trim() === "") {
-            throw new Error("Field 'deviceId' must be a non-empty string");
+        if (typeof id !== "string" || id.trim() === "") {
+            throw new Error("Field 'deviceId' or 'groupId' must be a non-empty string");
         }
 
         if (typeof type !== "string" || type.trim() === "") {
@@ -39,11 +40,12 @@ export class MessageFormats {
 
         // All fields valid — return the typed VirtualProfile object
         return {
-            deviceId,
+            deviceId: id,
             type,
             unit,
             value,
-            timestamp
+            timestamp,
+            ...(data.deviceCount !== undefined ? { deviceCount: data.deviceCount } : {})
         };
     }
 }
