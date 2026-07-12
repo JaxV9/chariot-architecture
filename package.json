@@ -1,0 +1,14 @@
+{
+  "name": "chariot",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "devices",
+    "runtime",
+    "communication",
+    "services"
+  ],
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

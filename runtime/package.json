@@ -1,0 +1,22 @@
+{
+  "name": "@chariot/runtime",
+  "version": "1.0.0",
+  "private": true,
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js"
+  },
+  "dependencies": {
+    "@matter/main": "^0.17.4",
+    "@matter/nodejs": "^0.17.4",
+    "aedes": "^0.51.3",
+    "mqtt": "^5.10.1"
+  },
+  "devDependencies": {
+    "@types/node": "^26.1.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^7.0.2"
+  }
+}
