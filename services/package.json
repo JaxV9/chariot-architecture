@@ -2,10 +2,20 @@
   "name": "@chariot/services",
   "version": "1.0.0",
   "private": true,
+  "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc",
     "start": "node dist/index.js"
+  },
+  "dependencies": {
+    "@chariot/communication": "*",
+    "express": "^4.19.2"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^26.1.1",
+    "typescript": "^7.0.2"
   }
 }
