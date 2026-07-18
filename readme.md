@@ -132,18 +132,18 @@ curl -H "Authorization: Bearer chariot-test-token" http://localhost:3000/devices
 ```
 *Expected Response:*
 ```json
-["chariot-temp-sensor"]
+["matter-temp-01"]
 ```
 
 #### 3. Get Latest Device Virtual Profile
 Get the latest decrypted and mapped state for a device:
 ```bash
-curl -H "Authorization: Bearer chariot-test-token" http://localhost:3000/devices/chariot-temp-sensor
+curl -H "Authorization: Bearer chariot-test-token" http://localhost:3000/devices/matter-temp-01
 ```
 *Expected Response:*
 ```json
 {
-  "deviceId": "chariot-temp-sensor",
+  "deviceId": "matter-temp-01",
   "type": "temperature",
   "unit": "celsius",
   "value": 20.15,
@@ -154,20 +154,20 @@ curl -H "Authorization: Bearer chariot-test-token" http://localhost:3000/devices
 #### 4. Get Device Reading History
 Fetch the rolling history (up to last 10 entries) for the device:
 ```bash
-curl -H "Authorization: Bearer chariot-test-token" http://localhost:3000/devices/chariot-temp-sensor/history
+curl -H "Authorization: Bearer chariot-test-token" http://localhost:3000/devices/matter-temp-01/history
 ```
 *Expected Response:*
 ```json
 [
   {
-    "deviceId": "chariot-temp-sensor",
+    "deviceId": "matter-temp-01",
     "type": "temperature",
     "unit": "celsius",
     "value": 20.15,
     "timestamp": "2026-07-12T13:31:07.000Z"
   },
   {
-    "deviceId": "chariot-temp-sensor",
+    "deviceId": "matter-temp-01",
     "type": "temperature",
     "unit": "celsius",
     "value": 20.02,

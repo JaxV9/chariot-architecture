@@ -103,6 +103,8 @@ async function main() {
             deviceId: reading.deviceId,
             protocol: reading.protocol,
             rawValue: telemetryRawValue,
+            homeId,
+            zoneId,
             timestamp: new Date().toISOString(),
             rawReading: {
                 deviceId: reading.deviceId,
@@ -153,17 +155,17 @@ async function main() {
     } else {
         // Defaults based on homeId
         if (homeId === "house-1") {
-            deviceIds = ["chariot-temp-sensor", "zigbee-temp-01", "zigbee-energy-01"];
+            deviceIds = ["matter-temp-01", "zigbee-temp-01", "zigbee-energy-01"];
         } else if (homeId === "house-2") {
             deviceIds = ["thread-temp-01", "thread-energy-01"];
         } else {
-            deviceIds = ["chariot-temp-sensor", "zigbee-energy-01"];
+            deviceIds = ["matter-temp-01", "zigbee-energy-01"];
         }
     }
 
     // 5. Register the active protocol drivers
     for (const dId of deviceIds) {
-        if (dId === "chariot-temp-sensor") {
+        if (dId === "matter-temp-01") {
             const matterDriver = new MatterDriver();
             protocolSupport.registerDriver(matterDriver);
         } else if (dId.includes("energy")) {

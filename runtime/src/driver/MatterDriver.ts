@@ -53,7 +53,7 @@ function setupMdnsInterface() {
 }
 
 export class MatterDriver implements DeviceDriver {
-    readonly id = "chariot-temp-sensor";
+    readonly id = "matter-temp-01";
     readonly protocol = "matter";
     private controllerNode?: ServerNode;
     private onRawDataCallback?: (reading: RawReading) => void;

@@ -5,6 +5,7 @@ import { RuntimePanel } from "./components/RuntimePanel.tsx";
 import { CommunicationPanel, TelemetryCommunicationEvent } from "./components/CommunicationPanel.tsx";
 import { ServicesPanel } from "./components/ServicesPanel.tsx";
 import { DataFormatPanel } from "./components/DataFormatPanel.tsx";
+import { SpatialView } from "./components/SpatialView.tsx";
 
 interface LogLine {
   id: string;
@@ -26,7 +27,7 @@ export default function App() {
   const [devices, setDevices] = useState<Record<string, DeviceData>>({});
   
   // Tabs Navigation
-  const [activeTab, setActiveTab] = useState<"live" | "format">("live");
+  const [activeTab, setActiveTab] = useState<"live" | "spatial" | "format">("live");
 
   // Config State (synced from runtime or modified locally before applying)
   const [config, setConfig] = useState({
@@ -226,6 +227,8 @@ export default function App() {
                 deviceId: data.deviceId,
                 protocol: data.protocol,
                 rawValue: data.rawValue,
+                homeId: data.homeId,
+                zoneId: data.zoneId,
                 timestamp,
                 unit: data.virtualProfile?.unit,
               },
@@ -531,6 +534,12 @@ export default function App() {
           Vue live
         </button>
         <button 
+          className={`tab-btn ${activeTab === "spatial" ? "active" : ""}`}
+          onClick={() => setActiveTab("spatial")}
+        >
+          Vue spatiale
+        </button>
+        <button 
           className={`tab-btn ${activeTab === "format" ? "active" : ""}`}
           onClick={() => setActiveTab("format")}
         >
@@ -546,6 +555,12 @@ export default function App() {
           <CommunicationPanel zones={communicationGroups} privacyState={groupState} />
           <ServicesPanel />
         </div>
+      ) : activeTab === "spatial" ? (
+        <SpatialView 
+          devices={devices} 
+          intraHomeState={intraHomeState} 
+          privacyState={groupState} 
+        />
       ) : (
         /* Data Format Tab Content */
         <DataFormatPanel dataFormatState={dataFormatState} />

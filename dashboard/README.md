@@ -1,7 +1,17 @@
 # CHARIOT Dashboard Server & Client
 
 This package provides a real-time web-based visualization dashboard for the CHARIOT Smart Home middleware architecture.
-It allows you to view raw sensor readings, trace the edge anonymisation pipeline, see group entries stored in directory services, and poll the public service layer REST API.
+It allows you to view raw sensor readings, trace the edge anonymisation pipeline, see group entries stored in directory services, poll the public service layer REST API, and visualize the spatial/hierarchical relationship of devices within homes and zones.
+
+## Views
+
+1. **Vue Live (Flow View)**: Sequential diagram of the layered architecture (Devices -> Runtime -> Communication -> Services).
+2. **Vue Spatiale (Spatial View)**: Nested representation illustrating physical relationships (Zone -> Houses -> Devices) and their logical mapping to the cloud middleware and external API endpoints. It demonstrates:
+   - **Local Aggregations**: Calculated real-time averages for each home runtime gateway (e.g. average temperature, average energy).
+   - **K-Anonymity Verification**: Shows published/withheld status based on the configured K threshold of active houses in a zone.
+   - **Gaussian Noise Injection**: Highlights the mathematical noise added (Box-Muller transform) to the final stored zone metrics.
+   - **Zero-Trust REST endpoints**: Simulates the API layer requesting and exposing only anonymized zone metrics.
+3. **Format des données**: Real-time representation of JSON payloads and AES-256-GCM encrypted strings flowing between layers.
 
 ## Design Architecture
 

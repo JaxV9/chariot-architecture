@@ -7,6 +7,8 @@ export interface DeviceData {
   rawValue: number;
   timestamp: string;
   unit?: string;
+  homeId?: string;
+  zoneId?: string;
 }
 
 interface DevicesPanelProps {

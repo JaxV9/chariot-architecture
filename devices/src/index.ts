@@ -49,7 +49,7 @@ async function main() {
 
     // 1. Initialize the Matter ServerNode
     const node = await ServerNode.create({
-        id: "chariot-temp-sensor",
+        id: "matter-temp-01",
         network: {
             port: 5540,
         },

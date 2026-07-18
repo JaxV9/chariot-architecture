@@ -48,7 +48,7 @@ The gateway only publishes a single aggregated value per data type for the home,
 | `HOME_ID` | `house-1` | Identifier of this home instance (e.g. `house-1`, `house-2`) |
 | `ZONE_ID` | `quartier-nord` | Geographical zone identifier shared by multiple homes |
 | `START_BROKER` | `true` | Set to `false` to prevent launching a local MQTT broker conflict on port 1883 |
-| `DEVICE_IDS` | *(dynamic)* | Comma-separated list of devices to drive (e.g., `chariot-temp-sensor,zigbee-temp-01`) |
+| `DEVICE_IDS` | *(dynamic)* | Comma-separated list of devices to drive (e.g., `matter-temp-01,zigbee-temp-01`) |
 | `ANONYMIZATION_ENABLED` | `true` | Set to `false` to disable local aggregation |
 | `ANON_WINDOW_SIZE` | `5` | Sliding window size N for temporal smoothing |
 
@@ -60,7 +60,7 @@ To simulate multiple houses reporting to the same zone, start multiple runtime i
 
 ```bash
 # House 1 (starts the Aedes MQTT broker)
-START_BROKER=true HOME_ID=house-1 ZONE_ID=quartier-nord DEVICE_IDS=chariot-temp-sensor,zigbee-temp-01 npm start -w runtime
+START_BROKER=true HOME_ID=house-1 ZONE_ID=quartier-nord DEVICE_IDS=matter-temp-01,zigbee-temp-01 npm start -w runtime
 
 # House 2 (connects to the Aedes broker of House 1)
 START_BROKER=false HOME_ID=house-2 ZONE_ID=quartier-nord DEVICE_IDS=thread-temp-01 npm start -w runtime
