@@ -7,6 +7,7 @@ import { EmbeddedBroker } from "./broker/EmbeddedBroker.js";
 import { MqttPublisher } from "./publisher/MqttPublisher.js";
 import { ProtocolSupport } from "./protocols/ProtocolSupport.js";
 import { MatterDriver } from "./driver/MatterDriver.js";
+import { MockDriver } from "./driver/MockDriver.js";
 import { DataAccess } from "./access/DataAccess.js";
 import { DevicesMapper } from "./mapping/DevicesMapper.js";
 import { Encryption } from "./security/Encryption.js";
@@ -14,12 +15,16 @@ import { AnonymisationEngine } from "./anonymisation/AnonymisationEngine.js";
 import { TelemetryClient } from "./telemetry/TelemetryClient.js";
 
 async function main() {
+    const homeId = process.env.HOME_ID ?? "house-1";
+    const zoneId = process.env.ZONE_ID ?? "quartier-nord";
+    const startBroker = (process.env.START_BROKER ?? "true") !== "false";
+
     console.log(`\n\x1b[35;1m===============================================================\x1b[0m`);
-    console.log(`\x1b[35;1m    STARTING CHARIOT GATEWAY (RUNTIME ENVIRONMENT)             \x1b[0m`);
+    console.log(`\x1b[35;1m    STARTING CHARIOT GATEWAY [HOME: ${homeId.toUpperCase()}, ZONE: ${zoneId.toUpperCase()}]   \x1b[0m`);
     console.log(`\x1b[35;1m===============================================================\x1b[0m\n`);
 
     // 1. Initialize the system support layers
-    const broker = new EmbeddedBroker();
+    const broker = startBroker ? new EmbeddedBroker() : null;
     const publisher = new MqttPublisher();
 
     // Initialize optional telemetry client (no-op if TELEMETRY_ENABLED !== "true")
@@ -40,7 +45,7 @@ async function main() {
     );
 
     if (anonymisationEnabled) {
-        console.log(`\x1b[35m[GATEWAY] Anonymisation pipeline ENABLED (K=${process.env.ANON_K_THRESHOLD ?? 2}, N=${process.env.ANON_WINDOW_SIZE ?? 5}, σ=${process.env.ANON_SIGMA ?? 0.1})\x1b[0m`);
+        console.log(`\x1b[35m[GATEWAY] Aggregation pipeline ENABLED (Window N=${anonymisationEngine.getWindowSize()})\x1b[0m`);
 
         // Register config update receiver
         telemetry.onConfigUpdate((config) => {
@@ -68,11 +73,13 @@ async function main() {
             } as any);
         });
     } else {
-        console.log(`\x1b[33m[GATEWAY] Anonymisation pipeline DISABLED — raw virtual profiles will be published.\x1b[0m`);
+        console.log(`\x1b[33m[GATEWAY] Aggregation pipeline DISABLED — raw virtual profiles will be published.\x1b[0m`);
     }
 
-    // 3. Start the MQTT broker and connect the publisher
-    await broker.start();
+    // 3. Start the MQTT broker (if configured to start locally) and connect the publisher
+    if (broker) {
+        await broker.start();
+    }
     await publisher.connect();
 
     // 4. Wire up the data processing pipeline
@@ -82,7 +89,7 @@ async function main() {
         // Step B: Devices Mapping (Normalization → VirtualProfile)
         const virtualProfile = mapper.mapToVirtualProfile(reading);
 
-        // Emit device-level telemetry event (fire-and-forget, no impact if dashboard is down)
+        // Emit device-level telemetry event
         let telemetryRawValue = reading.value;
         if (reading.protocol === "matter") {
             if (reading.cluster === "temperatureMeasurement" && reading.attribute === "measuredValue") {
@@ -113,46 +120,60 @@ async function main() {
             return;
         }
 
-        // Step B: Devices Mapping (Normalization → VirtualProfile) - already mapped above
-
-        // Step C: Anonymisation pipeline (temporal aggregation → k-anonymity → Gaussian noise)
+        // Step C: Aggregation pipeline (temporal smoothing → intra-home aggregation)
         if (anonymisationEnabled) {
-            const groupProfile = anonymisationEngine.process(virtualProfile);
+            const homeAggregate = anonymisationEngine.process(virtualProfile);
 
-            if (groupProfile === null) {
-                // K threshold not reached — data withheld, pipeline stops here
-                console.log(`\x1b[33m[PIPELINE] [STOP] Anonymisation withheld data (K threshold not reached). No MQTT publish.\x1b[0m`);
+            if (homeAggregate === null) {
                 return;
             }
 
-            // Step D: AES-256-GCM Encryption (on GroupProfile)
-            const encryptedPayload = encryption.encrypt(groupProfile);
+            // Step D: AES-256-GCM Encryption (on HomeAggregateProfile)
+            const encryptedPayload = encryption.encrypt(homeAggregate);
 
-            // Step E: Publish to MQTT Message Bus (topic keyed by groupId)
-            publisher.publish(groupProfile.groupId, encryptedPayload);
+            // Step E: Publish to MQTT Message Bus (topic keyed by zoneId)
+            publisher.publish(homeAggregate.zoneId, encryptedPayload);
 
-            console.log(`\x1b[35m[PIPELINE] [SUCCESS] Anonymised group profile published for group '${groupProfile.groupId}' (${groupProfile.deviceCount} device(s)).\x1b[0m`);
+            console.log(`\x1b[35m[PIPELINE] [SUCCESS] Aggregated home profile published for zone '${homeAggregate.zoneId}'.\x1b[0m`);
 
         } else {
-            // Anonymisation disabled — pass VirtualProfile directly
-
-            // Step D: AES-256-GCM Encryption (on VirtualProfile)
+            // Aggregation disabled — pass VirtualProfile directly (fallback mode)
             const encryptedPayload = encryption.encrypt(virtualProfile);
+            publisher.publish(zoneId, encryptedPayload);
 
-            // Step E: Publish to MQTT Message Bus (topic keyed by deviceId)
-            publisher.publish(reading.deviceId, encryptedPayload);
-
-            console.log(`\x1b[35m[PIPELINE] [SUCCESS] Pipeline completed for device '${reading.deviceId}'.\x1b[0m`);
+            console.log(`\x1b[35m[PIPELINE] [SUCCESS] Pipeline completed for device '${reading.deviceId}' (raw mode).\x1b[0m`);
         }
     });
 
+    // Parse device IDs to load
+    let deviceIds: string[] = [];
+    if (process.env.DEVICE_IDS) {
+        deviceIds = process.env.DEVICE_IDS.split(",").map(id => id.trim());
+    } else {
+        // Defaults based on homeId
+        if (homeId === "house-1") {
+            deviceIds = ["chariot-temp-sensor", "zigbee-temp-01"];
+        } else if (homeId === "house-2") {
+            deviceIds = ["thread-temp-01"];
+        } else {
+            deviceIds = ["chariot-temp-sensor"];
+        }
+    }
+
     // 5. Register the active protocol drivers
-    const matterDriver = new MatterDriver();
-    protocolSupport.registerDriver(matterDriver);
+    for (const dId of deviceIds) {
+        if (dId === "chariot-temp-sensor") {
+            const matterDriver = new MatterDriver();
+            protocolSupport.registerDriver(matterDriver);
+        } else {
+            const protocol = dId.startsWith("thread") ? "thread" : "zigbee";
+            const mockDriver = new MockDriver(dId, protocol);
+            protocolSupport.registerDriver(mockDriver);
+        }
+    }
 
     // 6. Start all registered protocol drivers
     await protocolSupport.startAll();
-
 
     // 8. Handle graceful system shutdown
     const shutdown = async () => {
@@ -160,7 +181,9 @@ async function main() {
         try {
             await protocolSupport.stopAll();
             await publisher.disconnect();
-            await broker.stop();
+            if (broker) {
+                await broker.stop();
+            }
             telemetry.close();
             console.log(`\x1b[32m[GATEWAY] Shutdown completed successfully.\x1b[0m`);
             process.exit(0);

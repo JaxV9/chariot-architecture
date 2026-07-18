@@ -5,10 +5,10 @@
 
 import * as crypto from "crypto";
 import { VirtualProfile } from "../mapping/DevicesMapper.js";
-import { GroupProfile } from "../anonymisation/GroupProfile.js";
+import { HomeAggregateProfile } from "../anonymisation/HomeAggregateProfile.js";
 
 /** Union of the two possible profile shapes that can flow into encryption. */
-export type EncryptableProfile = VirtualProfile | GroupProfile;
+export type EncryptableProfile = VirtualProfile | HomeAggregateProfile;
 
 export interface EncryptedPayload {
     iv: string;

@@ -1,6 +1,7 @@
 /**
  * @file MqttPublisher.ts
- * @description MQTT client that publishes encrypted payloads to the chariot/devices/{deviceId} topic.
+ * @description MQTT client that publishes encrypted home aggregate payloads to the chariot/zones/{zoneId} topic.
+ * Uses a non-blocking connection design with auto-reconnect.
  */
 
 import * as mqtt from "mqtt";
@@ -11,38 +12,37 @@ export class MqttPublisher {
     private brokerUrl = "mqtt://localhost:1883";
 
     /**
-     * Connects to the local MQTT broker.
+     * Connects to the local MQTT broker asynchronously without blocking the startup flow.
      */
     async connect(): Promise<void> {
-        console.log(`\x1b[34m[MQTT PUBLISHER] Connecting to MQTT broker at ${this.brokerUrl}...\x1b[0m`);
+        console.log(`\x1b[34m[MQTT PUBLISHER] Initiating connection to MQTT broker at ${this.brokerUrl}...\x1b[0m`);
         
-        return new Promise((resolve, reject) => {
-            this.client = mqtt.connect(this.brokerUrl, {
-                clientId: "chariot-gateway-publisher",
-            });
+        const homeId = process.env.HOME_ID ?? "default-home";
 
-            this.client.on("connect", () => {
-                console.log(`\x1b[32m[MQTT PUBLISHER] Connected to local MQTT broker.\x1b[0m`);
-                resolve();
-            });
+        this.client = mqtt.connect(this.brokerUrl, {
+            clientId: `chariot-gateway-publisher-${homeId}-${Math.random().toString(16).substring(2, 6)}`,
+            reconnectPeriod: 2000, // Retry every 2 seconds if connection is lost/unestablished
+        });
 
-            this.client.on("error", (err) => {
-                console.error(`\x1b[31m[MQTT PUBLISHER] MQTT connection error:\x1b[0m`, err);
-                reject(err);
-            });
+        this.client.on("connect", () => {
+            console.log(`\x1b[32m[MQTT PUBLISHER] Connected successfully to MQTT broker.\x1b[0m`);
+        });
+
+        this.client.on("error", (err) => {
+            console.warn(`\x1b[33m[MQTT PUBLISHER] MQTT connection status: ${err.message} (will auto-retry in the background)\x1b[0m`);
         });
     }
 
     /**
-     * Publishes an encrypted sensor payload to the device's MQTT topic.
+     * Publishes an encrypted aggregate payload to the zone's MQTT topic.
      */
-    publish(deviceId: string, payload: EncryptedPayload): void {
-        if (!this.client || !this.client.connected) {
-            console.error(`\x1b[31m[MQTT PUBLISHER] Cannot publish: not connected to broker.\x1b[0m`);
+    publish(zoneId: string, payload: EncryptedPayload): void {
+        if (!this.client) {
+            console.error(`\x1b[31m[MQTT PUBLISHER] Cannot publish: MQTT client is not initialized.\x1b[0m`);
             return;
         }
 
-        const topic = `chariot/devices/${deviceId}`;
+        const topic = `chariot/zones/${zoneId}`;
         const message = JSON.stringify(payload);
 
         this.client.publish(topic, message, { qos: 1 }, (err) => {

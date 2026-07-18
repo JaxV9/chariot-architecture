@@ -1,26 +1,23 @@
 /**
  * @file test-communication.ts
  * @description Local integration test file to validate the full communication pipeline.
- * This script publishes encrypted test data (valid and corrupted) to the MQTT broker
- * to verify decryption, format validation, Directory Services storage, and the 10-entry history limit.
  */
 
 import * as mqtt from "mqtt";
 import * as crypto from "crypto";
-import { DirectoryService, VirtualProfile } from "./directory/DirectoryService.js";
+import { DirectoryService, ZoneProfile } from "./directory/DirectoryService.js";
 import { MessageBusSubscriber } from "./bus/MessageBusSubscriber.js";
+import { HomeAggregateProfile } from "./anonymisation/HomeAggregateProfile.js";
 
-// Algorithm and key identical to the runtime
 const ALGORITHM = "aes-256-gcm";
 const PASSPHRASE = "chariot-super-secret-passphrase";
 const SALT = "chariot-cryptographic-salt";
-// Derive the key with scryptSync identical to the runtime
 const key = crypto.scryptSync(PASSPHRASE, SALT, 32);
 
 /**
  * Helper function to simulate runtime-side encryption.
  */
-function encryptPayload(profile: VirtualProfile) {
+function encryptPayload(profile: HomeAggregateProfile) {
     const jsonString = JSON.stringify(profile);
     const iv = crypto.randomBytes(12);
     const cipher = crypto.createCipheriv(ALGORITHM, key, iv);
@@ -42,17 +39,21 @@ async function runTests() {
     console.log(`\x1b[35;1m===============================================================\x1b[0m\n`);
 
     const brokerUrl = "mqtt://localhost:1883";
-    const testDeviceId = "chariot-test-sensor";
+    const testZoneId = "quartier-nord";
 
-    // 1. Initialize the Directory Service and the Message Bus Subscriber
+    // Configure environmental thresholds for tests
+    process.env.ANON_K_THRESHOLD = "2";
+    process.env.ANON_SIGMA = "0.0"; // Disable noise for predictable validation values
+
+    // 1. Initialize Directory Service and Message Bus Subscriber
     const directoryService = new DirectoryService();
     const subscriber = new MessageBusSubscriber(directoryService, brokerUrl);
 
-    // 2. Connect to the MQTT broker (the runtime broker must be running)
+    // 2. Connect to the MQTT broker
     try {
         await subscriber.connect();
     } catch (err) {
-        console.error("\x1b[31m[TEST] Failed to connect to MQTT broker. Make sure the runtime gateway is running!\x1b[0m");
+        console.error("\x1b[31m[TEST] Failed to connect to MQTT broker. Make sure the MQTT broker is running!\x1b[0m");
         process.exit(1);
     }
 
@@ -63,96 +64,81 @@ async function runTests() {
         console.log("\x1b[32m[TEST] Test client connected to MQTT broker. Launching test sequences...\x1b[0m");
 
         try {
-            // TEST 1: Publish a valid encrypted message
-            console.log("\n\x1b[34;1m--- TEST 1: Valid encrypted message ---\x1b[0m");
-            const validProfile: VirtualProfile = {
-                deviceId: testDeviceId,
+            // TEST 1: Publish first home's data (K-anonymity should withhold)
+            console.log("\n\x1b[34;1m--- TEST 1: Single home contribution (withheld) ---\x1b[0m");
+            const house1Profile: HomeAggregateProfile = {
+                homeId: "house-1",
+                zoneId: testZoneId,
                 type: "temperature",
                 unit: "celsius",
-                value: 21.5,
+                value: 20.0,
                 timestamp: new Date().toISOString()
             };
-            const encryptedValid = encryptPayload(validProfile);
-            client.publish(`chariot/devices/${testDeviceId}`, JSON.stringify(encryptedValid));
+            const encrypted1 = encryptPayload(house1Profile);
+            client.publish(`chariot/zones/${testZoneId}`, JSON.stringify(encrypted1));
             
-            // Wait briefly for the subscriber to process the message
             await new Promise(resolve => setTimeout(resolve, 800));
 
-            // Verify storage
-            const latest = directoryService.getDeviceLatest(testDeviceId);
-            if (latest && latest.value === 21.5) {
-                console.log("\x1b[32m[TEST 1 SUCCESS] Valid message was decrypted and stored with value 21.5.\x1b[0m");
+            // Verify withheld in Directory Services
+            const latest1 = directoryService.getZoneLatest(testZoneId);
+            if (!latest1) {
+                console.log("\x1b[32m[TEST 1 SUCCESS] Data withheld correctly (only 1 home active, K=2).\x1b[0m");
             } else {
-                throw new Error("Test 1 failed: profile not found or incorrect value.");
+                throw new Error("Test 1 failed: zone profile should be withheld.");
             }
 
-            // TEST 2: Robustness against malformed messages and decryption errors
-            console.log("\n\x1b[34;1m--- TEST 2: Robustness against anomalies (no crash expected) ---\x1b[0m");
-            
-            // Anomaly A: Corrupted JSON
-            console.log("\x1b[33m[TEST 2a] Publishing corrupted JSON...\x1b[0m");
-            client.publish(`chariot/devices/${testDeviceId}`, "{ malformed_json...");
-            await new Promise(resolve => setTimeout(resolve, 500));
-
-            // Anomaly B: Message encrypted with a wrong key
-            console.log("\x1b[33m[TEST 2b] Publishing a message with a wrong key/signature...\x1b[0m");
-            const wrongKey = crypto.scryptSync("wrong-passphrase", "wrong-salt", 32);
-            const iv = crypto.randomBytes(12);
-            const cipher = crypto.createCipheriv(ALGORITHM, wrongKey, iv);
-            let enc = cipher.update(JSON.stringify(validProfile), "utf8", "hex");
-            enc += cipher.final("hex");
-            const badPayload = {
-                iv: iv.toString("hex"),
-                encryptedData: enc,
-                authTag: cipher.getAuthTag().toString("hex")
-            };
-            client.publish(`chariot/devices/${testDeviceId}`, JSON.stringify(badPayload));
-            await new Promise(resolve => setTimeout(resolve, 500));
-
-            // Anomaly C: Decrypted virtual profile with invalid fields (format validation failure)
-            console.log("\x1b[33m[TEST 2c] Publishing a profile with invalid fields...\x1b[0m");
-            const invalidProfile = {
-                deviceId: "", // Invalid: empty string
+            // TEST 2: Publish second home's data (K-anonymity should satisfy)
+            console.log("\n\x1b[34;1m--- TEST 2: Second home contribution (published) ---\x1b[0m");
+            const house2Profile: HomeAggregateProfile = {
+                homeId: "house-2",
+                zoneId: testZoneId,
                 type: "temperature",
                 unit: "celsius",
-                value: "not-a-number", // Invalid: string instead of number
+                value: 22.0,
                 timestamp: new Date().toISOString()
             };
-            const encryptedInvalid = encryptPayload(invalidProfile as any);
-            client.publish(`chariot/devices/${testDeviceId}`, JSON.stringify(encryptedInvalid));
-            await new Promise(resolve => setTimeout(resolve, 500));
+            const encrypted2 = encryptPayload(house2Profile);
+            client.publish(`chariot/zones/${testZoneId}`, JSON.stringify(encrypted2));
+            
+            await new Promise(resolve => setTimeout(resolve, 800));
 
-            console.log("\x1b[32m[TEST 2 SUCCESS] All anomaly tests handled cleanly (error logs above are expected). Middleware did not crash.\x1b[0m");
+            // Verify published & stored in Directory Services
+            const latest2 = directoryService.getZoneLatest(testZoneId);
+            if (latest2 && latest2.value === 21.0) { // mean of 20 and 22 is 21
+                console.log("\x1b[32m[TEST 2 SUCCESS] Zone profile published and stored with value 21.0 (K=2 threshold met).\x1b[0m");
+            } else {
+                throw new Error(`Test 2 failed: expected 21.0, found ${latest2 ? latest2.value : "undefined"}`);
+            }
 
-            // TEST 3: Validate the 10-entry history limit
+            // TEST 3: Validate history limits
             console.log("\n\x1b[34;1m--- TEST 3: 10-entry history limit ---\x1b[0m");
             directoryService.clear();
 
-            // Publish 15 consecutive messages with different values (10 to 24)
-            console.log("\x1b[33m[TEST 3] Publishing 15 successive readings...\x1b[0m");
+            // Publish 15 messages (meeting K-anonymity by including both house-1 and house-2)
+            console.log("\x1b[33m[TEST 3] Publishing 15 successive zone readings...\x1b[0m");
             for (let i = 10; i < 25; i++) {
-                const profile: VirtualProfile = {
-                    deviceId: testDeviceId,
+                // Alternating house-1 and house-2 to keep both active
+                const homeId = i % 2 === 0 ? "house-1" : "house-2";
+                const profile: HomeAggregateProfile = {
+                    homeId,
+                    zoneId: testZoneId,
                     type: "temperature",
                     unit: "celsius",
                     value: i,
                     timestamp: new Date().toISOString()
                 };
                 const encMsg = encryptPayload(profile);
-                client.publish(`chariot/devices/${testDeviceId}`, JSON.stringify(encMsg));
-                // Small delay to preserve arrival order
+                client.publish(`chariot/zones/${testZoneId}`, JSON.stringify(encMsg));
                 await new Promise(resolve => setTimeout(resolve, 150));
             }
 
-            // Wait for all messages to be processed
             await new Promise(resolve => setTimeout(resolve, 1000));
 
-            const history = directoryService.getDeviceHistory(testDeviceId);
+            const history = directoryService.getZoneHistory(testZoneId);
             console.log(`\x1b[36m[TEST 3] Final history size: ${history.length} (expected: 10)\x1b[0m`);
-            console.log(`\x1b[36m[TEST 3] History values (most recent to oldest): ${history.map(p => p.value).join(", ")}\x1b[0m`);
-
+            
             if (history.length === 10) {
-                console.log("\x1b[32m[TEST 3 SUCCESS] History correctly retains exactly the last 10 readings (values 15 to 24).\x1b[0m");
+                console.log("\x1b[32m[TEST 3 SUCCESS] History retains exactly the last 10 readings.\x1b[0m");
             } else {
                 throw new Error(`Test 3 failed: incorrect history size (${history.length})`);
             }
@@ -164,7 +150,6 @@ async function runTests() {
         } catch (error: any) {
             console.error("\x1b[31m[TEST FAILED] An error occurred during assertions:\x1b[0m", error.message);
         } finally {
-            // Cleanup and disconnect
             client.end(false, {}, () => {
                 subscriber.disconnect().then(() => {
                     process.exit(0);

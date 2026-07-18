@@ -64,6 +64,16 @@ export default function App() {
     rawHistory: number[];
     smoothedHistory: number[];
   }>>({});
+
+  const [intraHomeState, setIntraHomeState] = useState<Record<string, {
+    homeId: string;
+    zoneId: string;
+    type: string;
+    unit: string;
+    value: number;
+    activeDevices: number;
+    timestamp: string;
+  }>>({});
   
   const [groupState, setGroupState] = useState<Record<string, { 
     activeDevices: number; 
@@ -136,10 +146,10 @@ export default function App() {
               }));
             }
           } else if (data.layer === "runtime") {
-            if (data.step === "gaussian" && data.individualProfile && data.groupProfile) {
+            if (data.step === "intra_home" && data.individualProfile && data.homeProfile) {
               setDataFormatState(prev => ({
                 ...prev,
-                runtimeInternal: { before: data.individualProfile, after: data.groupProfile }
+                runtimeInternal: { before: data.individualProfile, after: data.homeProfile }
               }));
             }
           } else if (data.layer === "communication_decrypt") {
@@ -240,13 +250,27 @@ export default function App() {
                 };
               });
             } 
+            else if (data.step === "intra_home") {
+              setIntraHomeState((prev) => ({
+                ...prev,
+                [`${data.homeId}-${data.type}`]: {
+                  homeId: data.homeId,
+                  zoneId: data.zoneId,
+                  type: data.type,
+                  unit: data.unit,
+                  value: data.value,
+                  activeDevices: data.activeDevices,
+                  timestamp,
+                }
+              }));
+            }
             else if (data.step === "kanon") {
               setGroupState((prev) => {
-                const current = prev[data.groupId] || { groupMeanHistory: [], finalValueHistory: [] };
+                const current = prev[data.zoneId] || { groupMeanHistory: [], finalValueHistory: [] };
                 return {
                   ...prev,
-                  [data.groupId]: {
-                    ...prev[data.groupId],
+                  [data.zoneId]: {
+                    ...prev[data.zoneId],
                     activeDevices: data.activeDevices,
                     kThreshold: data.kThreshold,
                     status: data.status,
@@ -260,7 +284,7 @@ export default function App() {
             } 
             else if (data.step === "gaussian") {
               setGroupState((prev) => {
-                const current = prev[data.groupId] || { groupMeanHistory: [], finalValueHistory: [] };
+                const current = prev[data.zoneId] || { groupMeanHistory: [], finalValueHistory: [] };
                 const groupMeanHistory = data.groupMean !== undefined 
                   ? [...(current.groupMeanHistory || []).slice(-19), data.groupMean]
                   : (current.groupMeanHistory || []);
@@ -269,8 +293,8 @@ export default function App() {
                   : (current.finalValueHistory || []);
                 return {
                   ...prev,
-                  [data.groupId]: {
-                    ...prev[data.groupId],
+                  [data.zoneId]: {
+                    ...prev[data.zoneId],
                     groupMean: data.groupMean,
                     noise: data.noise,
                     finalValue: data.finalValue,
@@ -287,8 +311,8 @@ export default function App() {
           else if (data.layer === "communication") {
             setCommunicationGroups((prev) => ({
               ...prev,
-              [data.groupId]: {
-                groupId: data.groupId,
+              [data.zoneId]: {
+                zoneId: data.zoneId,
                 type: data.type,
                 value: data.value,
                 unit: data.unit,
@@ -368,15 +392,18 @@ export default function App() {
       if (data.step === "temporal") {
         return `[Temporel] ${data.deviceId} : brute=${data.rawValue.toFixed(2)} → lissée=${data.smoothedValue.toFixed(2)} (remplissage=${Math.round(data.windowFill * 100)}%)`;
       }
+      if (data.step === "intra_home") {
+        return `[Maison] ${data.homeId} : type=${data.type} moyenne locale=${data.value.toFixed(2)} (${data.activeDevices} capteur(s) actif(s))`;
+      }
       if (data.step === "kanon") {
-        return `[k-Anonymat] Groupe "${data.groupId}" : actifs=${data.activeDevices}/${data.kThreshold} statut=${data.status === "published" ? "PUBLIÉ" : "RETENU"}`;
+        return `[k-Anonymat] Zone "${data.zoneId}" : actifs=${data.activeDevices}/${data.kThreshold} statut=${data.status === "published" ? "PUBLIÉ" : "RETENU"}`;
       }
       if (data.step === "gaussian") {
-        return `[Perturbation] Groupe "${data.groupId}" : moyenne=${data.groupMean.toFixed(2)} bruit=${data.noise.toFixed(2)} → finale=${data.finalValue.toFixed(2)} °C`;
+        return `[Perturbation] Zone "${data.zoneId}" : moyenne=${data.groupMean.toFixed(2)} bruit=${data.noise.toFixed(2)} → finale=${data.finalValue.toFixed(2)} °C`;
       }
     }
     if (data.layer === "communication") {
-      return `[Services d'annuaire] Zone "${data.groupId}" stockée : valeur=${data.value.toFixed(2)} ${data.unit}`;
+      return `[Services d'annuaire] Zone "${data.zoneId}" stockée : valeur=${data.value.toFixed(2)} ${data.unit}`;
     }
     if (data.layer === "services") {
       return `API REST GET ${data.path} → Statut ${data.status} (Zero Trust vérifié)`;
@@ -509,8 +536,8 @@ export default function App() {
         /* 4 Dashboard Panels Grid */
         <div className="dashboard-grid">
           <DevicesPanel devices={devices} />
-          <RuntimePanel temporalState={temporalState} groupState={groupState} />
-          <CommunicationPanel groups={communicationGroups} />
+          <RuntimePanel temporalState={temporalState} intraHomeState={intraHomeState} />
+          <CommunicationPanel zones={communicationGroups} privacyState={groupState} />
           <ServicesPanel />
         </div>
       ) : (

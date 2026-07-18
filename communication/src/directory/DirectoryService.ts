@@ -1,27 +1,23 @@
 /**
  * @file DirectoryService.ts
- * @description Directory Services storage layer for virtual device profiles, backed by an in-memory Map.
+ * @description Directory Services storage layer for zone profiles, backed by an in-memory Map.
  */
 
 import { TelemetryClient } from "../telemetry/TelemetryClient.js";
 
-export interface VirtualProfile {
-    deviceId: string;
+export interface ZoneProfile {
+    zoneId: string;
     type: string;
     unit: string;
     value: number;
+    homeCount: number;
     timestamp: string;
-    deviceCount?: number;
 }
 
 export class DirectoryService {
-    // Map storing the profile history per deviceId (maximum 10 entries)
-    private store: Map<string, VirtualProfile[]> = new Map();
+    // Map storing the profile history per zoneId (maximum 10 entries)
+    private store: Map<string, ZoneProfile[]> = new Map();
 
-    /**
-     * Optional telemetry client for dashboard observation.
-     * Provided via constructor; if absent, no telemetry is emitted.
-     */
     private readonly telemetry?: TelemetryClient;
 
     constructor(telemetry?: TelemetryClient) {
@@ -29,16 +25,16 @@ export class DirectoryService {
     }
 
     /**
-     * Saves a new virtual profile for a device.
+     * Saves a new zone profile.
      * Keeps only the 10 most recent readings (sliding window history).
      */
-    saveProfile(profile: VirtualProfile): void {
-        const deviceId = profile.deviceId;
-        if (!this.store.has(deviceId)) {
-            this.store.set(deviceId, []);
+    saveProfile(profile: ZoneProfile): void {
+        const zoneId = profile.zoneId;
+        if (!this.store.has(zoneId)) {
+            this.store.set(zoneId, []);
         }
 
-        const history = this.store.get(deviceId)!;
+        const history = this.store.get(zoneId)!;
         
         // Insert the new profile at the front (most recent first)
         history.unshift(profile);
@@ -48,15 +44,16 @@ export class DirectoryService {
             history.pop();
         }
 
-        console.log(`\x1b[32m[DIRECTORY SERVICES] Profile saved for ${deviceId}. Value: ${profile.value} ${profile.unit}. History: ${history.length}/10\x1b[0m`);
+        console.log(`\x1b[32m[DIRECTORY SERVICES] Profile saved for zone ${zoneId}. Value: ${profile.value} ${profile.unit}, homes count: ${profile.homeCount}. History: ${history.length}/10\x1b[0m`);
 
         // Emit communication-layer telemetry event (fire-and-forget)
         this.telemetry?.emit({
             layer: "communication",
-            groupId: deviceId,
+            zoneId: zoneId,
             type: profile.type,
             value: profile.value,
             unit: profile.unit,
+            homeCount: profile.homeCount,
             timestamp: profile.timestamp,
             directoryStoreStructure: history,
         });
@@ -70,17 +67,31 @@ export class DirectoryService {
     }
 
     /**
-     * Returns the list of all known device identifiers.
+     * Registers a callback for config updates via the telemetry client.
      */
-    getAllDevices(): string[] {
+    onConfigUpdate(listener: (config: any) => void): void {
+        this.telemetry?.onConfigUpdate(listener);
+    }
+
+    /**
+     * Registers a callback for telemetry connect events.
+     */
+    onConnect(listener: () => void): void {
+        this.telemetry?.onConnect(listener);
+    }
+
+    /**
+     * Returns the list of all known zone identifiers.
+     */
+    getAllZones(): string[] {
         return Array.from(this.store.keys());
     }
 
     /**
-     * Returns the most recent virtual profile for a given device.
+     * Returns the most recent profile for a given zone.
      */
-    getDeviceLatest(deviceId: string): VirtualProfile | undefined {
-        const history = this.store.get(deviceId);
+    getZoneLatest(zoneId: string): ZoneProfile | undefined {
+        const history = this.store.get(zoneId);
         if (!history || history.length === 0) {
             return undefined;
         }
@@ -88,10 +99,10 @@ export class DirectoryService {
     }
 
     /**
-     * Returns the full history for a device (up to 10 entries).
+     * Returns the full history for a zone (up to 10 entries).
      */
-    getDeviceHistory(deviceId: string): VirtualProfile[] {
-        return this.store.get(deviceId) || [];
+    getZoneHistory(zoneId: string): ZoneProfile[] {
+        return this.store.get(zoneId) || [];
     }
 
     /**

@@ -42,8 +42,11 @@ build: build-devices build-runtime build-communication build-services build-dash
 run-devices: build-devices
 	npm run start -w devices
 
-run-runtime: build-runtime
-	TELEMETRY_ENABLED=true npm run start -w runtime
+run-runtime-house1: build-runtime
+	START_BROKER=true HOME_ID=house-1 ZONE_ID=quartier-nord DEVICE_IDS=chariot-temp-sensor,zigbee-temp-01 TELEMETRY_ENABLED=true npm run start -w runtime
+
+run-runtime-house2: build-runtime
+	START_BROKER=false HOME_ID=house-2 ZONE_ID=quartier-nord DEVICE_IDS=thread-temp-01 TELEMETRY_ENABLED=true npm run start -w runtime
 
 run-services: build-services
 	TELEMETRY_ENABLED=true npm run start -w services
@@ -53,9 +56,10 @@ run-dashboard: build-dashboard
 
 demo: build
 	rm -rf ~/.matter
-	npx -y concurrently -n "Devices,Runtime,Services,Dashboard" -c "green,blue,cyan,magenta" \
+	npx -y concurrently -n "Devices,Runtime1,Runtime2,Services,Dashboard" -c "green,blue,cyan,yellow,magenta" \
 		"make run-devices" \
-		"sleep 8 && make run-runtime" \
+		"sleep 8 && make run-runtime-house1" \
+		"sleep 10 && make run-runtime-house2" \
 		"sleep 15 && make run-services" \
 		"sleep 20 && make run-dashboard"
 

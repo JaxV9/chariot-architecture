@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { FlashValue } from "./FlashValue.tsx";
 
-interface DeviceProfile {
-  deviceId: string;
+interface ZoneProfile {
+  zoneId: string;
   type: string;
   unit: string;
   value: number;
   timestamp: string;
-  deviceCount?: number;
+  homeCount: number;
 }
 
 const Sparkline: React.FC<{ values: number[]; color: string }> = ({ values, color }) => {
@@ -37,9 +37,9 @@ const Sparkline: React.FC<{ values: number[]; color: string }> = ({ values, colo
 };
 
 export const ServicesPanel: React.FC = () => {
-  const [devices, setDevices] = useState<string[]>([]);
-  const [latestProfiles, setLatestProfiles] = useState<Record<string, DeviceProfile>>({});
-  const [histories, setHistories] = useState<Record<string, DeviceProfile[]>>({});
+  const [zones, setZones] = useState<string[]>([]);
+  const [latestProfiles, setLatestProfiles] = useState<Record<string, ZoneProfile>>({});
+  const [histories, setHistories] = useState<Record<string, ZoneProfile[]>>({});
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -49,37 +49,37 @@ export const ServicesPanel: React.FC = () => {
 
     const fetchData = async () => {
       try {
-        const res = await fetch("/api/proxy/devices");
+        const res = await fetch("/api/proxy/zones");
         if (!res.ok) {
           throw new Error(`HTTP Error ${res.status}`);
         }
-        const deviceIds: string[] = await res.json();
+        const zoneIds: string[] = await res.json();
         if (!active) return;
-        setDevices(deviceIds);
+        setZones(zoneIds);
         setError(null);
 
-        // Fetch details and history for each device
-        deviceIds.forEach(async (id) => {
+        // Fetch details and history for each zone
+        zoneIds.forEach(async (id) => {
           try {
             // Latest profile
-            const profileRes = await fetch(`/api/proxy/devices/${id}`);
+            const profileRes = await fetch(`/api/proxy/zones/${id}`);
             if (profileRes.ok) {
-              const profile: DeviceProfile = await profileRes.json();
+              const profile: ZoneProfile = await profileRes.json();
               if (active) {
                 setLatestProfiles(prev => ({ ...prev, [id]: profile }));
               }
             }
 
             // History
-            const historyRes = await fetch(`/api/proxy/devices/${id}/history`);
+            const historyRes = await fetch(`/api/proxy/zones/${id}/history`);
             if (historyRes.ok) {
-              const history: DeviceProfile[] = await historyRes.json();
+              const history: ZoneProfile[] = await historyRes.json();
               if (active) {
                 setHistories(prev => ({ ...prev, [id]: history }));
               }
             }
           } catch (err) {
-            console.error(`Failed to fetch details for device ${id}:`, err);
+            console.error(`Failed to fetch details for zone ${id}:`, err);
           }
         });
       } catch (err: any) {
@@ -121,7 +121,7 @@ export const ServicesPanel: React.FC = () => {
           </div>
         )}
 
-        {devices.length === 0 ? (
+        {zones.length === 0 ? (
           <div className="empty-state">
             <span className="pulse-circle" style={{ "--pulse-color": "var(--color-services)" } as React.CSSProperties}></span>
             En attente de données...
@@ -129,7 +129,7 @@ export const ServicesPanel: React.FC = () => {
           </div>
         ) : (
           <div className="item-list">
-            {devices.map((id) => {
+            {zones.map((id) => {
               const profile = latestProfiles[id];
               const history = histories[id] || [];
               const sparklineValues = [...history].reverse().map(h => h.value);
@@ -137,7 +137,7 @@ export const ServicesPanel: React.FC = () => {
               return (
                 <div className="data-item" key={id} style={{ borderLeft: "2px solid var(--color-services)" }}>
                   <div className="data-item-header">
-                    <span className="item-name">Device ID : "{id}"</span>
+                    <span className="item-name">Zone ID : "{id}"</span>
                     <span className="item-meta" style={{ fontFamily: "var(--font-mono)", fontSize: "0.7rem" }}>
                       HTTP 200 OK
                     </span>
@@ -156,8 +156,8 @@ export const ServicesPanel: React.FC = () => {
                       
                       <div style={{ fontSize: "0.75rem", color: "var(--text-muted)", marginTop: "0.4rem", borderTop: "1px solid rgba(255,255,255,0.03)", paddingTop: "0.4rem" }}>
                         <div>Type : <strong>{profile.type}</strong></div>
-                        {profile.deviceCount !== undefined && (
-                          <div>Devices dans le groupe anonymisé : <strong>{profile.deviceCount}</strong></div>
+                        {profile.homeCount !== undefined && (
+                          <div>Maisons dans la zone anonymisée : <strong>{profile.homeCount}</strong></div>
                         )}
                       </div>
 

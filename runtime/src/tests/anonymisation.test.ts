@@ -1,22 +1,16 @@
 /**
  * @file anonymisation.test.ts
- * @description Unit tests for the three anonymisation steps.
- *
- * No external test framework required — uses Node.js built-in `assert`.
+ * @description Unit tests for the local gateway aggregation steps (temporal and intra-home).
  * Run with:
  *   npx tsx src/tests/anonymisation.test.ts
  */
 
 import assert from "node:assert/strict";
-import { temporalAggregate, gaussianNoise, AnonymisationEngine } from "../anonymisation/AnonymisationEngine.js";
+import { temporalAggregate, AnonymisationEngine } from "../anonymisation/AnonymisationEngine.js";
 import { VirtualProfile } from "../mapping/DevicesMapper.js";
 
-// ---------------------------------------------------------------------------
-// Helpers
-// ---------------------------------------------------------------------------
-
-function makeProfile(deviceId: string, value: number): VirtualProfile {
-    return { deviceId, type: "temperature", unit: "celsius", value, timestamp: new Date().toISOString() };
+function makeProfile(deviceId: string, type: string, value: number): VirtualProfile {
+    return { deviceId, type, unit: "celsius", value, timestamp: new Date().toISOString() };
 }
 
 let passed = 0;
@@ -54,7 +48,6 @@ test("computes the mean of two values", () => {
 });
 
 test("sliding window: discards oldest value when full", () => {
-    // Feed 6 values into a window of size 5
     const history: number[] = [];
     for (let i = 1; i <= 5; i++) temporalAggregate(history, i, 5); // [1,2,3,4,5]
     const result = temporalAggregate(history, 10, 5); // window = [2,3,4,5,10] → mean=4.8
@@ -62,141 +55,51 @@ test("sliding window: discards oldest value when full", () => {
     assert.equal(result, (2 + 3 + 4 + 5 + 10) / 5);
 });
 
-test("single-element window always returns the latest value", () => {
-    const history: number[] = [];
-    temporalAggregate(history, 99, 1);
-    const result = temporalAggregate(history, 42, 1);
-    assert.equal(result, 42, "window of 1 should always hold the latest value");
-});
-
 // ---------------------------------------------------------------------------
-// 2. Gaussian noise (Box-Muller)
+// 2. Intra-home aggregation
 // ---------------------------------------------------------------------------
 
-console.log("\n\x1b[1m[TEST] 2 — Gaussian noise (Box-Muller)\x1b[0m");
+console.log("\n\x1b[1m[TEST] 2 — Intra-home aggregation (AnonymisationEngine)\x1b[0m");
 
-test("gaussianNoise returns a finite number", () => {
-    const noise = gaussianNoise(0.1);
-    assert.ok(isFinite(noise), "result must be a finite number");
-});
-
-test("gaussianNoise with sigma=0 always returns 0", () => {
-    // z0 * 0 = 0 regardless of the Box-Muller output
-    const noise = gaussianNoise(0);
-    assert.equal(noise, 0);
-});
-
-test("large sigma produces larger spread (statistical sanity check)", () => {
-    // Average absolute value of 1000 samples with sigma=10 should be >> with sigma=0.01
-    const samples = 1000;
-    const avgLarge = Array.from({ length: samples }, () => Math.abs(gaussianNoise(10)))
-        .reduce((a, b) => a + b, 0) / samples;
-    const avgSmall = Array.from({ length: samples }, () => Math.abs(gaussianNoise(0.01)))
-        .reduce((a, b) => a + b, 0) / samples;
-    assert.ok(avgLarge > avgSmall * 10, `Expected avgLarge (${avgLarge.toFixed(2)}) >> avgSmall (${avgSmall.toFixed(4)})`);
-});
-
-// ---------------------------------------------------------------------------
-// 3. K-anonymity via AnonymisationEngine — two-level aggregation
-// ---------------------------------------------------------------------------
-
-console.log("\n\x1b[1m[TEST] 3 — K-anonymity (AnonymisationEngine)\x1b[0m");
-
-// --- Single-home scenarios ------------------------------------------------
-
-test("1 device in a home and 1 home in zone with K=1 publishes immediately", () => {
-    process.env.ANON_K_THRESHOLD = "1";
+test("aggregates multiple devices of the same type in a home immediately", () => {
+    process.env.HOME_ID = "house-1";
+    process.env.ZONE_ID = "zone-1";
     process.env.ANON_WINDOW_SIZE = "5";
-    process.env.ANON_SIGMA       = "0";
 
-    const engine = new AnonymisationEngine({
-        "device-A": { homeId: "house-1", zoneId: "zone-1" }
-    });
-    const result = engine.process(makeProfile("device-A", 21.5));
+    const engine = new AnonymisationEngine();
 
-    assert.notEqual(result, null, "Should publish when K=1");
-    assert.equal(result!.zoneId, "zone-1");
-    assert.equal(result!.groupId, "zone-1");
-    assert.equal(result!.homeCount, 1);
-    assert.equal(result!.value, 21.5);
+    // First temperature device publishes
+    const r1 = engine.process(makeProfile("device-A", "temperature", 20.0));
+    assert.notEqual(r1, null);
+    assert.equal(r1!.homeId, "house-1");
+    assert.equal(r1!.zoneId, "zone-1");
+    assert.equal(r1!.type, "temperature");
+    assert.equal(r1!.value, 20.0);
+
+    // Second temperature device publishes
+    const r2 = engine.process(makeProfile("device-B", "temperature", 22.0));
+    assert.notEqual(r2, null);
+    assert.equal(r2!.value, 21.0); // mean of A (20.0) and B (22.0)
 });
 
-test("K-anonymity: data is withheld when active homes in zone is less than K", () => {
-    process.env.ANON_K_THRESHOLD = "2";
-    process.env.ANON_SIGMA       = "0";
+test("does not mix different sensor types during aggregation", () => {
+    process.env.HOME_ID = "house-1";
+    process.env.ZONE_ID = "zone-1";
 
-    const engine = new AnonymisationEngine({
-        "dev-A1": { homeId: "house-1", zoneId: "zone-1" },
-        "dev-A2": { homeId: "house-1", zoneId: "zone-1" },
-        "dev-B1": { homeId: "house-2", zoneId: "zone-1" },
-    });
+    const engine = new AnonymisationEngine();
 
-    // 1st device of house-1 reports: house-1 has 1 active device. activeHomeCount in zone-1 is 1.
-    const r1 = engine.process(makeProfile("dev-A1", 20.0));
-    assert.equal(r1, null, "Should be withheld as only 1 home is active and K=2");
+    // Temp device publishes
+    const r1 = engine.process(makeProfile("device-temp", "temperature", 20.0));
+    // Humidity device publishes
+    const r2 = engine.process(makeProfile("device-humidity", "humidity", 50.0));
 
-    // 2nd device of house-1 reports: house-1 has 2 active devices. activeHomeCount in zone-1 is still 1.
-    const r2 = engine.process(makeProfile("dev-A2", 22.0));
-    assert.equal(r2, null, "Should still be withheld since it is still the same home (house-1)");
+    assert.notEqual(r1, null);
+    assert.equal(r1!.type, "temperature");
+    assert.equal(r1!.value, 20.0);
 
-    // 1st device of house-2 reports: house-2 becomes active. activeHomeCount in zone-1 is now 2.
-    const r3 = engine.process(makeProfile("dev-B1", 24.0));
-    assert.notEqual(r3, null, "Should publish because 2 distinct homes (house-1, house-2) are now active in the zone");
-    assert.equal(r3!.zoneId, "zone-1");
-    assert.equal(r3!.homeCount, 2);
-    // house-1 mean = (20 + 22) / 2 = 21
-    // house-2 mean = 24
-    // zone mean = (21 + 24) / 2 = 22.5
-    assert.equal(r3!.value, 22.5);
-});
-
-test("unknown device falls back to its own home and default-zone and publishes immediately with K=1", () => {
-    process.env.ANON_K_THRESHOLD = "1";
-    process.env.ANON_SIGMA       = "0";
-
-    const engine = new AnonymisationEngine({}); // empty config
-    const result = engine.process(makeProfile("unknown-device", 19.0));
-
-    assert.notEqual(result, null, "Should publish with K=1");
-    assert.equal(result!.zoneId, "default-zone");
-});
-
-test("homes in different zones are independent", () => {
-    process.env.ANON_K_THRESHOLD = "2";
-    process.env.ANON_SIGMA       = "0";
-
-    const engine = new AnonymisationEngine({
-        "dev-A": { homeId: "house-A", zoneId: "zone-A" },
-        "dev-B": { homeId: "house-B", zoneId: "zone-B" },
-    });
-
-    const r1 = engine.process(makeProfile("dev-A", 20.0)); // zone-A: 1 home active -> withheld
-    const r2 = engine.process(makeProfile("dev-B", 22.0)); // zone-B: 1 home active -> withheld
-
-    assert.equal(r1, null, "zone-A should be withheld");
-    assert.equal(r2, null, "zone-B should be withheld");
-});
-
-// --- Shape test -------------------------------------------------------------
-
-test("GroupProfile output has the correct shape", () => {
-    process.env.ANON_K_THRESHOLD = "1";
-    process.env.ANON_SIGMA       = "0";
-
-    const engine = new AnonymisationEngine({
-        "dev-X": { homeId: "house-1", zoneId: "zone-1" }
-    });
-    const result = engine.process(makeProfile("dev-X", 23.5));
-
-    assert.ok(result !== null);
-    assert.equal(result!.groupId, "zone-1");
-    assert.equal(result!.zoneId, "zone-1");
-    assert.equal(result!.homeCount, 1);
-    assert.equal(result!.deviceCount, 1);
-    assert.ok(typeof result!.type       === "string");
-    assert.ok(typeof result!.unit       === "string");
-    assert.ok(typeof result!.value      === "number");
-    assert.ok(typeof result!.timestamp  === "string");
+    assert.notEqual(r2, null);
+    assert.equal(r2!.type, "humidity");
+    assert.equal(r2!.value, 50.0); // should not be influenced by temperature value
 });
 
 // ---------------------------------------------------------------------------

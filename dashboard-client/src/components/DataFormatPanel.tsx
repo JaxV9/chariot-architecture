@@ -51,10 +51,10 @@ export const DataFormatPanel: React.FC<DataFormatPanelProps> = ({ dataFormatStat
     {
       id: "runtime-internal",
       title: "2. Runtime (Interne)",
-      desc: "Profil virtuel individuel ➡️ Profil de groupe anonymisé (K-anonymat + Perturbation)",
+      desc: "Profil virtuel individuel ➡️ Profil agrégé intra-maison",
       state: dataFormatState.runtimeInternal,
       beforeLabel: "Profil individuel (JSON)",
-      afterLabel: "Profil de groupe anonymisé (JSON)",
+      afterLabel: "Profil agrégé intra-maison (JSON)",
     },
     {
       id: "runtime-to-communication",
@@ -70,7 +70,7 @@ export const DataFormatPanel: React.FC<DataFormatPanelProps> = ({ dataFormatStat
       desc: "Structure stockée dans l'annuaire Directory Services ➡️ Réponse JSON retournée par l'API REST",
       state: dataFormatState.communicationToServices,
       beforeLabel: "Structure stockée (Historique 10 valeurs)",
-      afterLabel: "Réponse API REST (GET /devices/:id)",
+      afterLabel: "Réponse API REST (GET /zones/:id)",
     },
   ];
 

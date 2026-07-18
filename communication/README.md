@@ -1,31 +1,30 @@
 # CHARIOT - Communication Layer (Cloud Middleware)
 
-The **communication** layer represents the cloud middleware of the CHARIOT architecture. It functions as the bridge between the local gateway (runtime environment) and the API exposition layer (service layer requests).
+The **communication** layer represents the cloud middleware of the CHARIOT architecture. It functions as the bridge between the local gateway (runtime environment) and the REST API exposition layer (services).
 
 ## Architectural Role
 
 ```
-[Devices Layer] -> [Runtime Gateway] --(MQTT Encrypted)--> [Communication Layer] -> [Services Layer] -> [Smart City APIs]
+[Devices Layer] -> [Runtime Gateway] --(MQTT Encrypted Home Aggregate)--> [Communication Layer] -> [Services Layer] -> [Smart City APIs]
 ```
 
-1. **Message Bus (Subscriber)**: Subscribes to the runtime's local MQTT broker on `chariot/devices/+`.
-2. **Decryption**: Decrypts the incoming GCM-encrypted messages using the shared key derived via `crypto.scryptSync`.
-3. **Message Formats**: Validates and normalizes the incoming virtual profile structure.
-4. **Directory Services (Storage)**: Stores the latest profile and a rolling history of the last 10 entries for each device.
-
-## Design Decisions
-
-- **In-Memory Directory Storage**: The Directory Service is implemented using a Node-native `Map`. This decision ensures zero external setup (no Redis server configuration or installation required for testing the MVP) and simplifies execution. Because the `services` layer will import this package in the same monorepo context, they run in the same process and share the same in-memory instance.
-- **Robust Exception Boundary**: All message handling processes are encapsulated in distinct `try/catch` scopes. If a message contains invalid JSON, fails cryptographic decryption (wrong key/signature), or is structurally malformed, the subscriber logs the error and continues execution without crashing.
+1. **Message Bus (Subscriber)**: Subscribes to the runtime's home aggregate topic on `chariot/zones/+`.
+2. **Decryption**: Decrypts the incoming GCM-encrypted messages using the shared key.
+3. **Message Formats**: Validates that the decrypted message adheres to the `HomeAggregateProfile` structure.
+4. **Anonymisation Processor**: Performs the cloud-level privacy pipeline:
+   - **K-Anonymity**: Tracks active home contributors per zone (with a 60-second inactivity timeout). Retains the data if the active home count is below **K**.
+   - **Gaussian Perturbation**: Adds Box-Muller Gaussian noise ($\sigma$ configurable) to the zone average when the $K$ threshold is met.
+5. **Directory Services (Storage)**: Stores the final perturbed `ZoneProfile` and a rolling history of the last 10 entries for each zone.
 
 ## Package Structure
 
-- `src/bus/MessageBusSubscriber.ts`: Handles the MQTT subscription, message parsing, decryption stages, and error boundary.
-- `src/directory/DirectoryService.ts`: Stores devices' latest profiles and a 10-entry rolling history.
-- `src/formats/MessageFormats.ts`: Validates that incoming profiles match the required structure.
+- `src/bus/MessageBusSubscriber.ts`: Handles the MQTT subscription, message decryption, format validation, and K-anonymity / noise injection workflow.
+- `src/anonymisation/AnonymisationProcessor.ts`: Core state manager for active homes, K-anonymity checks, and Gaussian Box-Muller noise generation.
+- `src/directory/DirectoryService.ts`: Stores zone profiles and 10-entry rolling histories.
+- `src/formats/MessageFormats.ts`: Validates that incoming home aggregate profiles match the required schema.
 - `src/security/Encryption.ts`: Decrypts messages using AES-256-GCM.
-- `src/test-communication.ts`: Comprehensive integration test suite verifying standard delivery, malformed data rejection, and rolling history bounds.
-- `src/index.ts`: Exposes singleton accessors for other packages to consume, and includes a standalone subscriber mode.
+- `src/tests/anonymisation.test.ts`: Unit tests verifying K-anonymity limits, contributor deduplication, active home timeout, and Gaussian Box-Muller noise generation.
+- `src/test-communication.ts`: Integration test suite verifying decrypted zones delivery, malformed data rejection, and rolling history bounds.
 
 ## Getting Started
 
@@ -41,23 +40,21 @@ Compile TypeScript files:
 npm run build -w communication
 ```
 
+### Running the Unit Tests
+Execute the K-anonymity and noise unit tests:
+```bash
+npx tsx communication/src/tests/anonymisation.test.ts
+```
+
 ### Running the Integration Tests
 The integration tests require an active MQTT broker. The easiest way to run the test suite is to first start the runtime environment (which hosts the embedded MQTT broker):
 
 1. **Start the Runtime**:
    ```bash
-   make run-runtime
+   make run-runtime-house1
    ```
 
 2. **Run the Tests** (in a separate terminal):
    ```bash
    npm run test -w communication
    ```
-
-This will run `test-communication.ts`, which publishes valid/invalid payloads to MQTT, asserts successful decryption, asserts zero crashes on corrupted data, and validates the 10-item history limit.
-
-### Standalone Production Run
-If you wish to run the communication layer in listening mode manually:
-```bash
-npm run start -w communication
-```

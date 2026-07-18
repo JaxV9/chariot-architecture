@@ -1,25 +1,28 @@
 /**
  * @file MessageFormats.ts
- * @description Format validator for normalized virtual profiles.
+ * @description Format validator for decrypted home aggregate profiles received from runtime.
  */
 
-import { VirtualProfile } from "../directory/DirectoryService.js";
+import { HomeAggregateProfile } from "../anonymisation/HomeAggregateProfile.js";
 
 export class MessageFormats {
     /**
-     * Validates the structure of a decrypted virtual profile object.
-     * Returns the typed virtual profile if valid, or throws a descriptive error.
+     * Validates the structure of a decrypted home aggregate profile object.
+     * Returns the typed home aggregate profile if valid, or throws a descriptive error.
      */
-    static validateAndNormalize(data: any): VirtualProfile {
+    static validateAndNormalize(data: any): HomeAggregateProfile {
         if (!data || typeof data !== "object") {
             throw new Error("Message is not a valid JSON object");
         }
 
-        const { deviceId, groupId, type, unit, value, timestamp } = data;
-        const id = deviceId || groupId;
+        const { homeId, zoneId, type, unit, value, timestamp } = data;
 
-        if (typeof id !== "string" || id.trim() === "") {
-            throw new Error("Field 'deviceId' or 'groupId' must be a non-empty string");
+        if (typeof homeId !== "string" || homeId.trim() === "") {
+            throw new Error("Field 'homeId' must be a non-empty string");
+        }
+
+        if (typeof zoneId !== "string" || zoneId.trim() === "") {
+            throw new Error("Field 'zoneId' must be a non-empty string");
         }
 
         if (typeof type !== "string" || type.trim() === "") {
@@ -38,14 +41,13 @@ export class MessageFormats {
             throw new Error("Field 'timestamp' must be a non-empty string");
         }
 
-        // All fields valid — return the typed VirtualProfile object
         return {
-            deviceId: id,
+            homeId,
+            zoneId,
             type,
             unit,
             value,
-            timestamp,
-            ...(data.deviceCount !== undefined ? { deviceCount: data.deviceCount } : {})
+            timestamp
         };
     }
 }

@@ -73,62 +73,62 @@ app.get("/health", (req, res) => {
     });
 });
 
-// Secure all device endpoints using the Zero Trust MVP authentication middleware
-app.use("/devices", authMiddleware);
+// Secure all zone endpoints using the Zero Trust MVP authentication middleware
+app.use("/zones", authMiddleware);
 
 /**
- * GET /devices
- * Returns the list of all known device identifiers.
+ * GET /zones
+ * Returns the list of all known zone identifiers.
  */
-app.get("/devices", (req, res) => {
+app.get("/zones", (req, res) => {
     try {
-        const devices = directoryService.getAllDevices();
-        res.json(devices);
+        const zones = directoryService.getAllZones();
+        res.json(zones);
     } catch (err: any) {
-        console.error(`[SERVICES API] Error fetching devices:`, err);
+        console.error(`[SERVICES API] Error fetching zones:`, err);
         res.status(500).json({ error: "Internal Server Error", message: err.message });
     }
 });
 
 /**
- * GET /devices/:id
- * Returns the latest virtual profile for the specified device.
+ * GET /zones/:id
+ * Returns the latest virtual profile for the specified zone.
  */
-app.get("/devices/:id", (req, res) => {
+app.get("/zones/:id", (req, res) => {
     try {
         const { id } = req.params;
-        const profile = directoryService.getDeviceLatest(id);
+        const profile = directoryService.getZoneLatest(id);
         
         if (!profile) {
-            res.status(404).json({ error: "Not Found", message: `Device '${id}' not found in Directory Services.` });
+            res.status(404).json({ error: "Not Found", message: `Zone '${id}' not found in Directory Services.` });
             return;
         }
         res.json(profile);
     } catch (err: any) {
-        console.error(`[SERVICES API] Error fetching device profile:`, err);
+        console.error(`[SERVICES API] Error fetching zone profile:`, err);
         res.status(500).json({ error: "Internal Server Error", message: err.message });
     }
 });
 
 /**
- * GET /devices/:id/history
- * Returns the rolling history (up to 10 entries) for the specified device.
+ * GET /zones/:id/history
+ * Returns the rolling history (up to 10 entries) for the specified zone.
  */
-app.get("/devices/:id/history", (req, res) => {
+app.get("/zones/:id/history", (req, res) => {
     try {
         const { id } = req.params;
-        const devices = directoryService.getAllDevices();
+        const zones = directoryService.getAllZones();
         
-        // Return 404 if the device is unknown
-        if (!devices.includes(id)) {
-            res.status(404).json({ error: "Not Found", message: `Device '${id}' not found in Directory Services.` });
+        // Return 404 if the zone is unknown
+        if (!zones.includes(id)) {
+            res.status(404).json({ error: "Not Found", message: `Zone '${id}' not found in Directory Services.` });
             return;
         }
         
-        const history = directoryService.getDeviceHistory(id);
+        const history = directoryService.getZoneHistory(id);
         res.json(history);
     } catch (err: any) {
-        console.error(`[SERVICES API] Error fetching device history:`, err);
+        console.error(`[SERVICES API] Error fetching zone history:`, err);
         res.status(500).json({ error: "Internal Server Error", message: err.message });
     }
 });

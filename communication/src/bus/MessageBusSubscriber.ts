@@ -1,18 +1,23 @@
 /**
  * @file MessageBusSubscriber.ts
- * @description MQTT client that subscribes to encrypted runtime messages, decrypts, validates, and stores them.
+ * @description MQTT client that subscribes to encrypted home aggregate payloads, decrypts, checks K-anonymity, applies noise, and stores results.
  */
 
 import * as mqtt from "mqtt";
 import { Encryption, EncryptedPayload } from "../security/Encryption.js";
 import { DirectoryService } from "../directory/DirectoryService.js";
 import { MessageFormats } from "../formats/MessageFormats.js";
+import { AnonymisationProcessor } from "../anonymisation/AnonymisationProcessor.js";
 
 export class MessageBusSubscriber {
     private client: mqtt.MqttClient | null = null;
     private encryption: Encryption;
     private directoryService: DirectoryService;
+    private anonymisationProcessor: AnonymisationProcessor;
     private brokerUrl: string;
+
+    private kThreshold: number;
+    private sigma: number;
 
     constructor(
         directoryService: DirectoryService,
@@ -22,12 +27,49 @@ export class MessageBusSubscriber {
     ) {
         this.directoryService = directoryService;
         this.brokerUrl = brokerUrl;
-        // Initialize the decryption module with the scryptSync-derived key
         this.encryption = new Encryption(passphrase, salt);
+
+        this.kThreshold = parseInt(process.env.ANON_K_THRESHOLD ?? "2", 10);
+        this.sigma = parseFloat(process.env.ANON_SIGMA ?? "0.1");
+
+        // Initialize AnonymisationProcessor with callback to emit telemetry
+        this.anonymisationProcessor = new AnonymisationProcessor((event) => {
+            this.directoryService.emitTelemetry(event);
+        });
+
+        // Register configuration updates from the dashboard
+        this.directoryService.onConfigUpdate((config) => {
+            if (config.kThreshold !== undefined) {
+                this.kThreshold = config.kThreshold;
+            }
+            if (config.sigma !== undefined) {
+                this.sigma = config.sigma;
+            }
+            console.log(`\x1b[35m[MESSAGE BUS] Config updated dynamically — K=${this.kThreshold}, σ=${this.sigma}\x1b[0m`);
+            
+            // Broadcast the configuration back to dashboard
+            this.directoryService.emitTelemetry({
+                layer: "communication",
+                step: "config",
+                kThreshold: this.kThreshold,
+                sigma: this.sigma,
+                timestamp: new Date().toISOString()
+            } as any);
+        });
+
+        this.directoryService.onConnect(() => {
+            this.directoryService.emitTelemetry({
+                layer: "communication",
+                step: "config",
+                kThreshold: this.kThreshold,
+                sigma: this.sigma,
+                timestamp: new Date().toISOString()
+            } as any);
+        });
     }
 
     /**
-     * Connects to the MQTT broker and subscribes to the runtime's publication topic.
+     * Connects to the MQTT broker and subscribes to the zone aggregation topic.
      */
     connect(): Promise<void> {
         return new Promise((resolve, reject) => {
@@ -39,7 +81,7 @@ export class MessageBusSubscriber {
 
             this.client.on("connect", () => {
                 console.log(`\x1b[32m[MESSAGE BUS] Connected to MQTT broker.\x1b[0m`);
-                const topic = "chariot/devices/+";
+                const topic = "chariot/zones/+";
                 
                 this.client!.subscribe(topic, (err) => {
                     if (err) {
@@ -64,39 +106,38 @@ export class MessageBusSubscriber {
 
     /**
      * Processes each message received on the MQTT topic.
-     * This function guarantees that no exception can crash the process (global try/catch).
      */
     private handleMessage(topic: string, messageBuffer: Buffer): void {
         const rawMessage = messageBuffer.toString("utf8");
         console.log(`\n\x1b[34m[MESSAGE BUS] Message received on topic: ${topic}\x1b[0m`);
         
         try {
-            // Step 1: Parse the raw MQTT message into an encrypted payload (IV, encrypted data, auth tag)
+            // Step 1: Parse the raw MQTT message into an encrypted payload
             let encryptedPayload: EncryptedPayload;
             try {
                 encryptedPayload = JSON.parse(rawMessage);
             } catch (err: any) {
                 console.error(`\x1b[31m[MESSAGE BUS] [PARSE ERROR] Received message is not valid JSON: ${err.message}\x1b[0m`);
-                return; // Stop processing this message and continue
-            }
-
-            // Step 2: Validate that the payload contains the required fields for decryption
-            if (!encryptedPayload.iv || !encryptedPayload.encryptedData || !encryptedPayload.authTag) {
-                console.error(`\x1b[31m[MESSAGE BUS] [ENCRYPTED FORMAT ERROR] Incomplete encrypted payload (required fields: iv, encryptedData, authTag)\x1b[0m`);
                 return;
             }
 
-            // Step 3: Decrypt the message using AES-256-GCM
+            // Step 2: Validate payload structure
+            if (!encryptedPayload.iv || !encryptedPayload.encryptedData || !encryptedPayload.authTag) {
+                console.error(`\x1b[31m[MESSAGE BUS] [ENCRYPTED FORMAT ERROR] Incomplete encrypted payload\x1b[0m`);
+                return;
+            }
+
+            // Step 3: Decrypt using AES-256-GCM
             let decryptedString: string;
             try {
                 decryptedString = this.encryption.decrypt(encryptedPayload);
                 console.log(`\x1b[32m[MESSAGE BUS] Decryption successful with AES-256 key.\x1b[0m`);
             } catch (err: any) {
-                console.error(`\x1b[31m[MESSAGE BUS] [DECRYPTION ERROR] Unable to decrypt payload (wrong key or corrupted data): ${err.message}\x1b[0m`);
-                return; // Does not crash — continues running
+                console.error(`\x1b[31m[MESSAGE BUS] [DECRYPTION ERROR] Unable to decrypt payload: ${err.message}\x1b[0m`);
+                return;
             }
 
-            // Step 4: Parse the decrypted virtual profile
+            // Step 4: Parse decrypted profile
             let decryptedJson: any;
             try {
                 decryptedJson = JSON.parse(decryptedString);
@@ -105,31 +146,37 @@ export class MessageBusSubscriber {
                 return;
             }
 
-            // Step 5: Validate the virtual profile format (Message Formats)
-            let virtualProfile;
+            // Step 5: Validate home aggregate format
+            let homeProfile;
             try {
-                virtualProfile = MessageFormats.validateAndNormalize(decryptedJson);
-                console.log(`\x1b[32m[MESSAGE BUS] Structure validation successful for virtual profile.\x1b[0m`);
+                homeProfile = MessageFormats.validateAndNormalize(decryptedJson);
+                console.log(`\x1b[32m[MESSAGE BUS] Structure validation successful for home aggregate profile.\x1b[0m`);
             } catch (err: any) {
-                console.error(`\x1b[31m[MESSAGE BUS] [VALIDATION ERROR] Virtual profile does not match specs: ${err.message}\x1b[0m`);
-                return; // Does not crash — continues running
+                console.error(`\x1b[31m[MESSAGE BUS] [VALIDATION ERROR] Decrypted profile does not match specs: ${err.message}\x1b[0m`);
+                return;
             }
 
-            // Step 6: Store/register in the Directory Services
-            // Emit decryption telemetry (before/after payloads)
+            // Emit decryption telemetry for dashboard format tab
             this.directoryService.emitTelemetry({
                 layer: "communication_decrypt",
                 encryptedPayload: encryptedPayload,
-                decryptedPayload: virtualProfile,
+                decryptedPayload: homeProfile,
                 timestamp: new Date().toISOString()
             });
 
-            this.directoryService.saveProfile(virtualProfile);
-            console.log(`\x1b[35m[MESSAGE BUS] [SUCCESS] Full processing pipeline completed.\x1b[0m`);
+            // Step 6: Process K-anonymity & Noise Injection
+            const zoneProfile = this.anonymisationProcessor.process(homeProfile, this.kThreshold, this.sigma);
+            
+            if (zoneProfile) {
+                // Step 7: Store in Directory Services
+                this.directoryService.saveProfile(zoneProfile);
+                console.log(`\x1b[35m[MESSAGE BUS] [SUCCESS] Pipeline completed. Zone aggregate stored.\x1b[0m`);
+            } else {
+                console.log(`\x1b[33m[MESSAGE BUS] [STOP] Data withheld by privacy filter (K threshold not met).\x1b[0m`);
+            }
 
         } catch (err: any) {
-            // Ultimate safety net to NEVER crash the middleware process
-            console.error(`\x1b[31m[MESSAGE BUS] [UNEXPECTED CRITICAL ERROR] An unexpected error occurred: ${err.message}\x1b[0m`);
+            console.error(`\x1b[31m[MESSAGE BUS] [UNEXPECTED CRITICAL ERROR] ${err.message}\x1b[0m`);
         }
     }
 

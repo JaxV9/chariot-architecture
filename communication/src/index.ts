@@ -4,11 +4,11 @@
  */
 
 import { fileURLToPath } from "node:url";
-import { DirectoryService, VirtualProfile } from "./directory/DirectoryService.js";
+import { DirectoryService, ZoneProfile } from "./directory/DirectoryService.js";
 import { MessageBusSubscriber } from "./bus/MessageBusSubscriber.js";
 import { TelemetryClient } from "./telemetry/TelemetryClient.js";
 
-export { DirectoryService, VirtualProfile, MessageBusSubscriber, TelemetryClient };
+export { DirectoryService, ZoneProfile, MessageBusSubscriber, TelemetryClient };
 
 // Create singleton instances for direct imports (singleton pattern for shared state within the same process)
 const telemetryInstance = new TelemetryClient();

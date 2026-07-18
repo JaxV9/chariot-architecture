@@ -12,7 +12,7 @@ async function main() {
     console.log(`\x1b[35;1m===============================================================\x1b[0m\n`);
 
     const brokerUrl = "mqtt://localhost:1883";
-    const topic = "chariot/devices/#";
+    const topic = "chariot/zones/#";
     
     // Initialize the decryption module using the same default scryptSync key
     const encryption = new Encryption();
