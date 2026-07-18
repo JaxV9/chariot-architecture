@@ -36,6 +36,10 @@ export class DevicesMapper {
                 mappedValue = reading.value;
                 unit = "celsius";
                 type = "temperature";
+            } else if (reading.cluster === "energy_consumption") {
+                mappedValue = reading.value;
+                unit = "kWh";
+                type = "energy_consumption";
             }
         }
 

@@ -118,6 +118,7 @@ export class AnonymisationEngine {
             rawValue: value,
             smoothedValue,
             windowFill: history.length / this.windowSize,
+            unit,
             timestamp: new Date().toISOString()
         });
 

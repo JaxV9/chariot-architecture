@@ -6,6 +6,7 @@ export interface DeviceData {
   protocol: string;
   rawValue: number;
   timestamp: string;
+  unit?: string;
 }
 
 interface DevicesPanelProps {
@@ -64,7 +65,7 @@ export const DevicesPanel: React.FC<DevicesPanelProps> = ({ devices }) => {
                 </div>
                 <div className="data-item-body">
                   <span className="item-value">
-                    <FlashValue value={dev.rawValue} unit="°C" />
+                    <FlashValue value={dev.rawValue} unit={dev.unit === "celsius" ? "°C" : (dev.unit || "°C")} />
                   </span>
                   <span className="item-meta">
                     {new Date(dev.timestamp).toLocaleTimeString()}

@@ -35,6 +35,10 @@ HomeAggregateProfile { homeId, zoneId, type, unit, value, timestamp }
 **No data per room, nor per individual device, is ever exposed outside the local gateway.**
 The gateway only publishes a single aggregated value per data type for the home, tagged with its `homeId` and geographical `zoneId`.
 
+### Supported Data Types
+1. **Temperature (`celsius`)**: Standard environmental reading.
+2. **Energy Consumption (`kWh`)**: Measures power usage. While temperature is relatively low-sensitivity, energy usage is highly sensitive as it reveals intimate occupancy patterns, appliance usage, and resident habits. Aggregating energy consumption locally (intra-home) and applying K-anonymity plus Gaussian noise on the communication layer ensures smart grid utility without revealing individual household behaviors.
+
 ---
 
 ## Environment Variables

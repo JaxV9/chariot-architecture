@@ -9,6 +9,7 @@ interface RuntimePanelProps {
     timestamp: string;
     rawHistory?: number[];
     smoothedHistory?: number[];
+    unit?: string;
   }>;
   intraHomeState: Record<string, {
     homeId: string;
@@ -89,14 +90,14 @@ export const RuntimePanel: React.FC<RuntimePanelProps> = ({ temporalState, intra
                       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", fontSize: "0.85rem", marginTop: "0.25rem" }}>
                         <div style={{ display: "flex", flexDirection: "column" }}>
                           <span style={{ color: "var(--text-muted)" }}>
-                            Brute : <strong style={{ fontFamily: "var(--font-mono)", color: "#f87171" }}><FlashValue value={state.rawValue} />°C</strong>
+                            Brute : <strong style={{ fontFamily: "var(--font-mono)", color: "#f87171" }}><FlashValue value={state.rawValue} />{state.unit === "celsius" ? "°C" : (state.unit || "°C")}</strong>
                           </span>
                           <Sparkline values={state.rawHistory || []} color="#f87171" />
                         </div>
                         <span style={{ marginTop: "2px" }}>➡️</span>
                         <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end" }}>
                           <span>
-                            Lissée : <strong style={{ fontFamily: "var(--font-mono)", color: "var(--color-runtime)" }}><FlashValue value={state.smoothedValue} />°C</strong>
+                            Lissée : <strong style={{ fontFamily: "var(--font-mono)", color: "var(--color-runtime)" }}><FlashValue value={state.smoothedValue} />{state.unit === "celsius" ? "°C" : (state.unit || "°C")}</strong>
                           </span>
                           <Sparkline values={state.smoothedHistory || []} color="var(--color-runtime)" />
                         </div>

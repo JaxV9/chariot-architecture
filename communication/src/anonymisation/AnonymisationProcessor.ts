@@ -26,8 +26,8 @@ export type ProcessorTelemetryCallback = (event: any) => void;
 
 export class AnonymisationProcessor {
     /**
-     * Active homes state per zone.
-     * Structure: zoneId -> (homeId -> { value, timestamp })
+     * Active homes state per zone and data type.
+     * Structure: "zoneId:type" -> (homeId -> { value, timestamp })
      */
     private readonly zoneStates: Map<string, Map<string, { value: number; timestamp: number }>> = new Map();
 
@@ -49,12 +49,13 @@ export class AnonymisationProcessor {
     process(profile: HomeAggregateProfile, kThreshold: number, sigma: number): ZoneProfile | null {
         const { homeId, zoneId, type, unit, value } = profile;
         const now = Date.now();
+        const stateKey = `${zoneId}:${type}`;
 
         // 1. Initialize zone state
-        if (!this.zoneStates.has(zoneId)) {
-            this.zoneStates.set(zoneId, new Map());
+        if (!this.zoneStates.has(stateKey)) {
+            this.zoneStates.set(stateKey, new Map());
         }
-        const zoneHomes = this.zoneStates.get(zoneId)!;
+        const zoneHomes = this.zoneStates.get(stateKey)!;
 
         // 2. Record this home's contribution
         zoneHomes.set(homeId, { value, timestamp: now });
@@ -79,6 +80,8 @@ export class AnonymisationProcessor {
                 layer: "runtime", // layer mapped to runtime for dashboard backwards compatibility
                 step: "kanon",
                 zoneId,
+                type,
+                unit,
                 activeDevices: activeHomeCount,
                 kThreshold,
                 status: "withheld",
@@ -100,6 +103,8 @@ export class AnonymisationProcessor {
             layer: "runtime", // mapped to runtime for dashboard backwards compatibility
             step: "kanon",
             zoneId,
+            type,
+            unit,
             activeDevices: activeHomeCount,
             kThreshold,
             status: "published",
@@ -121,6 +126,7 @@ export class AnonymisationProcessor {
             layer: "runtime", // mapped to runtime for dashboard backwards compatibility
             step: "gaussian",
             zoneId,
+            type,
             groupMean: zoneMean,
             noise,
             finalValue: perturbedValue,

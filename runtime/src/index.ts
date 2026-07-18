@@ -8,6 +8,7 @@ import { MqttPublisher } from "./publisher/MqttPublisher.js";
 import { ProtocolSupport } from "./protocols/ProtocolSupport.js";
 import { MatterDriver } from "./driver/MatterDriver.js";
 import { MockDriver } from "./driver/MockDriver.js";
+import { EnergyMockDriver } from "./driver/EnergyMockDriver.js";
 import { DataAccess } from "./access/DataAccess.js";
 import { DevicesMapper } from "./mapping/DevicesMapper.js";
 import { Encryption } from "./security/Encryption.js";
@@ -152,11 +153,11 @@ async function main() {
     } else {
         // Defaults based on homeId
         if (homeId === "house-1") {
-            deviceIds = ["chariot-temp-sensor", "zigbee-temp-01"];
+            deviceIds = ["chariot-temp-sensor", "zigbee-temp-01", "zigbee-energy-01"];
         } else if (homeId === "house-2") {
-            deviceIds = ["thread-temp-01"];
+            deviceIds = ["thread-temp-01", "thread-energy-01"];
         } else {
-            deviceIds = ["chariot-temp-sensor"];
+            deviceIds = ["chariot-temp-sensor", "zigbee-energy-01"];
         }
     }
 
@@ -165,6 +166,10 @@ async function main() {
         if (dId === "chariot-temp-sensor") {
             const matterDriver = new MatterDriver();
             protocolSupport.registerDriver(matterDriver);
+        } else if (dId.includes("energy")) {
+            const protocol = dId.startsWith("thread") ? "thread" : "zigbee";
+            const energyDriver = new EnergyMockDriver(dId, protocol);
+            protocolSupport.registerDriver(energyDriver);
         } else {
             const protocol = dId.startsWith("thread") ? "thread" : "zigbee";
             const mockDriver = new MockDriver(dId, protocol);

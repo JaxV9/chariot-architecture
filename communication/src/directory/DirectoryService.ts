@@ -29,12 +29,12 @@ export class DirectoryService {
      * Keeps only the 10 most recent readings (sliding window history).
      */
     saveProfile(profile: ZoneProfile): void {
-        const zoneId = profile.zoneId;
-        if (!this.store.has(zoneId)) {
-            this.store.set(zoneId, []);
+        const key = `${profile.zoneId}--${profile.type}`;
+        if (!this.store.has(key)) {
+            this.store.set(key, []);
         }
 
-        const history = this.store.get(zoneId)!;
+        const history = this.store.get(key)!;
         
         // Insert the new profile at the front (most recent first)
         history.unshift(profile);
@@ -44,12 +44,12 @@ export class DirectoryService {
             history.pop();
         }
 
-        console.log(`\x1b[32m[DIRECTORY SERVICES] Profile saved for zone ${zoneId}. Value: ${profile.value} ${profile.unit}, homes count: ${profile.homeCount}. History: ${history.length}/10\x1b[0m`);
+        console.log(`\x1b[32m[DIRECTORY SERVICES] Profile saved for key ${key}. Value: ${profile.value} ${profile.unit}, homes count: ${profile.homeCount}. History: ${history.length}/10\x1b[0m`);
 
         // Emit communication-layer telemetry event (fire-and-forget)
         this.telemetry?.emit({
             layer: "communication",
-            zoneId: zoneId,
+            zoneId: key,
             type: profile.type,
             value: profile.value,
             unit: profile.unit,

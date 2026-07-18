@@ -43,10 +43,10 @@ run-devices: build-devices
 	npm run start -w devices
 
 run-runtime-house1: build-runtime
-	START_BROKER=true HOME_ID=house-1 ZONE_ID=quartier-nord DEVICE_IDS=chariot-temp-sensor,zigbee-temp-01 TELEMETRY_ENABLED=true npm run start -w runtime
+	START_BROKER=true HOME_ID=house-1 ZONE_ID=quartier-nord DEVICE_IDS=chariot-temp-sensor,zigbee-temp-01,zigbee-energy-01 TELEMETRY_ENABLED=true npm run start -w runtime
 
 run-runtime-house2: build-runtime
-	START_BROKER=false HOME_ID=house-2 ZONE_ID=quartier-nord DEVICE_IDS=thread-temp-01 TELEMETRY_ENABLED=true npm run start -w runtime
+	START_BROKER=false HOME_ID=house-2 ZONE_ID=quartier-nord DEVICE_IDS=thread-temp-01,thread-energy-01 TELEMETRY_ENABLED=true npm run start -w runtime
 
 run-services: build-services
 	TELEMETRY_ENABLED=true npm run start -w services

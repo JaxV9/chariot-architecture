@@ -110,6 +110,38 @@ test("discards inactive homes after timeout (60 seconds)", () => {
     }
 });
 
+test("does not mix different sensor types during zone aggregation", () => {
+    const processor = new AnonymisationProcessor();
+
+    // house-1 sends temperature
+    const temp1 = {
+        homeId: "house-1",
+        zoneId: "quartier-nord",
+        type: "temperature",
+        unit: "celsius",
+        value: 20.0,
+        timestamp: new Date().toISOString()
+    };
+    processor.process(temp1, 2, 0);
+
+    // house-2 sends energy_consumption
+    const energy2 = {
+        homeId: "house-2",
+        zoneId: "quartier-nord",
+        type: "energy_consumption",
+        unit: "kWh",
+        value: 1.5,
+        timestamp: new Date().toISOString()
+    };
+    
+    // Each type only has 1 contribution, so K=2 threshold should not be met for either type!
+    const resultTemp = processor.process(temp1, 2, 0);
+    const resultEnergy = processor.process(energy2, 2, 0);
+
+    assert.equal(resultTemp, null, "Temperature should be withheld because K=2 is not met for temperature");
+    assert.equal(resultEnergy, null, "Energy should be withheld because K=2 is not met for energy");
+});
+
 // ---------------------------------------------------------------------------
 // Summary
 // ---------------------------------------------------------------------------

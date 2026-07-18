@@ -17,5 +17,7 @@ export type DeviceGroupMap = Record<string, DeviceConfig>;
 export const DEFAULT_DEVICE_GROUPS: DeviceGroupMap = {
     "chariot-temp-sensor": { homeId: "house-1", zoneId: "quartier-nord" },
     "zigbee-temp-01":      { homeId: "house-1", zoneId: "quartier-nord" },
+    "zigbee-energy-01":    { homeId: "house-1", zoneId: "quartier-nord" },
     "thread-temp-01":      { homeId: "house-2", zoneId: "quartier-nord" },
+    "thread-energy-01":    { homeId: "house-2", zoneId: "quartier-nord" },
 };

@@ -106,7 +106,7 @@ export const CommunicationPanel: React.FC<CommunicationPanelProps> = ({ zones, p
                         }}
                       >
                         <div className="data-item-header">
-                          <span className="item-name" style={{ fontWeight: "600" }}>Zone : "{zoneId}"</span>
+                          <span className="item-name" style={{ fontWeight: "600" }}>Zone : "{zoneId.includes("--") ? zoneId.split("--")[0] : zoneId}" ({state.unit === "celsius" ? "température" : "consommation"})</span>
                           <span 
                             className="badge"
                             style={{
@@ -130,7 +130,7 @@ export const CommunicationPanel: React.FC<CommunicationPanelProps> = ({ zones, p
                             <span className="stat-label">Moyenne Zone</span>
                             <span className="stat-value" style={{ color: "var(--text-muted)" }}>
                               {state.groupMean !== undefined ? (
-                                <><FlashValue value={state.groupMean} />°C</>
+                                <><FlashValue value={state.groupMean} />{state.unit === "celsius" ? "°C" : state.unit}</>
                               ) : "N/A"}
                             </span>
                           </div>
@@ -144,7 +144,7 @@ export const CommunicationPanel: React.FC<CommunicationPanelProps> = ({ zones, p
                             <span className="stat-label">Valeur Finale</span>
                             <span className="stat-value" style={{ color: isPublished ? "var(--color-services)" : "var(--text-muted)", fontSize: "1.1rem" }}>
                               {state.finalValue !== undefined ? (
-                                <><FlashValue value={state.finalValue} />°C</>
+                                <><FlashValue value={state.finalValue} />{state.unit === "celsius" ? "°C" : state.unit}</>
                               ) : "RETENU"}
                             </span>
                             {isPublished && state.finalValueHistory && (
@@ -166,27 +166,30 @@ export const CommunicationPanel: React.FC<CommunicationPanelProps> = ({ zones, p
                   2. Annuaire des Zones Stockées
                 </div>
                 <div className="item-list">
-                  {zoneList.map((z) => (
-                    <div className="data-item" key={z.zoneId} style={{ borderLeft: "2px solid var(--color-communication)" }}>
-                      <div className="data-item-header">
-                        <span className="item-name">Zone : "{z.zoneId}"</span>
-                        <span className="badge" style={{ backgroundColor: "rgba(45, 212, 191, 0.1)", color: "var(--color-communication)" }}>
-                          STOCKÉ
-                        </span>
+                  {zoneList.map((z) => {
+                    const cleanZoneId = z.zoneId.includes("--") ? z.zoneId.split("--")[0] : z.zoneId;
+                    return (
+                      <div className="data-item" key={z.zoneId} style={{ borderLeft: "2px solid var(--color-communication)" }}>
+                        <div className="data-item-header">
+                          <span className="item-name">Zone : "{cleanZoneId}" ({z.unit === "celsius" ? "température" : "consommation"})</span>
+                          <span className="badge" style={{ backgroundColor: "rgba(45, 212, 191, 0.1)", color: "var(--color-communication)" }}>
+                            STOCKÉ
+                          </span>
+                        </div>
+                        <div className="data-item-body">
+                          <span className="item-value" style={{ color: "var(--color-communication)" }}>
+                            <FlashValue value={z.value} unit={z.unit === "celsius" ? "°C" : z.unit} />
+                          </span>
+                          <span className="item-meta">
+                            {new Date(z.timestamp).toLocaleTimeString()}
+                          </span>
+                        </div>
+                        <div style={{ fontSize: "0.75rem", color: "var(--text-muted)", marginTop: "0.4rem", fontFamily: "var(--font-mono)", borderTop: "1px solid rgba(255,255,255,0.03)", paddingTop: "0.25rem" }}>
+                          Topic : chariot/zones/{cleanZoneId} ({z.type})
+                        </div>
                       </div>
-                      <div className="data-item-body">
-                        <span className="item-value" style={{ color: "var(--color-communication)" }}>
-                          <FlashValue value={z.value} unit={z.unit === "celsius" ? "°C" : z.unit} />
-                        </span>
-                        <span className="item-meta">
-                          {new Date(z.timestamp).toLocaleTimeString()}
-                        </span>
-                      </div>
-                      <div style={{ fontSize: "0.75rem", color: "var(--text-muted)", marginTop: "0.4rem", fontFamily: "var(--font-mono)", borderTop: "1px solid rgba(255,255,255,0.03)", paddingTop: "0.25rem" }}>
-                        Topic : chariot/zones/{z.zoneId}
-                      </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
             )}

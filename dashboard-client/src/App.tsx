@@ -227,6 +227,7 @@ export default function App() {
                 protocol: data.protocol,
                 rawValue: data.rawValue,
                 timestamp,
+                unit: data.virtualProfile?.unit,
               },
             }));
           } 
@@ -243,6 +244,7 @@ export default function App() {
                     rawValue: data.rawValue,
                     smoothedValue: data.smoothedValue,
                     windowFill: data.windowFill,
+                    unit: data.unit,
                     timestamp,
                     rawHistory,
                     smoothedHistory,
@@ -265,16 +267,18 @@ export default function App() {
               }));
             }
             else if (data.step === "kanon") {
+              const stateKey = `${data.zoneId}--${data.type}`;
               setGroupState((prev) => {
-                const current = prev[data.zoneId] || { groupMeanHistory: [], finalValueHistory: [] };
+                const current = prev[stateKey] || { groupMeanHistory: [], finalValueHistory: [] };
                 return {
                   ...prev,
-                  [data.zoneId]: {
-                    ...prev[data.zoneId],
+                  [stateKey]: {
+                    ...prev[stateKey],
                     activeDevices: data.activeDevices,
                     kThreshold: data.kThreshold,
                     status: data.status,
                     groupMean: data.groupMean,
+                    unit: data.unit,
                     timestamp,
                     groupMeanHistory: current.groupMeanHistory || [],
                     finalValueHistory: current.finalValueHistory || [],
@@ -283,8 +287,9 @@ export default function App() {
               });
             } 
             else if (data.step === "gaussian") {
+              const stateKey = `${data.zoneId}--${data.type}`;
               setGroupState((prev) => {
-                const current = prev[data.zoneId] || { groupMeanHistory: [], finalValueHistory: [] };
+                const current = prev[stateKey] || { groupMeanHistory: [], finalValueHistory: [] };
                 const groupMeanHistory = data.groupMean !== undefined 
                   ? [...(current.groupMeanHistory || []).slice(-19), data.groupMean]
                   : (current.groupMeanHistory || []);
@@ -293,8 +298,8 @@ export default function App() {
                   : (current.finalValueHistory || []);
                 return {
                   ...prev,
-                  [data.zoneId]: {
-                    ...prev[data.zoneId],
+                  [stateKey]: {
+                    ...prev[stateKey],
                     groupMean: data.groupMean,
                     noise: data.noise,
                     finalValue: data.finalValue,
@@ -309,10 +314,11 @@ export default function App() {
           } 
           
           else if (data.layer === "communication") {
+            const stateKey = `${data.zoneId}--${data.type}`;
             setCommunicationGroups((prev) => ({
               ...prev,
-              [data.zoneId]: {
-                zoneId: data.zoneId,
+              [stateKey]: {
+                zoneId: stateKey,
                 type: data.type,
                 value: data.value,
                 unit: data.unit,

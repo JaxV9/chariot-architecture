@@ -7,14 +7,19 @@ import { RawReading } from "../driver/DeviceDriver.js";
 
 export class DataAccess {
     // By default, certain data types are allowed for transmission
-    private allowedTypes: Set<string> = new Set(["temperature"]);
+    private allowedTypes: Set<string> = new Set(["temperature", "energy_consumption"]);
 
     /**
      * Checks whether the transmission of a given raw reading is permitted by the user.
      */
     isTransmissionAllowed(reading: RawReading): boolean {
-        // Derive the data type from the cluster/attribute (e.g., temperature)
-        const dataType = reading.cluster === "temperatureMeasurement" ? "temperature" : "unknown";
+        // Derive the data type from the cluster/attribute (e.g., temperature, energy)
+        let dataType = "unknown";
+        if (reading.cluster === "temperatureMeasurement" || reading.cluster === "temperature") {
+            dataType = "temperature";
+        } else if (reading.cluster === "energy_consumption") {
+            dataType = "energy_consumption";
+        }
 
         if (this.allowedTypes.has(dataType)) {
             console.log(`\x1b[32m[DATA ACCESS] [ALLOW] Data type '${dataType}' allowed for device ${reading.deviceId}.\x1b[0m`);
