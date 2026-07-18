@@ -40,6 +40,18 @@ export class DevicesMapper {
                 mappedValue = reading.value;
                 unit = "kWh";
                 type = "energy_consumption";
+            } else if (reading.cluster === "occupancy") {
+                mappedValue = reading.value;
+                unit = "percent";
+                type = "occupancy";
+            } else if (reading.cluster === "security") {
+                mappedValue = reading.value === "normal" ? 0 : 1;
+                unit = "frequency";
+                type = "security_event";
+            } else if (reading.cluster === "air_quality") {
+                mappedValue = reading.value;
+                unit = "ppm";
+                type = "air_quality";
             }
         }
 

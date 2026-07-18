@@ -67,6 +67,8 @@ async function runTests() {
             // TEST 1: Publish first home's data (K-anonymity should withhold)
             console.log("\n\x1b[34;1m--- TEST 1: Single home contribution (withheld) ---\x1b[0m");
             const house1Profile: HomeAggregateProfile = {
+                siteId: "house-1",
+                siteType: "home",
                 homeId: "house-1",
                 zoneId: testZoneId,
                 type: "temperature",
@@ -80,7 +82,7 @@ async function runTests() {
             await new Promise(resolve => setTimeout(resolve, 800));
 
             // Verify withheld in Directory Services
-            const latest1 = directoryService.getZoneLatest(testZoneId);
+            const latest1 = directoryService.getZoneLatest(`${testZoneId}--home--temperature`);
             if (!latest1) {
                 console.log("\x1b[32m[TEST 1 SUCCESS] Data withheld correctly (only 1 home active, K=2).\x1b[0m");
             } else {
@@ -90,6 +92,8 @@ async function runTests() {
             // TEST 2: Publish second home's data (K-anonymity should satisfy)
             console.log("\n\x1b[34;1m--- TEST 2: Second home contribution (published) ---\x1b[0m");
             const house2Profile: HomeAggregateProfile = {
+                siteId: "house-2",
+                siteType: "home",
                 homeId: "house-2",
                 zoneId: testZoneId,
                 type: "temperature",
@@ -103,7 +107,7 @@ async function runTests() {
             await new Promise(resolve => setTimeout(resolve, 800));
 
             // Verify published & stored in Directory Services
-            const latest2 = directoryService.getZoneLatest(testZoneId);
+            const latest2 = directoryService.getZoneLatest(`${testZoneId}--home--temperature`);
             if (latest2 && latest2.value === 21.0) { // mean of 20 and 22 is 21
                 console.log("\x1b[32m[TEST 2 SUCCESS] Zone profile published and stored with value 21.0 (K=2 threshold met).\x1b[0m");
             } else {
@@ -120,6 +124,8 @@ async function runTests() {
                 // Alternating house-1 and house-2 to keep both active
                 const homeId = i % 2 === 0 ? "house-1" : "house-2";
                 const profile: HomeAggregateProfile = {
+                    siteId: homeId,
+                    siteType: "home",
                     homeId,
                     zoneId: testZoneId,
                     type: "temperature",
@@ -134,7 +140,7 @@ async function runTests() {
 
             await new Promise(resolve => setTimeout(resolve, 1000));
 
-            const history = directoryService.getZoneHistory(testZoneId);
+            const history = directoryService.getZoneHistory(`${testZoneId}--home--temperature`);
             console.log(`\x1b[36m[TEST 3] Final history size: ${history.length} (expected: 10)\x1b[0m`);
             
             if (history.length === 10) {

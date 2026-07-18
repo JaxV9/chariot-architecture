@@ -15,10 +15,16 @@ export class MessageFormats {
             throw new Error("Message is not a valid JSON object");
         }
 
-        const { homeId, zoneId, type, unit, value, timestamp } = data;
+        const siteId = data.siteId ?? data.homeId;
+        const siteType = data.siteType ?? "home";
+        const { zoneId, type, unit, value, timestamp } = data;
 
-        if (typeof homeId !== "string" || homeId.trim() === "") {
-            throw new Error("Field 'homeId' must be a non-empty string");
+        if (typeof siteId !== "string" || siteId.trim() === "") {
+            throw new Error("Field 'siteId' or 'homeId' must be a non-empty string");
+        }
+
+        if (typeof siteType !== "string" || (siteType !== "home" && siteType !== "building")) {
+            throw new Error("Field 'siteType' must be 'home' or 'building'");
         }
 
         if (typeof zoneId !== "string" || zoneId.trim() === "") {
@@ -42,7 +48,9 @@ export class MessageFormats {
         }
 
         return {
-            homeId,
+            siteId,
+            siteType,
+            homeId: siteId,
             zoneId,
             type,
             unit,

@@ -11,6 +11,8 @@ import { FlashValue } from "./FlashValue.tsx";
 interface SpatialViewProps {
   devices: Record<string, DeviceData>;
   intraHomeState: Record<string, {
+    siteId?: string;
+    siteType?: 'home' | 'building';
     homeId: string;
     zoneId: string;
     type: string;
@@ -34,26 +36,35 @@ interface SpatialViewProps {
 }
 
 export const SpatialView: React.FC<SpatialViewProps> = ({ devices, intraHomeState, privacyState }) => {
-  // Group devices by zoneId, then homeId
+  // Group devices by zoneId, then siteId
   const grouped: Record<string, {
     zoneId: string;
-    houses: Record<string, {
-      homeId: string;
+    sites: Record<string, {
+      siteId: string;
+      siteType: 'home' | 'building';
       devices: DeviceData[];
     }>;
   }> = {};
 
   Object.values(devices).forEach((dev) => {
     const zoneId = dev.zoneId || "quartier-nord"; // fallback to default
-    const homeId = dev.homeId || (dev.deviceId.includes("house-2") || dev.deviceId.includes("thread") ? "house-2" : "house-1");
+    const siteId = dev.siteId || dev.homeId || (dev.deviceId.includes("house-2") || dev.deviceId.includes("thread") ? "house-2" : "house-1");
+    
+    // Infer siteType: building if device ID contains building-specific terms
+    const isBuilding = dev.siteType === "building" || 
+                       dev.deviceId.includes("occupancy") || 
+                       dev.deviceId.includes("security") || 
+                       dev.deviceId.includes("airquality") || 
+                       siteId.includes("building");
+    const siteType = isBuilding ? "building" : "home";
 
     if (!grouped[zoneId]) {
-      grouped[zoneId] = { zoneId, houses: {} };
+      grouped[zoneId] = { zoneId, sites: {} };
     }
-    if (!grouped[zoneId].houses[homeId]) {
-      grouped[zoneId].houses[homeId] = { homeId, devices: [] };
+    if (!grouped[zoneId].sites[siteId]) {
+      grouped[zoneId].sites[siteId] = { siteId, siteType, devices: [] };
     }
-    grouped[zoneId].houses[homeId].devices.push(dev);
+    grouped[zoneId].sites[siteId].devices.push(dev);
   });
 
   const zoneList = Object.values(grouped);
@@ -66,6 +77,15 @@ export const SpatialView: React.FC<SpatialViewProps> = ({ devices, intraHomeStat
       case "thread": return "#a855f7"; // Purple
       default: return "#94a3b8";
     }
+  };
+
+  const formatUnit = (unit?: string) => {
+    if (!unit) return "";
+    if (unit === "celsius") return "°C";
+    if (unit === "percent") return "%";
+    if (unit === "ppm") return " ppm";
+    if (unit === "frequency") return "";
+    return " " + unit;
   };
 
   return (
@@ -126,7 +146,6 @@ export const SpatialView: React.FC<SpatialViewProps> = ({ devices, intraHomeStat
 
         .spatial-house-card {
           background: rgba(255, 255, 255, 0.02);
-          border: 1px solid rgba(56, 189, 248, 0.15);
           border-radius: 12px;
           padding: 1.25rem;
           display: flex;
@@ -146,7 +165,6 @@ export const SpatialView: React.FC<SpatialViewProps> = ({ devices, intraHomeStat
           justify-content: space-between;
           align-items: center;
           font-weight: 600;
-          color: var(--color-runtime);
           font-size: 0.95rem;
           border-bottom: 1px solid rgba(255, 255, 255, 0.03);
           padding-bottom: 0.5rem;
@@ -252,11 +270,17 @@ export const SpatialView: React.FC<SpatialViewProps> = ({ devices, intraHomeStat
         ) : (
           zoneList.map((zone) => {
             // Find active status of this zone
-            const tempK = privacyState[`${zone.zoneId}--temperature`];
-            const energyK = privacyState[`${zone.zoneId}--energy_consumption`];
+            const tempK = privacyState[`${zone.zoneId}--home--temperature`];
+            const energyK = privacyState[`${zone.zoneId}--home--energy_consumption`];
+            const occupancyK = privacyState[`${zone.zoneId}--building--occupancy`];
+            const securityK = privacyState[`${zone.zoneId}--building--security_event`];
+            const airQualityK = privacyState[`${zone.zoneId}--building--air_quality`];
             
             const isTempPub = tempK?.status === "published";
             const isEnergyPub = energyK?.status === "published";
+            const isOccupancyPub = occupancyK?.status === "published";
+            const isSecurityPub = securityK?.status === "published";
+            const isAirQualityPub = airQualityK?.status === "published";
 
             return (
               <div className="spatial-zone-card" key={zone.zoneId}>
@@ -269,66 +293,149 @@ export const SpatialView: React.FC<SpatialViewProps> = ({ devices, intraHomeStat
                     </svg>
                     Zone : "{zone.zoneId}"
                   </div>
-                  <div style={{ display: "flex", gap: "0.5rem" }}>
+                  <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap", justifyContent: "flex-end", maxWidth: "70%" }}>
                     {tempK && (
                       <span className="badge" style={{ backgroundColor: isTempPub ? "rgba(74, 222, 128, 0.1)" : "rgba(239, 68, 68, 0.1)", color: isTempPub ? "var(--color-services)" : "#ef4444" }}>
-                        Température : {tempK.activeDevices}/{tempK.kThreshold} maisons
+                        Maison Temp : {tempK.activeDevices}/{tempK.kThreshold}
                       </span>
                     )}
                     {energyK && (
                       <span className="badge" style={{ backgroundColor: isEnergyPub ? "rgba(74, 222, 128, 0.1)" : "rgba(239, 68, 68, 0.1)", color: isEnergyPub ? "var(--color-services)" : "#ef4444" }}>
-                        Énergie : {energyK.activeDevices}/{energyK.kThreshold} maisons
+                        Maison Énergie : {energyK.activeDevices}/{energyK.kThreshold}
+                      </span>
+                    )}
+                    {occupancyK && (
+                      <span className="badge" style={{ backgroundColor: isOccupancyPub ? "rgba(74, 222, 128, 0.1)" : "rgba(239, 68, 68, 0.1)", color: isOccupancyPub ? "var(--color-services)" : "#ef4444" }}>
+                        Bâtiment Occ : {occupancyK.activeDevices}/{occupancyK.kThreshold}
+                      </span>
+                    )}
+                    {securityK && (
+                      <span className="badge" style={{ backgroundColor: isSecurityPub ? "rgba(74, 222, 128, 0.1)" : "rgba(239, 68, 68, 0.1)", color: isSecurityPub ? "var(--color-services)" : "#ef4444" }}>
+                        Bâtiment Sécu : {securityK.activeDevices}/{securityK.kThreshold}
+                      </span>
+                    )}
+                    {airQualityK && (
+                      <span className="badge" style={{ backgroundColor: isAirQualityPub ? "rgba(74, 222, 128, 0.1)" : "rgba(239, 68, 68, 0.1)", color: isAirQualityPub ? "var(--color-services)" : "#ef4444" }}>
+                        Bâtiment Air : {airQualityK.activeDevices}/{airQualityK.kThreshold}
                       </span>
                     )}
                   </div>
                 </div>
 
                 <div className="houses-grid">
-                  {Object.values(zone.houses).map((house) => {
-                    // Extract local aggregates for this house
-                    const tempAggregate = intraHomeState[`${house.homeId}-temperature`];
-                    const energyAggregate = intraHomeState[`${house.homeId}-energy_consumption`];
+                  {Object.values(zone.sites).map((site) => {
+                    const isBuilding = site.siteType === "building";
+                    const cardBorderColor = isBuilding ? "rgba(249, 115, 22, 0.25)" : "rgba(56, 189, 248, 0.15)";
+                    const hoverGlow = isBuilding ? "rgba(249, 115, 22, 0.1)" : "rgba(56, 189, 248, 0.1)";
+                    const titleColor = isBuilding ? "rgba(249, 115, 22, 0.95)" : "var(--color-runtime)";
+
+                    // Extract local aggregates for this site
+                    const tempAggregate = intraHomeState[`${site.siteId}-temperature`];
+                    const energyAggregate = intraHomeState[`${site.siteId}-energy_consumption`];
+                    const occupancyAggregate = intraHomeState[`${site.siteId}-occupancy`];
+                    const securityAggregate = intraHomeState[`${site.siteId}-security_event`];
+                    const airQualityAggregate = intraHomeState[`${site.siteId}-air_quality`];
 
                     return (
-                      <div className="spatial-house-card" key={house.homeId}>
-                        <div className="spatial-house-header">
+                      <div 
+                        className="spatial-house-card" 
+                        key={site.siteId}
+                        style={{
+                          border: `1px solid ${cardBorderColor}`,
+                          boxShadow: `0 4px 15px ${hoverGlow}`
+                        }}
+                      >
+                        <div className="spatial-house-header" style={{ color: titleColor }}>
                           <div style={{ display: "flex", alignItems: "center", gap: "0.4rem" }}>
-                            {/* Home icon */}
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                              <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-                              <polyline points="9 22 9 12 15 12 15 22"/>
-                            </svg>
-                            {house.homeId}
+                            {isBuilding ? (
+                              /* Building Icon */
+                              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                                <rect x="4" y="2" width="16" height="20" rx="2" ry="2"/>
+                                <line x1="9" y1="22" x2="9" y2="16"/>
+                                <line x1="15" y1="22" x2="15" y2="16"/>
+                                <line x1="9" y1="16" x2="15" y2="16"/>
+                                <path d="M8 6h2v2H8V6zm0 4h2v2H8v-2zm0 4h2v2H8v-2zm6-8h2v2h-2V6zm0 4h2v2h-2v-2zm0 4h2v2h-2v-2z"/>
+                              </svg>
+                            ) : (
+                              /* Home icon */
+                              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                                <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                                <polyline points="9 22 9 12 15 12 15 22"/>
+                              </svg>
+                            )}
+                            {site.siteId}
                           </div>
-                          <span style={{ fontSize: "0.7rem", color: "var(--text-muted)" }}>Runtime Gateway</span>
+                          <span style={{ fontSize: "0.7rem", color: "var(--text-muted)" }}>
+                            {isBuilding ? "Building Gateway" : "Home Gateway"}
+                          </span>
                         </div>
 
                         {/* Local Gateway Aggregated values */}
                         <div className="house-aggregates">
                           <div style={{ fontSize: "0.7rem", color: "var(--text-muted)", fontWeight: "bold", textTransform: "uppercase", marginBottom: "0.1rem" }}>
-                            Abonnement Intra-Maison
+                            Abonnement Intra-Site
                           </div>
-                          {tempAggregate ? (
-                            <div className="aggregate-row" style={{ color: "var(--color-runtime)" }}>
-                              <span>Moyenne Temp :</span>
-                              <strong><FlashValue value={tempAggregate.value} />°C</strong>
-                            </div>
+                          {!isBuilding ? (
+                            <>
+                              {tempAggregate ? (
+                                <div className="aggregate-row" style={{ color: "var(--color-runtime)" }}>
+                                  <span>Moyenne Temp :</span>
+                                  <strong><FlashValue value={tempAggregate.value} />°C</strong>
+                                </div>
+                              ) : (
+                                <div className="aggregate-row" style={{ color: "var(--text-muted)" }}>
+                                  <span>Moyenne Temp :</span>
+                                  <span>N/A</span>
+                                </div>
+                              )}
+                              {energyAggregate ? (
+                                <div className="aggregate-row" style={{ color: "var(--color-devices)" }}>
+                                  <span>Moyenne Énergie :</span>
+                                  <strong><FlashValue value={energyAggregate.value} /> kWh</strong>
+                                </div>
+                              ) : (
+                                <div className="aggregate-row" style={{ color: "var(--text-muted)" }}>
+                                  <span>Moyenne Énergie :</span>
+                                  <span>N/A</span>
+                                </div>
+                              )}
+                            </>
                           ) : (
-                            <div className="aggregate-row" style={{ color: "var(--text-muted)" }}>
-                              <span>Moyenne Temp :</span>
-                              <span>N/A</span>
-                            </div>
-                          )}
-                          {energyAggregate ? (
-                            <div className="aggregate-row" style={{ color: "var(--color-devices)" }}>
-                              <span>Moyenne Énergie :</span>
-                              <strong><FlashValue value={energyAggregate.value} /> kWh</strong>
-                            </div>
-                          ) : (
-                            <div className="aggregate-row" style={{ color: "var(--text-muted)" }}>
-                              <span>Moyenne Énergie :</span>
-                              <span>N/A</span>
-                            </div>
+                            <>
+                              {occupancyAggregate ? (
+                                <div className="aggregate-row" style={{ color: "var(--color-communication)" }}>
+                                  <span>Moyenne Occupation :</span>
+                                  <strong><FlashValue value={occupancyAggregate.value} />%</strong>
+                                </div>
+                              ) : (
+                                <div className="aggregate-row" style={{ color: "var(--text-muted)" }}>
+                                  <span>Moyenne Occupation :</span>
+                                  <span>N/A</span>
+                                </div>
+                              )}
+                              {securityAggregate ? (
+                                <div className="aggregate-row" style={{ color: "#f43f5e" }}>
+                                  <span>Fréq. Anomalie :</span>
+                                  <strong><FlashValue value={securityAggregate.value} /></strong>
+                                </div>
+                              ) : (
+                                <div className="aggregate-row" style={{ color: "var(--text-muted)" }}>
+                                  <span>Fréq. Anomalie :</span>
+                                  <span>N/A</span>
+                                </div>
+                              )}
+                              {airQualityAggregate ? (
+                                <div className="aggregate-row" style={{ color: "#10b981" }}>
+                                  <span>Moyenne CO2 :</span>
+                                  <strong><FlashValue value={airQualityAggregate.value} /> ppm</strong>
+                                </div>
+                              ) : (
+                                <div className="aggregate-row" style={{ color: "var(--text-muted)" }}>
+                                  <span>Moyenne CO2 :</span>
+                                  <span>N/A</span>
+                                </div>
+                              )}
+                            </>
                           )}
                         </div>
 
@@ -337,7 +444,7 @@ export const SpatialView: React.FC<SpatialViewProps> = ({ devices, intraHomeStat
                           <div style={{ fontSize: "0.7rem", color: "var(--text-muted)", fontWeight: "bold", textTransform: "uppercase", marginTop: "0.2rem" }}>
                             Capteurs Physiques (Bruts)
                           </div>
-                          {house.devices.map((dev) => (
+                          {site.devices.map((dev) => (
                             <div className="spatial-device-item" key={dev.deviceId}>
                               <div style={{ display: "flex", flexDirection: "column", gap: "0.1rem" }}>
                                 <span style={{ fontWeight: "500", color: "#f1f5f9" }}>{dev.deviceId}</span>
@@ -346,7 +453,7 @@ export const SpatialView: React.FC<SpatialViewProps> = ({ devices, intraHomeStat
                                 </span>
                               </div>
                               <strong style={{ fontFamily: "var(--font-mono)" }}>
-                                <FlashValue value={dev.rawValue} unit={dev.unit === "celsius" ? "°C" : dev.unit} />
+                                <FlashValue value={dev.rawValue} unit={formatUnit(dev.unit)} />
                               </strong>
                             </div>
                           ))}
@@ -396,12 +503,12 @@ export const SpatialView: React.FC<SpatialViewProps> = ({ devices, intraHomeStat
           </div>
 
           <div style={{ fontSize: "0.85rem", color: "var(--text-muted)", lineHeight: "1.4" }}>
-            Reçoit les profils chiffrés de chaque maison. Applique le <strong>K-Anonymat</strong> inter-maisons par zone, puis injecte un <strong>Bruit Gaussien</strong>.
+            Reçoit les profils chiffrés de chaque site. Applique le <strong>K-Anonymat</strong> par type de site, puis injecte un <strong>Bruit Gaussien</strong>.
           </div>
 
           <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem", marginTop: "0.25rem" }}>
             {Object.entries(privacyState).map(([key, state]) => {
-              const [zoneId, type] = key.split("--");
+              const [zoneId, siteType, type] = key.split("--");
               const isPublished = state.status === "published";
               return (
                 <div 
@@ -415,7 +522,7 @@ export const SpatialView: React.FC<SpatialViewProps> = ({ devices, intraHomeStat
                   }}
                 >
                   <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.8rem", fontWeight: "600", marginBottom: "0.3rem" }}>
-                    <span>{zoneId} ({type === "celsius" || type === "temperature" ? "température" : "consommation"})</span>
+                    <span>{zoneId} ({siteType === "building" ? "Bâtiment" : "Maison"} - {type})</span>
                     <span style={{ color: isPublished ? "var(--color-services)" : "#ef4444" }}>
                       {isPublished ? "PUBLIÉ ✓" : "RETENU ❌"}
                     </span>
@@ -425,7 +532,7 @@ export const SpatialView: React.FC<SpatialViewProps> = ({ devices, intraHomeStat
                     <div>Bruit : <strong style={{ color: "#60a5fa" }}>{state.noise !== undefined ? (state.noise > 0 ? "+" : "") + state.noise.toFixed(4) : "0.0000"}</strong></div>
                     <div style={{ gridColumn: "span 2" }}>
                       Valeur finale : <strong style={{ color: isPublished ? "var(--color-services)" : "var(--text-muted)" }}>
-                        {state.finalValue !== undefined ? `${state.finalValue} ${state.unit === "celsius" ? "°C" : state.unit}` : "RETENU"}
+                        {state.finalValue !== undefined ? `${state.finalValue}${formatUnit(state.unit)}` : "RETENU"}
                       </strong>
                     </div>
                   </div>
@@ -469,7 +576,7 @@ export const SpatialView: React.FC<SpatialViewProps> = ({ devices, intraHomeStat
 
           <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem", marginTop: "0.25rem" }}>
             {Object.entries(privacyState).map(([key, state]) => {
-              const [zoneId, type] = key.split("--");
+              const [zoneId, siteType, type] = key.split("--");
               const isPublished = state.status === "published";
               if (!isPublished) return null;
 
@@ -485,11 +592,11 @@ export const SpatialView: React.FC<SpatialViewProps> = ({ devices, intraHomeStat
                   }}
                 >
                   <div style={{ fontFamily: "var(--font-mono)", color: "var(--color-services)", fontWeight: "bold" }}>
-                    GET /zones/{zoneId}--{type}
+                    GET /zones/{zoneId}--{siteType}--{type}
                   </div>
                   <div style={{ display: "flex", justifyContent: "space-between", marginTop: "0.25rem", color: "var(--text-muted)" }}>
                     <span>Statut : <strong style={{ color: "var(--color-services)" }}>200 OK</strong></span>
-                    <span>Valeur : <strong style={{ color: "#f1f5f9" }}>{state.finalValue} {state.unit === "celsius" ? "°C" : state.unit}</strong></span>
+                    <span>Valeur : <strong style={{ color: "#f1f5f9" }}>{state.finalValue}{formatUnit(state.unit)}</strong></span>
                   </div>
                 </div>
               );

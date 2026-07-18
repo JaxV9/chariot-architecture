@@ -4,7 +4,9 @@
  */
 
 export interface HomeAggregateProfile {
-    homeId: string;
+    siteId: string;
+    siteType: 'home' | 'building';
+    homeId: string; // for backward compatibility
     zoneId: string;
     type: string;
     unit: string;

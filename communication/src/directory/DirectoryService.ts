@@ -7,10 +7,12 @@ import { TelemetryClient } from "../telemetry/TelemetryClient.js";
 
 export interface ZoneProfile {
     zoneId: string;
+    siteType: 'home' | 'building';
     type: string;
     unit: string;
     value: number;
-    homeCount: number;
+    siteCount: number;
+    homeCount: number; // backward compatibility
     timestamp: string;
 }
 
@@ -29,7 +31,8 @@ export class DirectoryService {
      * Keeps only the 10 most recent readings (sliding window history).
      */
     saveProfile(profile: ZoneProfile): void {
-        const key = `${profile.zoneId}--${profile.type}`;
+        const siteType = profile.siteType || "home";
+        const key = `${profile.zoneId}--${siteType}--${profile.type}`;
         if (!this.store.has(key)) {
             this.store.set(key, []);
         }
@@ -44,15 +47,17 @@ export class DirectoryService {
             history.pop();
         }
 
-        console.log(`\x1b[32m[DIRECTORY SERVICES] Profile saved for key ${key}. Value: ${profile.value} ${profile.unit}, homes count: ${profile.homeCount}. History: ${history.length}/10\x1b[0m`);
+        console.log(`\x1b[32m[DIRECTORY SERVICES] Profile saved for key ${key}. Value: ${profile.value} ${profile.unit}, sites count: ${profile.siteCount}. History: ${history.length}/10\x1b[0m`);
 
         // Emit communication-layer telemetry event (fire-and-forget)
         this.telemetry?.emit({
             layer: "communication",
             zoneId: key,
+            siteType: siteType,
             type: profile.type,
             value: profile.value,
             unit: profile.unit,
+            siteCount: profile.siteCount,
             homeCount: profile.homeCount,
             timestamp: profile.timestamp,
             directoryStoreStructure: history,

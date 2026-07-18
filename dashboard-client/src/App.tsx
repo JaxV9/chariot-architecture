@@ -256,10 +256,14 @@ export default function App() {
               });
             } 
             else if (data.step === "intra_home") {
+              const siteId = data.siteId || data.homeId;
+              const siteType = data.siteType || "home";
               setIntraHomeState((prev) => ({
                 ...prev,
-                [`${data.homeId}-${data.type}`]: {
-                  homeId: data.homeId,
+                [`${siteId}-${data.type}`]: {
+                  siteId,
+                  siteType,
+                  homeId: siteId,
                   zoneId: data.zoneId,
                   type: data.type,
                   unit: data.unit,
@@ -270,7 +274,8 @@ export default function App() {
               }));
             }
             else if (data.step === "kanon") {
-              const stateKey = `${data.zoneId}--${data.type}`;
+              const siteType = data.siteType || "home";
+              const stateKey = `${data.zoneId}--${siteType}--${data.type}`;
               setGroupState((prev) => {
                 const current = prev[stateKey] || { groupMeanHistory: [], finalValueHistory: [] };
                 return {
@@ -290,7 +295,8 @@ export default function App() {
               });
             } 
             else if (data.step === "gaussian") {
-              const stateKey = `${data.zoneId}--${data.type}`;
+              const siteType = data.siteType || "home";
+              const stateKey = `${data.zoneId}--${siteType}--${data.type}`;
               setGroupState((prev) => {
                 const current = prev[stateKey] || { groupMeanHistory: [], finalValueHistory: [] };
                 const groupMeanHistory = data.groupMean !== undefined 
@@ -317,7 +323,11 @@ export default function App() {
           } 
           
           else if (data.layer === "communication") {
-            const stateKey = `${data.zoneId}--${data.type}`;
+            if (data.step === "config") {
+              return;
+            }
+            const siteType = data.siteType || "home";
+            const stateKey = `${data.zoneId}--${siteType}--${data.type}`;
             setCommunicationGroups((prev) => ({
               ...prev,
               [stateKey]: {
@@ -394,25 +404,34 @@ export default function App() {
   }, [logs]);
 
   const formatLogMessage = (data: any): string => {
+    const toFixedSafe = (val: any, decimals = 2) => {
+      return typeof val === "number" ? val.toFixed(decimals) : String(val);
+    };
+
     if (data.layer === "devices") {
-      return `Lecture brute de ${data.deviceId} (${data.protocol.toUpperCase()}) : valeur=${data.rawValue.toFixed(2)}`;
+      return `Lecture brute de ${data.deviceId} (${data.protocol.toUpperCase()}) : valeur=${toFixedSafe(data.rawValue)}`;
     }
     if (data.layer === "runtime") {
       if (data.step === "temporal") {
-        return `[Temporel] ${data.deviceId} : brute=${data.rawValue.toFixed(2)} → lissée=${data.smoothedValue.toFixed(2)} (remplissage=${Math.round(data.windowFill * 100)}%)`;
+        return `[Temporel] ${data.deviceId} : brute=${toFixedSafe(data.rawValue)} → lissée=${toFixedSafe(data.smoothedValue)} (remplissage=${Math.round(data.windowFill * 100)}%)`;
       }
       if (data.step === "intra_home") {
-        return `[Maison] ${data.homeId} : type=${data.type} moyenne locale=${data.value.toFixed(2)} (${data.activeDevices} capteur(s) actif(s))`;
+        return `[Site] ${data.siteId || data.homeId} (${data.siteType || "home"}) : type=${data.type} moyenne locale=${toFixedSafe(data.value)} (${data.activeDevices} capteur(s) actif(s))`;
       }
       if (data.step === "kanon") {
-        return `[k-Anonymat] Zone "${data.zoneId}" : actifs=${data.activeDevices}/${data.kThreshold} statut=${data.status === "published" ? "PUBLIÉ" : "RETENU"}`;
+        return `[k-Anonymat] Zone "${data.zoneId}" (${data.siteType || "home"}) : actifs=${data.activeDevices}/${data.kThreshold} statut=${data.status === "published" ? "PUBLIÉ" : "RETENU"}`;
       }
       if (data.step === "gaussian") {
-        return `[Perturbation] Zone "${data.zoneId}" : moyenne=${data.groupMean.toFixed(2)} bruit=${data.noise.toFixed(2)} → finale=${data.finalValue.toFixed(2)} °C`;
+        return `[Perturbation] Zone "${data.zoneId}" (${data.siteType || "home"}) : moyenne=${toFixedSafe(data.groupMean)} bruit=${toFixedSafe(data.noise)} → finale=${toFixedSafe(data.finalValue)} ${data.unit || ""}`;
       }
     }
     if (data.layer === "communication") {
-      return `[Services d'annuaire] Zone "${data.zoneId}" stockée : valeur=${data.value.toFixed(2)} ${data.unit}`;
+      if (data.step === "config") {
+        return `[Configuration Cloud] K-Anonymat=${data.kThreshold}, σ=${data.sigma}`;
+      }
+      const zoneIdStr = data.zoneId || "";
+      const cleanZoneId = zoneIdStr.includes("--") ? zoneIdStr.split("--")[0] : zoneIdStr;
+      return `[Services d'annuaire] Zone "${cleanZoneId}" (${data.siteType || "home"}) stockée : valeur=${toFixedSafe(data.value)} ${data.unit || ""}`;
     }
     if (data.layer === "services") {
       return `API REST GET ${data.path} → Statut ${data.status} (Zero Trust vérifié)`;

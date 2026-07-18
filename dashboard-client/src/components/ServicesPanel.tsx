@@ -3,11 +3,13 @@ import { FlashValue } from "./FlashValue.tsx";
 
 interface ZoneProfile {
   zoneId: string;
+  siteType?: 'home' | 'building';
   type: string;
   unit: string;
   value: number;
   timestamp: string;
-  homeCount: number;
+  siteCount?: number;
+  homeCount?: number;
 }
 
 const Sparkline: React.FC<{ values: number[]; color: string }> = ({ values, color }) => {
@@ -156,9 +158,14 @@ export const ServicesPanel: React.FC = () => {
                       
                       <div style={{ fontSize: "0.75rem", color: "var(--text-muted)", marginTop: "0.4rem", borderTop: "1px solid rgba(255,255,255,0.03)", paddingTop: "0.4rem" }}>
                         <div>Type : <strong>{profile.type}</strong></div>
-                        {profile.homeCount !== undefined && (
-                          <div>Maisons dans la zone anonymisée : <strong>{profile.homeCount}</strong></div>
+                        {profile.siteType && (
+                          <div>Type de site : <strong>{profile.siteType === "building" ? "Bâtiment" : "Maison"}</strong></div>
                         )}
+                        {profile.siteCount !== undefined ? (
+                          <div>Sites dans la zone anonymisée : <strong>{profile.siteCount}</strong></div>
+                        ) : profile.homeCount !== undefined ? (
+                          <div>Maisons dans la zone anonymisée : <strong>{profile.homeCount}</strong></div>
+                        ) : null}
                       </div>
 
                       {/* Sparkline & History timeline dots */}

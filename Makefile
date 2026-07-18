@@ -43,10 +43,30 @@ run-devices: build-devices
 	npm run start -w devices
 
 run-runtime-house1: build-runtime
-	START_BROKER=true HOME_ID=house-1 ZONE_ID=quartier-nord DEVICE_IDS=matter-temp-01,zigbee-temp-01,zigbee-energy-01 TELEMETRY_ENABLED=true npm run start -w runtime
+	START_BROKER=true SITE_ID=house-1 SITE_TYPE=home ZONE_ID=quartier-nord DEVICE_IDS=matter-temp-01,zigbee-temp-01,zigbee-energy-01 TELEMETRY_ENABLED=true npm run start -w runtime
 
 run-runtime-house2: build-runtime
-	START_BROKER=false HOME_ID=house-2 ZONE_ID=quartier-nord DEVICE_IDS=thread-temp-01,thread-energy-01 TELEMETRY_ENABLED=true npm run start -w runtime
+	START_BROKER=false SITE_ID=house-2 SITE_TYPE=home ZONE_ID=quartier-nord DEVICE_IDS=thread-temp-01,thread-energy-01 TELEMETRY_ENABLED=true npm run start -w runtime
+run-runtime-house3: build-runtime
+	START_BROKER=false SITE_ID=house-3 SITE_TYPE=home ZONE_ID=quartier-nord DEVICE_IDS=matter-temp-03,zigbee-temp-03,zigbee-energy-03 TELEMETRY_ENABLED=true npm run start -w runtime
+
+run-runtime-house4: build-runtime
+	START_BROKER=false SITE_ID=house-4 SITE_TYPE=home ZONE_ID=quartier-nord DEVICE_IDS=matter-temp-04,zigbee-temp-04,zigbee-energy-04 TELEMETRY_ENABLED=true npm run start -w runtime
+
+run-runtime-house5: build-runtime
+	START_BROKER=false SITE_ID=house-5 SITE_TYPE=home ZONE_ID=quartier-nord DEVICE_IDS=matter-temp-05,zigbee-temp-05,zigbee-energy-05 TELEMETRY_ENABLED=true npm run start -w runtime
+
+run-runtime-building1: build-runtime
+	START_BROKER=false SITE_ID=building-1 SITE_TYPE=building ZONE_ID=quartier-nord DEVICE_IDS=zigbee-occupancy-01,zigbee-security-01,thread-airquality-01 TELEMETRY_ENABLED=true npm run start -w runtime
+
+run-runtime-building2: build-runtime
+	START_BROKER=false SITE_ID=building-2 SITE_TYPE=building ZONE_ID=quartier-nord DEVICE_IDS=zigbee-occupancy-02,zigbee-security-02,thread-airquality-02 TELEMETRY_ENABLED=true npm run start -w runtime
+
+run-runtime-building3: build-runtime
+	START_BROKER=false SITE_ID=building-3 SITE_TYPE=building ZONE_ID=quartier-nord DEVICE_IDS=zigbee-occupancy-03,zigbee-security-03,thread-airquality-03 TELEMETRY_ENABLED=true npm run start -w runtime
+
+run-runtime-building4: build-runtime
+	START_BROKER=false SITE_ID=building-4 SITE_TYPE=building ZONE_ID=quartier-nord DEVICE_IDS=zigbee-occupancy-04,zigbee-security-04,thread-airquality-04 TELEMETRY_ENABLED=true npm run start -w runtime
 
 run-services: build-services
 	TELEMETRY_ENABLED=true npm run start -w services
@@ -56,12 +76,16 @@ run-dashboard: build-dashboard
 
 demo: build
 	rm -rf ~/.matter
-	npx -y concurrently -n "Devices,Runtime1,Runtime2,Services,Dashboard" -c "green,blue,cyan,yellow,magenta" \
+	npx -y concurrently -n "Devices,Runtime1,Runtime2,Building1,Building2,Building3,Building4,House3,House4,House5,Services,Dashboard" -c "green,blue,cyan,yellow,red,magenta,blue,gray,magenta,cyan,gray,green" \
 		"make run-devices" \
 		"sleep 8 && make run-runtime-house1" \
 		"sleep 10 && make run-runtime-house2" \
-		"sleep 15 && make run-services" \
-		"sleep 20 && make run-dashboard"
+		"sleep 12 && make run-runtime-building1" \
+		"sleep 13 && make run-runtime-building2" \
+		"sleep 14 && make run-runtime-building3" \
+		"sleep 15 && make run-runtime-building4" \
+		"sleep 17 && make run-services" \
+		"sleep 22 && make run-dashboard"
 
 stop-demo:
 	@echo "Stopping Chariot demo processes..."

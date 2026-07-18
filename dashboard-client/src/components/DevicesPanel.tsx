@@ -4,9 +4,11 @@ import { FlashValue } from "./FlashValue.tsx";
 export interface DeviceData {
   deviceId: string;
   protocol: string;
-  rawValue: number;
+  rawValue: any; // allow any for string events
   timestamp: string;
   unit?: string;
+  siteId?: string;
+  siteType?: string;
   homeId?: string;
   zoneId?: string;
 }

@@ -7,7 +7,7 @@
 
 import assert from "node:assert/strict";
 import { temporalAggregate, AnonymisationEngine } from "../anonymisation/AnonymisationEngine.js";
-import { VirtualProfile } from "../mapping/DevicesMapper.js";
+import { DevicesMapper, VirtualProfile } from "../mapping/DevicesMapper.js";
 
 function makeProfile(deviceId: string, type: string, value: number): VirtualProfile {
     return { deviceId, type, unit: "celsius", value, timestamp: new Date().toISOString() };
@@ -100,6 +100,67 @@ test("does not mix different sensor types during aggregation", () => {
     assert.notEqual(r2, null);
     assert.equal(r2!.type, "humidity");
     assert.equal(r2!.value, 50.0); // should not be influenced by temperature value
+});
+
+test("security_event conversion (normal/door_open/alarm_triggered -> 0/1 -> frequency aggregated)", () => {
+    const mapper = new DevicesMapper();
+    
+    // Map normal, door_open, and alarm_triggered raw security states
+    const rNormal = mapper.mapToVirtualProfile({
+        deviceId: "sec-01",
+        protocol: "zigbee",
+        cluster: "security",
+        attribute: "value",
+        value: "normal"
+    });
+    const rDoorOpen = mapper.mapToVirtualProfile({
+        deviceId: "sec-01",
+        protocol: "zigbee",
+        cluster: "security",
+        attribute: "value",
+        value: "door_open"
+    });
+    const rAlarm = mapper.mapToVirtualProfile({
+        deviceId: "sec-01",
+        protocol: "zigbee",
+        cluster: "security",
+        attribute: "value",
+        value: "alarm_triggered"
+    });
+
+    assert.equal(rNormal.value, 0, "normal should map to 0");
+    assert.equal(rDoorOpen.value, 1, "door_open should map to 1");
+    assert.equal(rAlarm.value, 1, "alarm_triggered should map to 1");
+    assert.equal(rNormal.type, "security_event");
+    assert.equal(rNormal.unit, "frequency");
+
+    // Configure environmental variables for aggregating this building's security anomalies
+    process.env.SITE_ID = "building-1";
+    process.env.SITE_TYPE = "building";
+    process.env.ZONE_ID = "quartier-nord";
+    process.env.ANON_WINDOW_SIZE = "3"; // sliding window size of 3
+
+    const engine = new AnonymisationEngine();
+
+    // 1st: normal (value: 0) -> smoothed: 0
+    const agg1 = engine.process(rNormal);
+    assert.notEqual(agg1, null);
+    assert.equal(agg1!.value, 0.0);
+
+    // 2nd: door_open (value: 1) -> smoothed: (0 + 1) / 2 = 0.50
+    const agg2 = engine.process(rDoorOpen);
+    assert.notEqual(agg2, null);
+    assert.equal(agg2!.value, 0.50);
+
+    // 3rd: normal (value: 0) -> smoothed: (0 + 1 + 0) / 3 = 0.33
+    const agg3 = engine.process(rNormal);
+    assert.notEqual(agg3, null);
+    assert.equal(agg3!.value, 0.33);
+
+    // 4th: alarm (value: 1) -> window slides to [1, 0, 1] -> smoothed: (1 + 0 + 1) / 3 = 0.67
+    const agg4 = engine.process(rAlarm);
+    assert.notEqual(agg4, null);
+    assert.equal(agg4!.value, 0.67);
 });
 
 // ---------------------------------------------------------------------------

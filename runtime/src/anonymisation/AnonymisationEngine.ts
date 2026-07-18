@@ -52,7 +52,9 @@ export class AnonymisationEngine {
     private readonly deviceLatestSmoothed: Map<string, number> = new Map();
     private readonly deviceTypes: Map<string, string> = new Map();
 
-    private homeId: string;
+    private siteId: string;
+    private siteType: "home" | "building";
+    private homeId: string; // for backward compatibility
     private zoneId: string;
     private windowSize: number;
     private kThreshold: number; // Retained for config backward compatibility
@@ -60,7 +62,9 @@ export class AnonymisationEngine {
     private readonly onTelemetry?: OnTelemetryCallback;
 
     constructor(_deviceGroups: DeviceGroupMap = DEFAULT_DEVICE_GROUPS, onTelemetry?: OnTelemetryCallback) {
-        this.homeId = process.env.HOME_ID ?? "house-1";
+        this.siteId = process.env.SITE_ID ?? process.env.HOME_ID ?? "house-1";
+        this.siteType = (process.env.SITE_TYPE ?? "home") as "home" | "building";
+        this.homeId = this.siteId;
         this.zoneId = process.env.ZONE_ID ?? "quartier-nord";
         this.windowSize = parseInt(process.env.ANON_WINDOW_SIZE ?? "5", 10);
         this.kThreshold = parseInt(process.env.ANON_K_THRESHOLD ?? "2", 10);
@@ -69,7 +73,7 @@ export class AnonymisationEngine {
 
         console.log(
             `\x1b[35m[AGGREGATION] Engine initialised — ` +
-            `homeId=${this.homeId}, zoneId=${this.zoneId}, window=${this.windowSize}\x1b[0m`
+            `siteId=${this.siteId}, siteType=${this.siteType}, zoneId=${this.zoneId}, window=${this.windowSize}\x1b[0m`
         );
     }
 
@@ -137,11 +141,13 @@ export class AnonymisationEngine {
         const homeMean = parseFloat((sum / count).toFixed(2));
 
         console.log(
-            `\x1b[35m[AGGREGATION] [2/2 INTRA-HOME] Home '${this.homeId}' ` +
+            `\x1b[35m[AGGREGATION] [2/2 INTRA-HOME] Site '${this.siteId}' (${this.siteType}) ` +
             `type='${type}' (${count} device(s)) → mean=${homeMean.toFixed(2)} ${unit}\x1b[0m`
         );
 
         const aggregateProfile: HomeAggregateProfile = {
+            siteId: this.siteId,
+            siteType: this.siteType,
             homeId: this.homeId,
             zoneId: this.zoneId,
             type,
@@ -153,6 +159,8 @@ export class AnonymisationEngine {
         // Emit telemetry for the dashboard
         this.onTelemetry?.({
             step: "intra_home",
+            siteId: this.siteId,
+            siteType: this.siteType,
             homeId: this.homeId,
             zoneId: this.zoneId,
             type,

@@ -9,6 +9,9 @@ import { ProtocolSupport } from "./protocols/ProtocolSupport.js";
 import { MatterDriver } from "./driver/MatterDriver.js";
 import { MockDriver } from "./driver/MockDriver.js";
 import { EnergyMockDriver } from "./driver/EnergyMockDriver.js";
+import { PresenceMockDriver } from "./driver/PresenceMockDriver.js";
+import { SecurityMockDriver } from "./driver/SecurityMockDriver.js";
+import { AirQualityMockDriver } from "./driver/AirQualityMockDriver.js";
 import { DataAccess } from "./access/DataAccess.js";
 import { DevicesMapper } from "./mapping/DevicesMapper.js";
 import { Encryption } from "./security/Encryption.js";
@@ -16,12 +19,14 @@ import { AnonymisationEngine } from "./anonymisation/AnonymisationEngine.js";
 import { TelemetryClient } from "./telemetry/TelemetryClient.js";
 
 async function main() {
-    const homeId = process.env.HOME_ID ?? "house-1";
+    const siteId = process.env.SITE_ID ?? process.env.HOME_ID ?? "house-1";
+    const siteType = (process.env.SITE_TYPE ?? "home") as "home" | "building";
+    const homeId = siteId; // backward compatibility
     const zoneId = process.env.ZONE_ID ?? "quartier-nord";
     const startBroker = (process.env.START_BROKER ?? "true") !== "false";
 
     console.log(`\n\x1b[35;1m===============================================================\x1b[0m`);
-    console.log(`\x1b[35;1m    STARTING CHARIOT GATEWAY [HOME: ${homeId.toUpperCase()}, ZONE: ${zoneId.toUpperCase()}]   \x1b[0m`);
+    console.log(`\x1b[35;1m    STARTING CHARIOT GATEWAY [SITE: ${siteId.toUpperCase()} (${siteType.toUpperCase()}), ZONE: ${zoneId.toUpperCase()}]   \x1b[0m`);
     console.log(`\x1b[35;1m===============================================================\x1b[0m\n`);
 
     // 1. Initialize the system support layers
@@ -103,6 +108,8 @@ async function main() {
             deviceId: reading.deviceId,
             protocol: reading.protocol,
             rawValue: telemetryRawValue,
+            siteId,
+            siteType,
             homeId,
             zoneId,
             timestamp: new Date().toISOString(),
@@ -153,10 +160,12 @@ async function main() {
     if (process.env.DEVICE_IDS) {
         deviceIds = process.env.DEVICE_IDS.split(",").map(id => id.trim());
     } else {
-        // Defaults based on homeId
-        if (homeId === "house-1") {
+        // Defaults based on siteType / siteId
+        if (siteType === "building") {
+            deviceIds = ["zigbee-occupancy-01", "zigbee-security-01", "thread-airquality-01"];
+        } else if (siteId === "house-1") {
             deviceIds = ["matter-temp-01", "zigbee-temp-01", "zigbee-energy-01"];
-        } else if (homeId === "house-2") {
+        } else if (siteId === "house-2") {
             deviceIds = ["thread-temp-01", "thread-energy-01"];
         } else {
             deviceIds = ["matter-temp-01", "zigbee-energy-01"];
@@ -165,15 +174,23 @@ async function main() {
 
     // 5. Register the active protocol drivers
     for (const dId of deviceIds) {
+        const protocol = dId.startsWith("thread") ? "thread" : "zigbee";
         if (dId === "matter-temp-01") {
             const matterDriver = new MatterDriver();
             protocolSupport.registerDriver(matterDriver);
         } else if (dId.includes("energy")) {
-            const protocol = dId.startsWith("thread") ? "thread" : "zigbee";
             const energyDriver = new EnergyMockDriver(dId, protocol);
             protocolSupport.registerDriver(energyDriver);
+        } else if (dId.includes("occupancy")) {
+            const occupancyDriver = new PresenceMockDriver(dId, protocol);
+            protocolSupport.registerDriver(occupancyDriver);
+        } else if (dId.includes("security")) {
+            const securityDriver = new SecurityMockDriver(dId, protocol);
+            protocolSupport.registerDriver(securityDriver);
+        } else if (dId.includes("airquality")) {
+            const airQualityDriver = new AirQualityMockDriver(dId, protocol);
+            protocolSupport.registerDriver(airQualityDriver);
         } else {
-            const protocol = dId.startsWith("thread") ? "thread" : "zigbee";
             const mockDriver = new MockDriver(dId, protocol);
             protocolSupport.registerDriver(mockDriver);
         }

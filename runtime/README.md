@@ -27,17 +27,20 @@ It transforms device-specific profiles into a home-level aggregate profile:
 ```
 VirtualProfile  { deviceId, type, unit, value, timestamp }
       ↓  AnonymisationEngine (runtime)
-HomeAggregateProfile { homeId, zoneId, type, unit, value, timestamp }
+SiteAggregateProfile { siteId, siteType, homeId, zoneId, type, unit, value, timestamp }
 ```
 
 ### Core Privacy Principle
 
 **No data per room, nor per individual device, is ever exposed outside the local gateway.**
-The gateway only publishes a single aggregated value per data type for the home, tagged with its `homeId` and geographical `zoneId`.
+The gateway only publishes a single aggregated value per data type for the site, tagged with its `siteId`, `siteType`, and geographical `zoneId`.
 
 ### Supported Data Types
-1. **Temperature (`celsius`)**: Standard environmental reading.
-2. **Energy Consumption (`kWh`)**: Measures power usage. While temperature is relatively low-sensitivity, energy usage is highly sensitive as it reveals intimate occupancy patterns, appliance usage, and resident habits. Aggregating energy consumption locally (intra-home) and applying K-anonymity plus Gaussian noise on the communication layer ensures smart grid utility without revealing individual household behaviors.
+1. **Temperature (`celsius`)**: Standard environmental reading (Home specific).
+2. **Energy Consumption (`kWh`)**: Measures power usage (Home specific).
+3. **Presence/Occupation (`percent`)**: Diurnal building occupancy levels (Building specific).
+4. **Security Events (`frequency`)**: Calculates security anomaly frequency (0 for normal, 1 for alert; Building specific).
+5. **Air Quality (`ppm`)**: CO2 ppm levels, correlated with office hours occupancy (Building specific).
 
 ---
 
@@ -45,23 +48,27 @@ The gateway only publishes a single aggregated value per data type for the home,
 
 | Variable | Default | Description |
 |---|---|---|
-| `HOME_ID` | `house-1` | Identifier of this home instance (e.g. `house-1`, `house-2`) |
-| `ZONE_ID` | `quartier-nord` | Geographical zone identifier shared by multiple homes |
+| `SITE_ID` / `HOME_ID` | `house-1` | Identifier of this site instance (e.g. `house-1`, `building-1`) |
+| `SITE_TYPE` | `home` | Type of the site, either `home` or `building` |
+| `ZONE_ID` | `quartier-nord` | Geographical zone identifier shared by multiple sites |
 | `START_BROKER` | `true` | Set to `false` to prevent launching a local MQTT broker conflict on port 1883 |
-| `DEVICE_IDS` | *(dynamic)* | Comma-separated list of devices to drive (e.g., `matter-temp-01,zigbee-temp-01`) |
+| `DEVICE_IDS` | *(dynamic)* | Comma-separated list of devices to drive |
 | `ANONYMIZATION_ENABLED` | `true` | Set to `false` to disable local aggregation |
 | `ANON_WINDOW_SIZE` | `5` | Sliding window size N for temporal smoothing |
 
 ---
 
-## Multiple Homes Simulation
+## Multiple Sites Simulation
 
-To simulate multiple houses reporting to the same zone, start multiple runtime instances in parallel with different configurations:
+To simulate multiple houses and buildings reporting to the same zone, start multiple runtime instances in parallel with different configurations:
 
 ```bash
 # House 1 (starts the Aedes MQTT broker)
-START_BROKER=true HOME_ID=house-1 ZONE_ID=quartier-nord DEVICE_IDS=matter-temp-01,zigbee-temp-01 npm start -w runtime
+START_BROKER=true SITE_ID=house-1 SITE_TYPE=home ZONE_ID=quartier-nord DEVICE_IDS=matter-temp-01,zigbee-temp-01 npm start -w runtime
 
 # House 2 (connects to the Aedes broker of House 1)
-START_BROKER=false HOME_ID=house-2 ZONE_ID=quartier-nord DEVICE_IDS=thread-temp-01 npm start -w runtime
+START_BROKER=false SITE_ID=house-2 SITE_TYPE=home ZONE_ID=quartier-nord DEVICE_IDS=thread-temp-01 npm start -w runtime
+
+# Building 1 (connects to House 1 broker, simulates building sensors)
+START_BROKER=false SITE_ID=building-1 SITE_TYPE=building ZONE_ID=quartier-nord DEVICE_IDS=zigbee-occupancy-01,zigbee-security-01,thread-airquality-01 npm start -w runtime
 ```

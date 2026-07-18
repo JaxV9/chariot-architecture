@@ -47,32 +47,32 @@ export class AnonymisationProcessor {
      * Returns a ZoneProfile if the K-anonymity threshold is met, otherwise returns null.
      */
     process(profile: HomeAggregateProfile, kThreshold: number, sigma: number): ZoneProfile | null {
-        const { homeId, zoneId, type, unit, value } = profile;
+        const { siteId, siteType, zoneId, type, unit, value } = profile;
         const now = Date.now();
-        const stateKey = `${zoneId}:${type}`;
+        const stateKey = `${zoneId}:${siteType}:${type}`;
 
         // 1. Initialize zone state
         if (!this.zoneStates.has(stateKey)) {
             this.zoneStates.set(stateKey, new Map());
         }
-        const zoneHomes = this.zoneStates.get(stateKey)!;
+        const zoneSites = this.zoneStates.get(stateKey)!;
 
-        // 2. Record this home's contribution
-        zoneHomes.set(homeId, { value, timestamp: now });
+        // 2. Record this site's contribution
+        zoneSites.set(siteId, { value, timestamp: now });
 
-        // 3. Clean up inactive homes (older than timeoutMs)
-        for (const [hId, record] of zoneHomes.entries()) {
+        // 3. Clean up inactive sites (older than timeoutMs)
+        for (const [sId, record] of zoneSites.entries()) {
             if (now - record.timestamp > this.timeoutMs) {
-                zoneHomes.delete(hId);
+                zoneSites.delete(sId);
             }
         }
 
-        const activeHomeCount = zoneHomes.size;
+        const activeSiteCount = zoneSites.size;
 
         // 4. Verify K-anonymity threshold
-        if (activeHomeCount < kThreshold) {
+        if (activeSiteCount < kThreshold) {
             console.log(
-                `[K-ANONYMITY] Zone '${zoneId}' : ${activeHomeCount}/${kThreshold} maisons actives, donnée retenue`
+                `[K-ANONYMITY] Zone '${zoneId}' (type: ${siteType}) : ${activeSiteCount}/${kThreshold} sites actifs, donnée retenue`
             );
             
             // Emit withheld telemetry
@@ -80,9 +80,10 @@ export class AnonymisationProcessor {
                 layer: "runtime", // layer mapped to runtime for dashboard backwards compatibility
                 step: "kanon",
                 zoneId,
+                siteType,
                 type,
                 unit,
-                activeDevices: activeHomeCount,
+                activeDevices: activeSiteCount,
                 kThreshold,
                 status: "withheld",
                 timestamp: new Date().toISOString()
@@ -93,19 +94,20 @@ export class AnonymisationProcessor {
 
         // 5. Seuil K atteint — compute zone average
         let sum = 0;
-        for (const record of zoneHomes.values()) {
+        for (const record of zoneSites.values()) {
             sum += record.value;
         }
-        const zoneMean = sum / activeHomeCount;
+        const zoneMean = sum / activeSiteCount;
 
         // Emit telemetry for K-anonymity passing
         this.onTelemetry?.({
             layer: "runtime", // mapped to runtime for dashboard backwards compatibility
             step: "kanon",
             zoneId,
+            siteType,
             type,
             unit,
-            activeDevices: activeHomeCount,
+            activeDevices: activeSiteCount,
             kThreshold,
             status: "published",
             groupMean: zoneMean,
@@ -117,7 +119,7 @@ export class AnonymisationProcessor {
         const perturbedValue = parseFloat((zoneMean + noise).toFixed(3));
 
         console.log(
-            `[K-ANONYMITY] Zone '${zoneId}' ✓ : ${activeHomeCount}/${kThreshold} maisons actives -> ` +
+            `[K-ANONYMITY] Zone '${zoneId}' (type: ${siteType}) ✓ : ${activeSiteCount}/${kThreshold} sites actifs -> ` +
             `moyenne=${zoneMean.toFixed(2)} + bruit=${noise.toFixed(4)} -> valeur finale=${perturbedValue}`
         );
 
@@ -126,6 +128,7 @@ export class AnonymisationProcessor {
             layer: "runtime", // mapped to runtime for dashboard backwards compatibility
             step: "gaussian",
             zoneId,
+            siteType,
             type,
             groupMean: zoneMean,
             noise,
@@ -135,20 +138,24 @@ export class AnonymisationProcessor {
             individualProfile: profile,
             zoneProfile: {
                 zoneId,
+                siteType,
                 type,
                 unit,
                 value: perturbedValue,
-                homeCount: activeHomeCount,
+                siteCount: activeSiteCount,
+                homeCount: activeSiteCount, // backward compatibility
                 timestamp: new Date().toISOString()
             }
         });
 
         return {
             zoneId,
+            siteType,
             type,
             unit,
             value: perturbedValue,
-            homeCount: activeHomeCount,
+            siteCount: activeSiteCount,
+            homeCount: activeSiteCount, // backward compatibility
             timestamp: new Date().toISOString()
         };
     }

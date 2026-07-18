@@ -11,6 +11,8 @@ import { HomeAggregateProfile } from "../anonymisation/HomeAggregateProfile.js";
 
 function makeHomeProfile(homeId: string, value: number): HomeAggregateProfile {
     return {
+        siteId: homeId,
+        siteType: "home",
         homeId,
         zoneId: "quartier-nord",
         type: "temperature",
@@ -115,6 +117,8 @@ test("does not mix different sensor types during zone aggregation", () => {
 
     // house-1 sends temperature
     const temp1 = {
+        siteId: "house-1",
+        siteType: "home" as const,
         homeId: "house-1",
         zoneId: "quartier-nord",
         type: "temperature",
@@ -126,6 +130,8 @@ test("does not mix different sensor types during zone aggregation", () => {
 
     // house-2 sends energy_consumption
     const energy2 = {
+        siteId: "house-2",
+        siteType: "home" as const,
         homeId: "house-2",
         zoneId: "quartier-nord",
         type: "energy_consumption",
@@ -140,6 +146,59 @@ test("does not mix different sensor types during zone aggregation", () => {
 
     assert.equal(resultTemp, null, "Temperature should be withheld because K=2 is not met for temperature");
     assert.equal(resultEnergy, null, "Energy should be withheld because K=2 is not met for energy");
+});
+
+test("isolates siteTypes (home vs building) during zone K-anonymity checks", () => {
+    const processor = new AnonymisationProcessor();
+
+    // house-1 (home) sends temperature
+    const homeProfile = {
+        siteId: "house-1",
+        siteType: "home" as const,
+        homeId: "house-1",
+        zoneId: "quartier-nord",
+        type: "temperature",
+        unit: "celsius",
+        value: 20.0,
+        timestamp: new Date().toISOString()
+    };
+
+    // building-1 (building) sends temperature
+    const buildingProfile = {
+        siteId: "building-1",
+        siteType: "building" as const,
+        homeId: "building-1",
+        zoneId: "quartier-nord",
+        type: "temperature",
+        unit: "celsius",
+        value: 22.0,
+        timestamp: new Date().toISOString()
+    };
+
+    // With K=2, if they were mixed, we would have 2 contributions in quartier-nord:temperature,
+    // and they would trigger publication.
+    // If they are isolated, both will be withheld since each category (home and building) only has 1 contribution.
+    const resultHome = processor.process(homeProfile, 2, 0);
+    const resultBuilding = processor.process(buildingProfile, 2, 0);
+
+    assert.equal(resultHome, null, "Home profile should be withheld because K=2 is not met for homes");
+    assert.equal(resultBuilding, null, "Building profile should be withheld because K=2 is not met for buildings");
+
+    // If we add another home (house-2), K=2 should be met for homes, but still not for buildings
+    const homeProfile2 = {
+        siteId: "house-2",
+        siteType: "home" as const,
+        homeId: "house-2",
+        zoneId: "quartier-nord",
+        type: "temperature",
+        unit: "celsius",
+        value: 24.0,
+        timestamp: new Date().toISOString()
+    };
+
+    const resultHome2 = processor.process(homeProfile2, 2, 0);
+    assert.notEqual(resultHome2, null, "Home profile should publish because we now have 2 active homes");
+    assert.equal(resultHome2!.value, 22.0, "Zone mean for homes should be (20 + 24) / 2 = 22.0");
 });
 
 // ---------------------------------------------------------------------------

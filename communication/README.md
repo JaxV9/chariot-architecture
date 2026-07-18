@@ -8,22 +8,22 @@ The **communication** layer represents the cloud middleware of the CHARIOT archi
 [Devices Layer] -> [Runtime Gateway] --(MQTT Encrypted Home Aggregate)--> [Communication Layer] -> [Services Layer] -> [Smart City APIs]
 ```
 
-1. **Message Bus (Subscriber)**: Subscribes to the runtime's home aggregate topic on `chariot/zones/+`.
+1. **Message Bus (Subscriber)**: Subscribes to the runtime's site aggregate topic on `chariot/zones/+`.
 2. **Decryption**: Decrypts the incoming GCM-encrypted messages using the shared key.
-3. **Message Formats**: Validates that the decrypted message adheres to the `HomeAggregateProfile` structure.
+3. **Message Formats**: Validates that the decrypted message adheres to the `SiteAggregateProfile` structure.
 4. **Anonymisation Processor**: Performs the cloud-level privacy pipeline:
-   - **K-Anonymity**: Tracks active home contributors per zone (with a 60-second inactivity timeout). Retains the data if the active home count is below **K**.
-   - **Gaussian Perturbation**: Adds Box-Muller Gaussian noise ($\sigma$ configurable) to the zone average when the $K$ threshold is met.
-5. **Directory Services (Storage)**: Stores the final perturbed `ZoneProfile` and a rolling history of the last 10 entries for each zone.
+   - **K-Anonymity**: Tracks active site contributors per zone and siteType (with a 60-second inactivity timeout). Retains the data if the active site count is below **K**.
+   - **Gaussian Perturbation**: Adds Box-Muller Gaussian noise ($\sigma$ configurable) to the zone/siteType average when the $K$ threshold is met.
+5. **Directory Services (Storage)**: Stores the final perturbed `ZoneProfile` (keyed by `zoneId--siteType--type`) and a rolling history of the last 10 entries for each zone/type/siteType combination.
 
 ## Package Structure
 
 - `src/bus/MessageBusSubscriber.ts`: Handles the MQTT subscription, message decryption, format validation, and K-anonymity / noise injection workflow.
-- `src/anonymisation/AnonymisationProcessor.ts`: Core state manager for active homes, K-anonymity checks, and Gaussian Box-Muller noise generation.
-- `src/directory/DirectoryService.ts`: Stores zone profiles and 10-entry rolling histories.
-- `src/formats/MessageFormats.ts`: Validates that incoming home aggregate profiles match the required schema.
+- `src/anonymisation/AnonymisationProcessor.ts`: Core state manager for active sites, siteType-isolated K-anonymity checks, and Gaussian Box-Muller noise generation.
+- `src/directory/DirectoryService.ts`: Stores zone profiles and 10-entry rolling histories. Keys are formatted as `zoneId--siteType--type` for safe REST URL routing.
+- `src/formats/MessageFormats.ts`: Validates that incoming site aggregate profiles match the required schema.
 - `src/security/Encryption.ts`: Decrypts messages using AES-256-GCM.
-- `src/tests/anonymisation.test.ts`: Unit tests verifying K-anonymity limits, contributor deduplication, active home timeout, and Gaussian Box-Muller noise generation.
+- `src/tests/anonymisation.test.ts`: Unit tests verifying K-anonymity limits, contributor deduplication, active site timeout, siteType isolation, security event frequency calculations, and Gaussian noise generation.
 - `src/test-communication.ts`: Integration test suite verifying decrypted zones delivery, malformed data rejection, and rolling history bounds.
 
 ## Getting Started
